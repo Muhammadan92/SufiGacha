@@ -1,0 +1,80 @@
+[gd_resource type="Resource" load_steps=11 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/unit_data.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/data/skill_data.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/data/effect_block.gd" id="3"]
+
+[sub_resource type="Resource" id="eff_lit"]
+script = ExtResource("3")
+kind = 0
+power = 1.1
+
+[sub_resource type="Resource" id="eff_rem_atkup"]
+script = ExtResource("3")
+kind = 2
+status_id = 0
+chance = 1.0
+duration = 3
+amount = 0.35
+
+[sub_resource type="Resource" id="eff_trance_dmg"]
+script = ExtResource("3")
+kind = 0
+power = 1.5
+
+[sub_resource type="Resource" id="eff_trance_atkdown"]
+script = ExtResource("3")
+kind = 2
+status_id = 1
+chance = 0.5
+duration = 2
+amount = 0.3
+
+[sub_resource type="Resource" id="skill_lit"]
+script = ExtResource("2")
+id = &"kibr_litany"
+display_name = "Contempt"
+slot = 0
+cooldown = 0
+target_type = 0
+fervor_gain = 20
+effects = [SubResource("eff_lit")]
+
+[sub_resource type="Resource" id="skill_rem"]
+script = ExtResource("2")
+id = &"kibr_remembrance"
+display_name = "Swell of Pride"
+slot = 1
+cooldown = 3
+target_type = 4
+fervor_gain = 15
+effects = [SubResource("eff_rem_atkup")]
+
+[sub_resource type="Resource" id="skill_trance"]
+script = ExtResource("2")
+id = &"kibr_trance"
+display_name = "I Am Above You"
+slot = 2
+cooldown = 0
+target_type = 1
+fervor_gain = 0
+effects = [SubResource("eff_trance_dmg"), SubResource("eff_trance_atkdown")]
+
+[resource]
+script = ExtResource("1")
+id = &"kibr"
+display_name = "Kibr"
+epithet = "Father of Pride"
+order_name = ""
+affinity = 7
+rarity = 5
+is_enemy = true
+max_hp = 3500
+atk = 95
+def = 90
+spd = 98
+crit_rate = 0.15
+crit_damage = 1.5
+effectiveness = 0.1
+resilience = 0.2
+skills = [SubResource("skill_lit"), SubResource("skill_rem"), SubResource("skill_trance")]

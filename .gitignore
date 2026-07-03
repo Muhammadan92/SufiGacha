@@ -1,0 +1,11 @@
+# Godot
+.godot/
+*.import
+export_presets.cfg
+android/
+
+# macOS
+.DS_Store
+
+# AI art working files stay local until curated (see AI_ART_PIPELINE.md §8)
+art_workbench/

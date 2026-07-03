@@ -1,0 +1,57 @@
+[gd_resource type="Resource" load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/unit_data.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/data/skill_data.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/data/effect_block.gd" id="3"]
+
+[sub_resource type="Resource" id="eff_lit"]
+script = ExtResource("3")
+kind = 0
+power = 1.1
+
+[sub_resource type="Resource" id="eff_rem_atkup"]
+script = ExtResource("3")
+kind = 2
+status_id = 0
+chance = 1.0
+duration = 2
+amount = 0.3
+
+[sub_resource type="Resource" id="skill_lit"]
+script = ExtResource("2")
+id = &"vermin_litany"
+display_name = "Gnaw"
+slot = 0
+cooldown = 0
+target_type = 0
+fervor_gain = 20
+effects = [SubResource("eff_lit")]
+
+[sub_resource type="Resource" id="skill_rem"]
+script = ExtResource("2")
+id = &"vermin_remembrance"
+display_name = "Frenzy"
+slot = 1
+cooldown = 3
+target_type = 4
+fervor_gain = 15
+effects = [SubResource("eff_rem_atkup")]
+
+[resource]
+script = ExtResource("1")
+id = &"shadow_vermin"
+display_name = "Shadow Vermin"
+epithet = ""
+order_name = ""
+affinity = 6
+rarity = 3
+is_enemy = true
+max_hp = 650
+atk = 75
+def = 50
+spd = 100
+crit_rate = 0.1
+crit_damage = 1.5
+effectiveness = 0.0
+resilience = 0.0
+skills = [SubResource("skill_lit"), SubResource("skill_rem")]

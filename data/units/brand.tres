@@ -1,0 +1,81 @@
+[gd_resource type="Resource" load_steps=11 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/unit_data.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/data/skill_data.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/data/effect_block.gd" id="3"]
+
+[sub_resource type="Resource" id="eff_lit"]
+script = ExtResource("3")
+kind = 0
+power = 0.8
+
+[sub_resource type="Resource" id="eff_rem_taunt"]
+script = ExtResource("3")
+kind = 2
+status_id = 13
+chance = 1.0
+duration = 2
+
+[sub_resource type="Resource" id="eff_rem_defup"]
+script = ExtResource("3")
+kind = 2
+status_id = 2
+chance = 1.0
+duration = 2
+amount = 0.4
+
+[sub_resource type="Resource" id="eff_trance"]
+script = ExtResource("3")
+kind = 2
+status_id = 9
+chance = 1.0
+duration = 2
+
+[sub_resource type="Resource" id="skill_lit"]
+script = ExtResource("2")
+id = &"brand_litany"
+display_name = "Searing Blow"
+slot = 0
+cooldown = 0
+target_type = 0
+fervor_gain = 20
+effects = [SubResource("eff_lit")]
+
+[sub_resource type="Resource" id="skill_rem"]
+script = ExtResource("2")
+id = &"brand_remembrance"
+display_name = "Stand Unburnt"
+slot = 1
+cooldown = 3
+target_type = 4
+fervor_gain = 15
+effects = [SubResource("eff_rem_taunt"), SubResource("eff_rem_defup")]
+
+[sub_resource type="Resource" id="skill_trance"]
+script = ExtResource("2")
+id = &"brand_trance"
+display_name = "The Unburnt"
+slot = 2
+cooldown = 0
+target_type = 3
+fervor_gain = 0
+effects = [SubResource("eff_trance")]
+
+[resource]
+script = ExtResource("1")
+id = &"brand"
+display_name = "Brand"
+epithet = "the Unburnt"
+order_name = "Rifai"
+affinity = 2
+rarity = 5
+is_enemy = false
+max_hp = 1400
+atk = 80
+def = 110
+spd = 95
+crit_rate = 0.1
+crit_damage = 1.5
+effectiveness = 0.0
+resilience = 0.25
+skills = [SubResource("skill_lit"), SubResource("skill_rem"), SubResource("skill_trance")]
