@@ -62,6 +62,7 @@ script = ExtResource("1")
 id = &"aria"
 display_name = "Aria"
 epithet = ""
+art_notes = "warm-faced woman in rose-and-cream Chishti robes with modest headwrap, holding a small daf frame drum, musical geometry halo"
 order_name = "Chishti"
 affinity = 5
 rarity = 5

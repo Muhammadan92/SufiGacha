@@ -41,6 +41,7 @@ script = ExtResource("1")
 id = &"whisperling"
 display_name = "Whisperling"
 epithet = ""
+art_notes = "small smoky imp of curling shadow with faint whispering mouths, no distinct face, wisp tendrils"
 order_name = ""
 affinity = 3
 rarity = 3

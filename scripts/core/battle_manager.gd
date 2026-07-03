@@ -8,6 +8,13 @@ signal log_message(text: String)
 signal state_refreshed
 signal awaiting_input(actor: BattleUnit)
 signal battle_ended(victory: bool)
+# Structured events for the presentation layer (animations, floats, banners).
+signal action_started(actor: BattleUnit, skill: SkillData, primary: BattleUnit)
+signal damage_dealt(target: BattleUnit, amount: int, crit: bool)
+signal unit_healed(target: BattleUnit, amount: int)
+signal unit_evaded(target: BattleUnit, label: String)
+signal status_applied(target: BattleUnit, status_id: int)
+signal unit_died(unit: BattleUnit)
 
 const METER_MAX := 100.0
 
@@ -122,10 +129,12 @@ func _start_of_turn(actor: BattleUnit) -> void:
 			var dmg := maxi(1, int(actor.max_hp * s.magnitude))
 			actor.hp = maxi(0, actor.hp - dmg)
 			log_message.emit("%s takes %d burn damage." % [actor.data.display_name, dmg])
+			damage_dealt.emit(actor, dmg, false)
 		elif s.id == Enums.StatusId.REGEN:
 			var heal := int(actor.max_hp * s.magnitude)
 			actor.hp = mini(actor.max_hp, actor.hp + heal)
 			log_message.emit("%s regenerates %d HP." % [actor.data.display_name, heal])
+			unit_healed.emit(actor, heal)
 	# Durations tick down once per own turn, in one place only. A 2-turn
 	# status therefore lives through two of this unit's turn starts.
 	actor.expire_statuses()
@@ -211,6 +220,7 @@ func _resolve_skill(actor: BattleUnit, skill: SkillData, primary: BattleUnit) ->
 			target_desc = " on %s" % t[0].data.display_name
 	log_message.emit("%s uses [%s] %s%s." % [
 		actor.data.display_name, Enums.SLOT_NAMES[skill.slot], skill.full_name(), target_desc])
+	action_started.emit(actor, skill, primary)
 
 	if skill.slot == Enums.Slot.TRANCE:
 		actor.fervor = 0.0
@@ -241,6 +251,7 @@ func _apply_effect(actor: BattleUnit, eff: EffectBlock, target: BattleUnit) -> v
 			var amount := int(actor.atk() * eff.power)
 			target.hp = mini(target.max_hp, target.hp + amount)
 			log_message.emit("  %s recovers %d HP." % [target.data.display_name, amount])
+			unit_healed.emit(target, amount)
 		Enums.EffectKind.APPLY_STATUS:
 			var is_debuff := eff.status_id not in Enums.BUFF_IDS
 			var land_chance := eff.chance
@@ -251,6 +262,7 @@ func _apply_effect(actor: BattleUnit, eff: EffectBlock, target: BattleUnit) -> v
 				var magnitude := eff.amount * actor.atk() if eff.status_id == Enums.StatusId.BARRIER else eff.amount
 				target.add_status(eff.status_id, eff.duration, magnitude, eff.stack_cap)
 				log_message.emit("  %s gains %s." % [target.data.display_name, Enums.STATUS_NAMES[eff.status_id]])
+				status_applied.emit(target, eff.status_id)
 			elif is_debuff:
 				log_message.emit("  %s resists %s." % [target.data.display_name, Enums.STATUS_NAMES[eff.status_id]])
 		Enums.EffectKind.CLEANSE:
@@ -261,6 +273,7 @@ func _apply_effect(actor: BattleUnit, eff: EffectBlock, target: BattleUnit) -> v
 					var heal_amt := int(actor.atk() * eff.power) * removed
 					target.hp = mini(target.max_hp, target.hp + heal_amt)
 					log_message.emit("  %s recovers %d HP." % [target.data.display_name, heal_amt])
+					unit_healed.emit(target, heal_amt)
 		Enums.EffectKind.GAIN_FERVOR:
 			target.gain_fervor(eff.amount)
 			log_message.emit("  %s gains %d Fervor." % [target.data.display_name, int(eff.amount)])
@@ -272,9 +285,11 @@ func _apply_effect(actor: BattleUnit, eff: EffectBlock, target: BattleUnit) -> v
 func _deal_damage(actor: BattleUnit, target: BattleUnit, power: float) -> void:
 	if target.has_status(Enums.StatusId.IMMUNITY):
 		log_message.emit("  %s is immune!" % target.data.display_name)
+		unit_evaded.emit(target, "IMMUNE")
 		return
 	if target.has_status(Enums.StatusId.EVASION) and randf() < target.status_magnitude(Enums.StatusId.EVASION):
 		log_message.emit("  %s evades!" % target.data.display_name)
+		unit_evaded.emit(target, "EVADE")
 		return
 	var mult := Affinity.damage_multiplier(actor.data.affinity, target.data.affinity)
 	var base := actor.atk() * power * mult
@@ -286,9 +301,11 @@ func _deal_damage(actor: BattleUnit, target: BattleUnit, power: float) -> void:
 	if dmg < raw:
 		log_message.emit("  %s's barrier absorbs %d." % [target.data.display_name, raw - dmg])
 		if dmg <= 0:
+			unit_evaded.emit(target, "ABSORBED")
 			return
 	target.hp = maxi(0, target.hp - dmg)
 	target.gain_fervor(BattleUnit.FERVOR_ON_HIT)
+	damage_dealt.emit(target, dmg, crit)
 	var notes: Array = []
 	if crit:
 		notes.append("CRIT")
@@ -306,6 +323,7 @@ func _on_death(unit: BattleUnit) -> void:
 	unit.statuses.clear()
 	unit.turn_meter = 0.0
 	log_message.emit("%s falls!" % unit.data.display_name)
+	unit_died.emit(unit)
 
 
 func _check_end() -> void:

@@ -3,7 +3,18 @@
 A Sufi-inspired collectible turn-based RPG for mobile, built in Godot 4.
 
 - **[GDD.md](GDD.md)** — the full game design document (start here)
-- **[AI_ART_PIPELINE.md](AI_ART_PIPELINE.md)** — how art assets are produced
+- **[AI_ART_PIPELINE.md](AI_ART_PIPELINE.md)** — how art assets are produced (§10: the automated pipeline)
+- **[PROGRESS.md](PROGRESS.md)** — live project status; updated every commit
+
+## Art pipeline quick reference
+
+```
+godot --headless --path . -s res://tools/export_art_tasks.gd   # regenerate per-unit art briefs from unit data
+godot --headless --path . -s res://tools/audit_assets.gd       # what's REAL vs placeholder vs missing
+godot --headless --path . -s res://tools/gen_placeholders.gd   # regenerate procedural placeholder art
+./tools/import_art.sh unit vale portrait ~/finished.png        # import real art (resizes + records as REAL)
+godot --headless --path . --import                             # re-import after adding art
+```
 
 ## Current status: Phase 2 — grey-box vertical slice (full game loop)
 

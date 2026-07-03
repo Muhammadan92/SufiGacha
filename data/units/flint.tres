@@ -64,6 +64,7 @@ script = ExtResource("1")
 id = &"flint"
 display_name = "Flint"
 epithet = ""
+art_notes = "wiry young man, dark Rifai wraps with iron chain accents, sparks striking from flint in his hands"
 order_name = "Rifai"
 affinity = 2
 rarity = 3

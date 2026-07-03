@@ -27,6 +27,30 @@ func reload() -> void:
 		return a.index < b.index if a.valley == b.valley else a.valley < b.valley)
 
 
+# --- art resolution -----------------------------------------------------------
+# Art is convention-addressed: assets/art/units/<id>/{portrait,chibi,icon}.png
+# and assets/art/stages/valley_<n>/background.png. Anything missing returns
+# null and the UI falls back to procedural placeholders — the game always
+# runs, whatever state the art is in. See AI_ART_PIPELINE.md §10.
+
+func unit_art(id: String, kind: String) -> Texture2D:
+	return _load_art("res://assets/art/units/%s/%s.png" % [id, kind])
+
+
+func stage_background(stage: StageData) -> Texture2D:
+	# Per-stage override wins over the valley default.
+	var specific := _load_art("res://assets/art/stages/%s/background.png" % String(stage.id))
+	if specific != null:
+		return specific
+	return _load_art("res://assets/art/stages/valley_%d/background.png" % stage.valley)
+
+
+func _load_art(path: String) -> Texture2D:
+	if ResourceLoader.exists(path):
+		return load(path)
+	return null
+
+
 func playable_pool(rarity: int) -> Array:
 	var pool: Array = []
 	for u: UnitData in units.values():

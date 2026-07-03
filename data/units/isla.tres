@@ -59,6 +59,7 @@ script = ExtResource("1")
 id = &"isla"
 display_name = "Isla"
 epithet = "the Returning Tide"
+art_notes = "calm middle-aged woman, sea-blue Shadhili robes and white hijab, litany beads in hand, tide-water calligraphy swirling at her feet"
 order_name = "Shadhili"
 affinity = 4
 rarity = 5

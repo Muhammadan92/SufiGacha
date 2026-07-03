@@ -64,3 +64,16 @@ const BUFF_IDS := [
 ]
 
 const RARITY_NAMES := { 3: "Novice", 4: "Wayfarer", 5: "Luminary" }
+
+## Signature color per affinity — used by battle cards, placeholder art,
+## and VFX tinting, so the whole game keys off one table.
+const AFFINITY_COLORS := {
+	Affinity.HEART: Color(0.93, 0.83, 0.53),      # warm gold
+	Affinity.THUNDER: Color(0.62, 0.47, 0.94),    # violet
+	Affinity.EMBER: Color(0.94, 0.45, 0.28),      # burnt orange
+	Affinity.WIND: Color(0.42, 0.83, 0.55),       # green
+	Affinity.SEA: Color(0.35, 0.62, 0.93),        # sea blue
+	Affinity.HARMONY: Color(0.93, 0.55, 0.72),    # rose
+	Affinity.LIGHT: Color(0.98, 0.91, 0.45),      # bright yellow
+	Affinity.CORRUPTION: Color(0.48, 0.22, 0.55), # bruised purple
+}

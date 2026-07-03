@@ -7,6 +7,10 @@ extends Resource
 @export var display_name: String = ""
 @export var epithet: String = ""       # "Voice of Thunder" — empty for most
 @export var order_name: String = ""    # "Qadiri" etc.; empty for demons
+## Appearance description for the AI art pipeline — tools/export_art_tasks.gd
+## composes generation prompts from this + the order's style block. Keeping it
+## here means character data and art briefs can never drift apart.
+@export var art_notes: String = ""
 @export var affinity: Enums.Affinity = Enums.Affinity.THUNDER
 @export var rarity: int = 3            # 3 Novice / 4 Wayfarer / 5 Luminary
 @export var is_enemy: bool = false

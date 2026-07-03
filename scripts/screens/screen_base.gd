@@ -10,8 +10,16 @@ extends Control
 var resources_label: Label = null
 
 
+const BG_COLOR := Color(0.05, 0.07, 0.12)
+const ACCENT := Color(0.87, 0.75, 0.42)  # deep gold — GDD §11 palette
+
+
 func _ready() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
+	var bg := ColorRect.new()
+	bg.color = BG_COLOR
+	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
+	add_child(bg)
 	_build()
 
 

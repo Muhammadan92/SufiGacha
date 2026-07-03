@@ -7,5 +7,8 @@ android/
 # macOS
 .DS_Store
 
-# AI art working files stay local until curated (see AI_ART_PIPELINE.md §8)
-art_workbench/
+# AI art working files stay local until curated (see AI_ART_PIPELINE.md §8).
+# Generated briefs (tasks/) are regenerable; real_art.json IS tracked — it
+# records which shipped assets are real art vs. placeholders.
+art_workbench/*
+!art_workbench/real_art.json

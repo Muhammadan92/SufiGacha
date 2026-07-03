@@ -69,6 +69,7 @@ script = ExtResource("1")
 id = &"vale"
 display_name = "Vale"
 epithet = "the Silent"
+art_notes = "slender contemplative man, plain slate-blue Naqshbandi robes and small understated turban, trimmed beard, eyes closed, concentric circles of light around the heart"
 order_name = "Naqshbandi"
 affinity = 0
 rarity = 5

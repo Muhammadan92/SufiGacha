@@ -62,6 +62,7 @@ script = ExtResource("1")
 id = &"echo"
 display_name = "Echo"
 epithet = ""
+art_notes = "young woman, dignified teal hijab wrapped in Qadiri green trim, holding a resonant brass bell, sound-ring motifs, confident stance"
 order_name = "Qadiri"
 affinity = 1
 rarity = 4

@@ -65,6 +65,7 @@ script = ExtResource("1")
 id = &"rowan"
 display_name = "Rowan"
 epithet = ""
+art_notes = "lean young man mid-sidestep, Mevlevi sikke and white skirts, light on his feet, motion-blur wind trails"
 order_name = "Mevlevi"
 affinity = 3
 rarity = 4

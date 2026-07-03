@@ -47,6 +47,7 @@ script = ExtResource("1")
 id = &"ash_ghoul"
 display_name = "Ash Ghoul"
 epithet = ""
+art_notes = "hunched ashen demon, cracked charcoal skin glowing ember-orange from within, trailing cinders"
 order_name = ""
 affinity = 2
 rarity = 3

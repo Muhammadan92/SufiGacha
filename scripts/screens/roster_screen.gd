@@ -2,6 +2,7 @@ extends ScreenBase
 ## The Company: owned characters with a detail pane.
 
 var detail: RichTextLabel
+var detail_portrait: TextureRect
 
 
 func _build() -> void:
@@ -21,11 +22,20 @@ func _build() -> void:
 	list.add_theme_constant_override("separation", 6)
 	scroll.add_child(list)
 
+	var detail_pane := VBoxContainer.new()
+	detail_pane.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	detail_pane.size_flags_stretch_ratio = 1.4
+	detail_pane.add_theme_constant_override("separation", 10)
+	split.add_child(detail_pane)
+	detail_portrait = TextureRect.new()
+	detail_portrait.custom_minimum_size = Vector2(140, 140)
+	detail_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	detail_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	detail_pane.add_child(detail_portrait)
 	detail = RichTextLabel.new()
-	detail.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	detail.size_flags_stretch_ratio = 1.4
+	detail.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	detail.bbcode_enabled = true
-	split.add_child(detail)
+	detail_pane.add_child(detail)
 
 	var ids: Array = game.roster.keys()
 	ids.sort()
@@ -41,6 +51,7 @@ func _build() -> void:
 
 
 func _show_detail(id: String) -> void:
+	detail_portrait.texture = db.unit_art(id, "portrait")
 	var u: UnitData = db.units[id]
 	var level: int = game.level_of(id)
 	var mult: float = game.level_mult(level)

@@ -133,7 +133,41 @@ AI image models output flat stills; **rigging and animation remain manual** — 
 
 The money savings are real; the *time* cost migrates into cleanup, layer-cutting, and rigging — plan Phase 2 (vertical slice) around that.
 
-## 10. Disclosure & Store Policy
+## 10. Automated Integration Pipeline (IMPLEMENTED)
+
+The game side of this pipeline is built and running. The loop:
+
+1. **Character data is the single source of truth.** Every unit's `.tres` file
+   has an `art_notes` field (appearance description). The GDD order blocks
+   live as constants in `tools/export_art_tasks.gd` — edit them and the GDD
+   together.
+2. **Briefs are generated, never hand-written**:
+   `godot --headless --path . -s res://tools/export_art_tasks.gd`
+   → one markdown brief per unit in `art_workbench/tasks/` with the full
+   composed prompt (style block + order block + art_notes + affinity hex),
+   required file list, and the hard rules. Add a character to the game → its
+   art tasks appear automatically. Data and art briefs cannot drift.
+3. **Generate externally** (Niji/ComfyUI per §1–3), paint over, then import:
+   `./tools/import_art.sh unit vale portrait ~/Downloads/vale_final.png`
+   — resizes with macOS `sips`, places it at the convention path, and records
+   it as REAL art in `art_workbench/real_art.json` (repo-tracked).
+4. **Audit coverage** any time:
+   `godot --headless --path . -s res://tools/audit_assets.gd`
+   → per-unit table of REAL / placeholder / MISSING.
+5. **The game never blocks on art.** `tools/gen_placeholders.gd` generates
+   procedural affinity-colored portraits and valley backgrounds for every
+   unit; `Db.unit_art()` resolves real art → placeholder → null with UI
+   fallbacks at every call site. Convention paths:
+   `assets/art/units/<id>/{portrait,chibi,icon}.png`,
+   `assets/art/stages/valley_<n>/background.png` (per-stage override:
+   `assets/art/stages/<stage_id>/background.png`).
+
+Animation note: battle presentation (lunges, hit flashes, floating numbers,
+Trance banners) is driven by engine signals and works identically with
+placeholder or final art. When chibi sprites arrive, they replace the card
+portrait and gain Skeleton2D rigs (§4) without touching battle logic.
+
+## 11. Disclosure & Store Policy
 
 - Apple App Store and Google Play currently permit AI-generated assets (no disclosure requirement at time of writing — re-verify at submission).
 - If ever ported to Steam: Valve requires AI-content disclosure at submission — our ledger (§8) makes that trivial.
