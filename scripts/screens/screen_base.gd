@@ -6,6 +6,7 @@ extends Control
 @onready var game: Node = get_node("/root/Game")
 @onready var db: Node = get_node("/root/Db")
 @onready var screens: Node = get_node("/root/Screens")
+@onready var audio: Node = get_node_or_null("/root/Audio")
 
 var resources_label: Label = null
 
@@ -21,11 +22,23 @@ func _ready() -> void:
 	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(bg)
 	_build()
+	if audio != null:
+		audio.play_music(music_key())
 
 
 ## Override in each screen.
 func _build() -> void:
 	pass
+
+
+## Music track key for this screen ("" = leave current music playing).
+func music_key() -> String:
+	return "title"
+
+
+func sfx(key: String) -> void:
+	if audio != null:
+		audio.play_sfx(key)
 
 
 ## Standard vertical root with margins.

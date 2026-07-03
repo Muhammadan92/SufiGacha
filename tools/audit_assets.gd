@@ -60,6 +60,28 @@ func _initialize() -> void:
 			cell = "placeholder"
 		print("%-16s %-10s" % ["valley_%d" % v, cell])
 
+	# --- audio (AI_ART_PIPELINE.md §11.3 track list + battle SFX set) ---
+	print("")
+	var music := ["title", "valley_1", "battle", "boss", "calling",
+		"title_percussion", "battle_percussion"]
+	var sfx_keys := ["ui_tap", "hit", "hit_crit", "heal", "evade", "trance",
+		"fall", "reveal_novice", "reveal_wayfarer", "reveal_luminary",
+		"victory", "defeat"]
+	for entry in [["music", music], ["sfx", sfx_keys]]:
+		for k in entry[1]:
+			total += 1
+			var akey := "audio:%s/%s" % [entry[0], k]
+			var cell := "MISSING"
+			if real.has(akey):
+				cell = "REAL"
+				have_real += 1
+			else:
+				for ext in ["ogg", "mp3", "wav"]:
+					if FileAccess.file_exists("res://assets/audio/%s/%s.%s" % [entry[0], k, ext]):
+						cell = "placeholder"
+						break
+			print("%-16s %-10s" % ["%s/%s" % [entry[0], k], cell])
+
 	print("\nreal art: %d / %d assets (%.0f%%) — everything else runs on placeholders" % [
 		have_real, total, 100.0 * have_real / total])
 	quit(0)

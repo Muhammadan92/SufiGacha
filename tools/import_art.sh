@@ -5,6 +5,7 @@
 #
 #   ./tools/import_art.sh unit <unit_id> <portrait|chibi|icon> <source-image>
 #   ./tools/import_art.sh valley <valley_number> <source-image>
+#   ./tools/import_art.sh audio <music|sfx> <key> <source .ogg/.mp3/.wav>
 #
 # After importing, re-import resources so Godot picks them up:
 #   godot --headless --path . --import
@@ -50,8 +51,19 @@ case "${1:-}" in
     record "valley_$V/background"
     echo "imported: $DEST"
     ;;
+  audio)
+    TYPE="$2"; KEY="$3"; SRC="$4"
+    case "$TYPE" in music|sfx) ;; *) echo "ERROR: type must be music|sfx"; exit 1 ;; esac
+    EXT="${SRC##*.}"
+    case "$EXT" in ogg|mp3|wav) ;; *) echo "ERROR: audio must be .ogg/.mp3/.wav"; exit 1 ;; esac
+    DEST="assets/audio/$TYPE/$KEY.$EXT"
+    mkdir -p "assets/audio/$TYPE"
+    cp "$SRC" "$DEST"
+    record "audio:$TYPE/$KEY"
+    echo "imported: $DEST  (ogg/mp3 outrank placeholder .wav automatically)"
+    ;;
   *)
-    grep '^#' "$0" | head -12
+    grep '^#' "$0" | head -13
     exit 1
     ;;
 esac

@@ -27,6 +27,10 @@ that changes status.** Roadmap definitions live in GDD.md §14.
 - [x] Battle presentation layer: unit cards, HP/Fervor bars, hit/heal animations, floating damage, Trance banners, boss-ultimate warning
 - [x] Art pipeline automation: placeholder generator, data→prompt brief exporter, asset audit, import script (see AI_ART_PIPELINE.md §10)
 - [x] Player-progression simulator (tests/simulate_progression.gd): day-by-day career model, real-engine battles — verdict: full campaign clears in ~7d hardcore / ~14d casual → content lifecycle plan in GDD §6.1
+- [x] AudioManager: convention-loaded music (crossfades, per-screen keys) + SFX pool wired to battle signals; "percussion & voice only" toggle + volume settings on Home (persisted)
+- [x] Placeholder audio generator (tools/gen_placeholder_audio.gd): 12 synthesized SFX + 6 seamless loops — game fully audible with zero real tracks; real imports (.ogg/.mp3) auto-outrank placeholder .wav
+- [x] Summon reveal: sequential door-of-light animation on The Calling (rarity-colored, Luminary full-screen flash, tap-to-advance, Skip)
+- [x] Asset audit extended to audio (70 tracked assets total)
 
 ### In progress
 - [ ] Manual playtest pass on the visual build (feel, pacing, clarity) — **owner: Kareem**
@@ -35,10 +39,8 @@ that changes status.** Roadmap definitions live in GDD.md §14.
 ### Next up (ordered)
 - [ ] First real character through full art pipe (Vale: design→LoRA→portrait+chibi→import) — validates pipeline end to end
 - [ ] Chibi battle sprites + Skeleton2D rig template (replaces card pulse animations with real skeletal animation)
-- [ ] Summon reveal animation on The Calling (door-of-light sequence per GDD §9.1)
 - [ ] Teaching Scrolls spend: skill-up system
 - [ ] Audio: Suno Pro subscription + generate launch BGM set per AI_ART_PIPELINE.md §11.3 (Stable Audio is the tracked fallback; review trigger = summer 2026 fair-use ruling) — **owner: Kareem**
-- [ ] AudioManager autoload: convention-loaded music/SFX off battle signals, "percussion & voice only" toggle (GDD §11)
 - [ ] Mobile export test on a real device (do EARLY — GDD §13.4)
 - [ ] Tutorial/first-session flow
 - [ ] Codex ("The Traveler's Notebook") first entries — the dawah layer (GDD §1.1)

@@ -23,6 +23,10 @@ var banner: Label
 const CARD_BG := Color(0.09, 0.11, 0.18, 0.92)
 
 
+func music_key() -> String:
+	return "boss" if stage != null and stage.index == 12 else "battle"
+
+
 func _build() -> void:
 	stage = db.stages[screens.payload["stage_id"]]
 
@@ -302,6 +306,7 @@ func _pulse(unit: BattleUnit, color: Color, scale_to: float = 1.0) -> void:
 func _on_action_started(actor: BattleUnit, skill: SkillData, _primary: BattleUnit) -> void:
 	_pulse(actor, Color(1.3, 1.3, 1.3), 1.07)
 	if skill.slot == Enums.Slot.TRANCE:
+		sfx("trance")
 		banner.text = "%s — %s" % [actor.data.display_name, skill.full_name()]
 		banner.add_theme_color_override("font_color",
 			Enums.AFFINITY_COLORS[actor.data.affinity].lightened(0.3))
@@ -316,21 +321,25 @@ func _on_action_started(actor: BattleUnit, skill: SkillData, _primary: BattleUni
 
 
 func _on_damage_dealt(target: BattleUnit, amount: int, crit: bool) -> void:
+	sfx("hit_crit" if crit else "hit")
 	_pulse(target, Color(1.6, 0.5, 0.5), 0.94)
 	_float_text(target, ("-%d!" if crit else "-%d") % amount,
 		Color(1.0, 0.85, 0.3) if crit else Color(1, 1, 1), crit)
 
 
 func _on_unit_healed(target: BattleUnit, amount: int) -> void:
+	sfx("heal")
 	_pulse(target, Color(0.6, 1.5, 0.6))
 	_float_text(target, "+%d" % amount, Color(0.55, 0.95, 0.55))
 
 
 func _on_unit_evaded(target: BattleUnit, label: String) -> void:
+	sfx("evade")
 	_float_text(target, label, Color(0.7, 0.9, 1.0))
 
 
 func _on_unit_died(unit: BattleUnit) -> void:
+	sfx("fall")
 	if not cards.has(unit):
 		return
 	var card: PanelContainer = cards[unit]["card"]
@@ -411,6 +420,7 @@ func _on_log(text: String) -> void:
 
 func _on_battle_ended(victory: bool) -> void:
 	timer.stop()
+	sfx("victory" if victory else "defeat")
 	var summary: Dictionary = game.finish_stage(stage, victory)
 	prompt_label.text = "VICTORY — the darkness recedes" if victory else "DEFEAT — try a different approach"
 	var cont := Button.new()

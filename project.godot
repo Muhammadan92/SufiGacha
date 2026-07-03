@@ -14,6 +14,7 @@ config/features=PackedStringArray("4.3")
 Db="*res://scripts/systems/database.gd"
 Game="*res://scripts/systems/game_state.gd"
 Screens="*res://scripts/systems/screen_manager.gd"
+Audio="*res://scripts/systems/audio_manager.gd"
 
 [display]
 

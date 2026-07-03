@@ -4,6 +4,10 @@ extends ScreenBase
 var notice: Label
 
 
+func music_key() -> String:
+	return "valley_1"
+
+
 func _build() -> void:
 	var root := make_root()
 	add_header(root, "Valley of the Quest", "home")
