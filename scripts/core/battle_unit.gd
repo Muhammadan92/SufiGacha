@@ -55,11 +55,14 @@ func has_status(id: int) -> bool:
 	return false
 
 
-func add_status(id: int, turns: int, magnitude: float) -> void:
+func add_status(id: int, turns: int, magnitude: float, stack_cap: float = 3.0) -> void:
 	for s: StatusEffect in statuses:
 		if s.id == id:
 			s.turns_left = maxi(s.turns_left, turns)
-			s.magnitude = maxf(s.magnitude, magnitude)
+			# Reapplication stacks magnitude up to stack_cap applications —
+			# lets breakers stack DEF Down, and powers boss enrages
+			# (Kibr's Swell of Pride ramps unbounded to punish stalling).
+			s.magnitude = minf(s.magnitude + magnitude, magnitude * stack_cap)
 			return
 	statuses.append(StatusEffect.new(id, turns, magnitude))
 

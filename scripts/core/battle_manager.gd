@@ -138,12 +138,30 @@ func _ai_act(actor: BattleUnit) -> void:
 
 
 func _ai_pick_skill(actor: BattleUnit) -> SkillData:
-	# Prefer Trance, then Remembrance, then Litany.
+	# Prefer Trance, then Remembrance, then Litany — but don't waste heals.
 	for slot in [Enums.Slot.TRANCE, Enums.Slot.REMEMBRANCE, Enums.Slot.LITANY]:
 		for skill: SkillData in actor.data.skills:
 			if skill.slot == slot and actor.skill_ready(skill):
+				if skill.slot != Enums.Slot.LITANY and _is_wasted_heal(actor, skill):
+					continue
 				return skill
 	return actor.data.skills[0]
+
+
+## True for pure healing skills when no ally is meaningfully hurt.
+func _is_wasted_heal(actor: BattleUnit, skill: SkillData) -> bool:
+	var heals := false
+	for eff: EffectBlock in skill.effects:
+		if eff.kind == Enums.EffectKind.DAMAGE:
+			return false
+		if eff.kind == Enums.EffectKind.HEAL:
+			heals = true
+	if not heals:
+		return false
+	for u: BattleUnit in _alive(players if actor.is_player_side else enemies):
+		if float(u.hp) / u.data.max_hp < 0.8:
+			return false
+	return true
 
 
 func _is_offensive(skill: SkillData) -> bool:
@@ -226,7 +244,7 @@ func _apply_effect(actor: BattleUnit, eff: EffectBlock, target: BattleUnit) -> v
 			if is_debuff:
 				land_chance *= 1.0 + actor.data.effectiveness - target.data.resilience
 			if randf() < land_chance:
-				target.add_status(eff.status_id, eff.duration, eff.amount)
+				target.add_status(eff.status_id, eff.duration, eff.amount, eff.stack_cap)
 				log_message.emit("  %s gains %s." % [target.data.display_name, Enums.STATUS_NAMES[eff.status_id]])
 			elif is_debuff:
 				log_message.emit("  %s resists %s." % [target.data.display_name, Enums.STATUS_NAMES[eff.status_id]])

@@ -17,3 +17,6 @@ extends Resource
 ## -1 = use the skill's target set; otherwise an Enums.TargetType overriding it
 ## (e.g. a damage skill whose second effect buffs SELF).
 @export var target_override: int = -1
+## For APPLY_STATUS: reapplication stacks magnitude up to `amount * stack_cap`.
+## Set very high (99) for unbounded ramps like boss enrages.
+@export var stack_cap: float = 3.0

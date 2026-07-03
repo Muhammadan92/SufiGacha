@@ -19,6 +19,17 @@ feel smart.
 2. Open the project: `godot -e --path .` (or import the folder in the Project Manager)
 3. Run (F5). Pick an encounter: **Valley Patrol** (easy) or **Kibr, Father of Pride** (boss).
 
+## Headless testing & balance sims
+
+```
+godot --headless --path . -s res://tests/smoke.gd      # engine smoke test (one full auto-battle)
+godot --headless --path . -s res://tests/simulate.gd   # 3000-battle balance sweep across team comps
+```
+
+Current boss-fight tuning targets (auto-AI win rates): balanced comp ~60-70%,
+missing-role comps ≤20%, no-healer ~0%. Kibr's *Swell of Pride* stacks without
+bound as anti-stall enrage — turtle comps lose long fights by design.
+
 ## Project layout (GDD §13)
 
 ```

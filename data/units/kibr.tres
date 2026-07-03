@@ -7,20 +7,21 @@
 [sub_resource type="Resource" id="eff_lit"]
 script = ExtResource("3")
 kind = 0
-power = 1.1
+power = 1.4
 
 [sub_resource type="Resource" id="eff_rem_atkup"]
 script = ExtResource("3")
 kind = 2
 status_id = 0
 chance = 1.0
-duration = 3
-amount = 0.35
+duration = 99
+amount = 0.1
+stack_cap = 99.0
 
 [sub_resource type="Resource" id="eff_trance_dmg"]
 script = ExtResource("3")
 kind = 0
-power = 1.5
+power = 1.7
 
 [sub_resource type="Resource" id="eff_trance_atkdown"]
 script = ExtResource("3")
@@ -45,7 +46,7 @@ script = ExtResource("2")
 id = &"kibr_remembrance"
 display_name = "Swell of Pride"
 slot = 1
-cooldown = 3
+cooldown = 4
 target_type = 4
 fervor_gain = 15
 effects = [SubResource("eff_rem_atkup")]
@@ -69,10 +70,10 @@ order_name = ""
 affinity = 7
 rarity = 5
 is_enemy = true
-max_hp = 3500
-atk = 95
+max_hp = 5600
+atk = 138
 def = 90
-spd = 98
+spd = 102
 crit_rate = 0.15
 crit_damage = 1.5
 effectiveness = 0.1
