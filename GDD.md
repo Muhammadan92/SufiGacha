@@ -63,14 +63,14 @@ Each character belongs to one order. Orders define **affinity**, **visual identi
 | Order | Affinity | Signature color | Theme source | Combat identity | Typical roles |
 |---|---|---|---|---|---|
 | **Naqshbandi** | **Heart** — neutral | **Deep emerald green** (the strongest order carries the strongest color — see §3.1) | Silent dhikr, *khalwat dar anjuman* (solitude in the crowd), the subtle centers (*laṭā'if*) | Meditation & mind: team-wide buffs, barriers, turn-meter and tempo manipulation, "unseen" (untargetable) states | Buffer, enabler, apex units |
-| **Qadiri** | **Thunder** | Violet | Loud vocal dhikr, the "Ghawth" (supreme helper) archetype of spiritual power | Raw power: lightning and sound, highest single-target burst, armor-shattering shouts | Nuker, breaker |
-| **Rifai** | **Ember** | Burnt orange | Renowned for feats of bodily invulnerability during dhikr (fire, blades) | Unbreakable body: taunts, damage immunity windows, burning retaliation | Tank, bruiser |
-| **Mevlevi** | **Wind** | Sky turquoise | The samā' whirling ceremony | Continuous motion: spinning AoE damage, evasion, damage-over-turns, never staying still | AoE DPS, evader |
+| **Qadiri** | **Thunder** | Turquoise | Loud vocal dhikr, the "Ghawth" (supreme helper) archetype of spiritual power | Raw power: lightning and sound, highest single-target burst, armor-shattering shouts | Nuker, breaker |
+| **Rifai** | **Ember** | Red | Renowned for feats of bodily invulnerability during dhikr (fire, blades) | Unbreakable body: taunts, damage immunity windows, burning retaliation | Tank, bruiser |
+| **Mevlevi** | **Wind** | Pearl white (the whirling robes) | The samā' whirling ceremony | Continuous motion: spinning AoE damage, evasion, damage-over-turns, never staying still | AoE DPS, evader |
 | **Shadhili** | **Sea** | Deep royal blue | The great litanies (aḥzāb), esp. the Litany of the Sea recited for protection on voyages | Protective recitation: cleansing debuffs, sustained regen, tide-like shields that grow over turns | Sustain support, cleanser |
 | **Chishti** | **Harmony** | Rose | Samā' (spiritual music), radical hospitality, love and service | The open table: healing, revival, sharing HP/buffs between allies | Healer, binder |
 | **Suhrawardi** | **Light** | Radiant yellow (the only order in the gold family — UI accent gold stays distinct) | Illuminationist (*ishrāqī*) philosophy of light *(note: the order and the philosopher are distinct historical strands — we borrow the light aesthetic, flagged in lore as inspiration)* | Revelation: exposing enemies (defense down, mark for death), true-sight vs stealth, precision crits | Debuffer, sniper |
 
-Enemy **Corruption** signals bruised purple. Canonical values: `Enums.AFFINITY_COLORS`.
+Enemy **Corruption** signals dark blood-red/black. Canonical values: `Enums.AFFINITY_COLORS`. (Battle-UI state colors stay clear of the order palette: current actor = accent gold, target selection = cyan, boss-ultimate warning = bright warning red.)
 
 ### 2.1 Affinity Triangle
 

@@ -80,11 +80,11 @@ const RARITY_COLORS := {
 ## yellow/gold family, keeping it distinct from the UI accent gold.
 const AFFINITY_COLORS := {
 	Affinity.HEART: Color(0.16, 0.66, 0.4),       # deep emerald green
-	Affinity.THUNDER: Color(0.62, 0.47, 0.94),    # violet
-	Affinity.EMBER: Color(0.94, 0.45, 0.28),      # burnt orange
-	Affinity.WIND: Color(0.5, 0.87, 0.83),        # sky turquoise
+	Affinity.THUNDER: Color(0.5, 0.87, 0.83),     # turquoise
+	Affinity.EMBER: Color(0.9, 0.22, 0.2),        # red
+	Affinity.WIND: Color(0.93, 0.94, 0.96),       # pearl white
 	Affinity.SEA: Color(0.27, 0.52, 0.95),        # deep royal blue
 	Affinity.HARMONY: Color(0.93, 0.55, 0.72),    # rose
 	Affinity.LIGHT: Color(0.98, 0.91, 0.45),      # radiant yellow
-	Affinity.CORRUPTION: Color(0.48, 0.22, 0.55), # bruised purple
+	Affinity.CORRUPTION: Color(0.42, 0.09, 0.11), # dark blood red / black
 }

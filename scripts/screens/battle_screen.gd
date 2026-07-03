@@ -260,10 +260,11 @@ func _refresh_cards() -> void:
 			c["style"].border_color = Color.CYAN
 			c["style"].set_border_width_all(3)
 		elif unit == manager.current_actor and not manager.ended:
-			c["style"].border_color = Color.WHITE
-			c["style"].set_border_width_all(3)
-		elif warn:
+			# Accent gold, not white — Mevlevi's affinity color is pearl white.
 			c["style"].border_color = ACCENT
+			c["style"].set_border_width_all(4)
+		elif warn:
+			c["style"].border_color = Color(1.0, 0.35, 0.3)
 			c["style"].set_border_width_all(3)
 		else:
 			c["style"].border_color = c["affinity_color"]
