@@ -167,7 +167,54 @@ Trance banners) is driven by engine signals and works identically with
 placeholder or final art. When chibi sprites arrive, they replace the card
 portrait and gain Skeleton2D rigs (§4) without touching battle logic.
 
-## 11. Disclosure & Store Policy
+## 11. Audio Pipeline (BGM & SFX)
+
+**Decision (2026-07): Suno is the primary BGM tool. Stable Audio is the
+designated fallback** if Suno becomes unusable (adverse fair-use ruling,
+license change, or takedown risk — the UMG/Sony litigation ruling expected
+summer 2026 is the review trigger). Sound effects: ElevenLabs SFX or Stable
+Audio — the SFX category is legally clean either way.
+
+### 11.1 Fallback-safe workflow (do these from day one)
+- **Subscribe to Suno Pro before generating anything that ships** — commercial
+  rights attach to the paid tier at generation time.
+- **Keep every track brief tool-agnostic**: mood, instrumentation, tempo, and
+  reference notes in `art_workbench/audio_tasks/` — never Suno-specific
+  prompt syntax as the only record. If we must regenerate the whole soundtrack
+  on Stable Audio later, the briefs are the soundtrack; the tool is a detail.
+- **Generation ledger applies to audio** (same as §8): save prompt, tool,
+  date, and raw output file alongside each shipped track.
+- Don't hang the game's *musical identity* on any single un-reproducible
+  track. The 2–3 identity pieces (title theme, Kibr's theme) should be the
+  first candidates for a human composer commission anyway — that also solves
+  stems for the percussion-only toggle, which AI handles poorly.
+
+### 11.2 Hard rules (audio mirror of §0.3)
+- **Instrumental or wordless vocables ONLY.** AI music tools hallucinate
+  lyrics; hallucinated pseudo-Arabic singing is the audio version of
+  pseudo-script — it could accidentally resemble or mangle sacred text.
+  Prompt for instrumental; any track containing voice gets a full
+  listen-through review before shipping.
+- Never any sampled adhan, recitation, or liturgy. Ever.
+- Instrument palette per GDD §11: ney, daf/bendir, oud; percussion-and-voice
+  variants needed for the settings toggle.
+
+### 11.3 Launch track list (BGM)
+| Key | Track | Notes |
+|---|---|---|
+| `title` | Title / home lodge theme | identity piece — composer candidate |
+| `valley_1` | Valley of the Quest ambience | calm, sparse ney |
+| `battle` | Standard battle loop | daf-driven, mid tempo |
+| `boss` | Kibr / Vice boss theme | identity piece — composer candidate |
+| `calling` | The Calling ambience + reveal sting | wonder, restraint |
+| `victory` / `defeat` | Result stingers | 5–10 s |
+
+Loops: trim + crossfade loop points manually (Audacity, ~10 min/track).
+Integration: `assets/audio/music/<key>.ogg`, `assets/audio/sfx/<key>.ogg`,
+loaded by convention with graceful silence when missing (same pattern as art,
+§10). AudioManager autoload: tracked in PROGRESS.md.
+
+## 12. Disclosure & Store Policy
 
 - Apple App Store and Google Play currently permit AI-generated assets (no disclosure requirement at time of writing — re-verify at submission).
 - If ever ported to Steam: Valve requires AI-content disclosure at submission — our ledger (§8) makes that trivial.

@@ -36,7 +36,8 @@ that changes status.** Roadmap definitions live in GDD.md §14.
 - [ ] Chibi battle sprites + Skeleton2D rig template (replaces card pulse animations with real skeletal animation)
 - [ ] Summon reveal animation on The Calling (door-of-light sequence per GDD §9.1)
 - [ ] Teaching Scrolls spend: skill-up system
-- [ ] Audio pass: ney/daf placeholder loops + "percussion & voice only" toggle (GDD §11)
+- [ ] Audio: Suno Pro subscription + generate launch BGM set per AI_ART_PIPELINE.md §11.3 (Stable Audio is the tracked fallback; review trigger = summer 2026 fair-use ruling) — **owner: Kareem**
+- [ ] AudioManager autoload: convention-loaded music/SFX off battle signals, "percussion & voice only" toggle (GDD §11)
 - [ ] Mobile export test on a real device (do EARLY — GDD §13.4)
 - [ ] Tutorial/first-session flow
 - [ ] Codex ("The Traveler's Notebook") first entries — the dawah layer (GDD §1.1)
