@@ -24,4 +24,7 @@ func goto(screen_name: String, p_payload = null) -> void:
 		current.queue_free()
 	current = SCREEN_SCRIPTS[screen_name].new()
 	current.name = screen_name.capitalize() + "Screen"
-	get_tree().root.add_child.call_deferred(current)
+	# Parent to the main scene's root Control, NOT the Window — full-rect
+	# anchors only resolve against a Control ancestor. Adding screens to the
+	# Window collapses them to minimum content size (invisible stage lists).
+	get_tree().current_scene.add_child.call_deferred(current)

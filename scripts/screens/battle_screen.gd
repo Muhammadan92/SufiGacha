@@ -32,7 +32,7 @@ func _build() -> void:
 		bg.texture = art
 		bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		bg.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-		bg.set_anchors_preset(Control.PRESET_FULL_RECT)
+		bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		add_child(bg)
 
 	manager = BattleManager.new()
@@ -58,7 +58,7 @@ func _build() -> void:
 
 func _build_layout() -> void:
 	var margin := MarginContainer.new()
-	margin.set_anchors_preset(Control.PRESET_FULL_RECT)
+	margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	for side in ["left", "right", "top", "bottom"]:
 		margin.add_theme_constant_override("margin_" + side, 16)
 	add_child(margin)
@@ -107,14 +107,14 @@ func _build_layout() -> void:
 
 	# Float-text layer sits above everything and never blocks input.
 	overlay = Control.new()
-	overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
+	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(overlay)
 
 	banner = Label.new()
 	banner.add_theme_font_size_override("font_size", 40)
 	banner.add_theme_color_override("font_color", ACCENT)
-	banner.set_anchors_preset(Control.PRESET_CENTER_TOP)
+	banner.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
 	banner.position.y = 60
 	banner.modulate.a = 0.0
 	overlay.add_child(banner)
