@@ -194,6 +194,55 @@ Each chapter spotlights an order's story characters — this doubles as the bann
 
 Story tone: earnest, warm, lightly humorous between battles; the *journey inward* framing (the demons grow stronger as they get more personal) gives gacha grinding an actual arc.
 
+### 6.1 Content lifecycle & cadence
+
+**Sim-verified pacing** (tests/simulate_progression.gd, real-engine battles,
+day-by-day player model): at current curves a hardcore player full-clears all
+7 valleys in **~7 days**, a casual player in **~14**. The campaign is the
+spine, not the retention — long-term play comes from the layers below, in
+priority order:
+
+1. **Staggered release**: launch with Valleys 1–4; release 5–7 monthly, each
+   with its order's banner (§6's chapter-spotlight structure = the live-ops
+   calendar for the first 3 months free).
+2. **The Minaret** (endless tower, monthly reset — §7): promote to
+   **pre-launch requirement**. It's where players go when the campaign ends.
+3. **Hard/Nightmare valley re-clears**: same stages at raised `enemy_scale`
+   with better drops — nearly free with data-driven stages; 84 stages → 252.
+4. **3-star stage objectives** (no deaths / under N turns / 3-unit clear)
+   with Pearl rewards — triples the goals per stage, rewards mastery.
+5. **Weekly Vice trials**: scaling boss re-fights reusing the Vice roster.
+6. **Roster depth as true endgame**: dupes, skill-ups, ascension materials in
+   daily sanctums, talismans (§8) — collection games retain through building.
+
+Economy levers live in the progression sim (`XP_VALLEY_BONUS`, boss level
+targets, Breath costs); rerun it before shipping any curve change.
+
+### 6.2 Part 2 campaign — roadmap note (not yet designed)
+
+Genre precedent is strong: FGO's Part 2 (new-arc campaign years post-launch),
+Epic Seven's episodic campaigns, AFK Arena's rolling chapters — a second
+campaign as a flagship content update is a proven anniversary-scale beat.
+
+Concept notes (to be designed when Phase 3 planning begins):
+- **Working title: *The Twelve Moons*** — 12 chapters, one per lunar month of
+  the journey year; **9 stages per chapter; the final stage is stage 108**,
+  where the road ends at **the Fountain of Abundance**.
+- Structural numerology as lore seasoning: 12 × 9 = 108; the destination
+  shares its number with the 108th chapter of the source tradition — kept as
+  discoverable Codex depth, never surfaced as doctrine (§1.1).
+- **Completion reward: the "Fountain of Youth"** — a small *permanent,
+  account-wide* buff active in every game mode (exact effect TBD; must be
+  minor enough not to warp tower/PvP balance — e.g. small starting-Fervor or
+  regen bonus). Genre precedent: account-level passives.
+- Language policy applies in full (§1.1), with flavor drawn from
+  lesser-known tariqa concepts rather than mainstream vocabulary — the
+  seasoning should feel like a discovery even to Muslim players.
+- Internal research/inspiration source: nurmuhammad.com teachings on the
+  twelve months and the mystical number 108 → the Fountain (inspiration
+  only; all player-facing text passes §1.1 and the §12 charter, and the §12.6
+  scholar review covers this campaign's framing explicitly).
+
 ---
 
 ## 7. Game Modes (launch)

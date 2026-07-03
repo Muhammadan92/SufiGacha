@@ -26,6 +26,7 @@ that changes status.** Roadmap definitions live in GDD.md §14.
 - [x] Headless test suite: engine smoke, comp sims, stage-curve sims, systems tests
 - [x] Battle presentation layer: unit cards, HP/Fervor bars, hit/heal animations, floating damage, Trance banners, boss-ultimate warning
 - [x] Art pipeline automation: placeholder generator, data→prompt brief exporter, asset audit, import script (see AI_ART_PIPELINE.md §10)
+- [x] Player-progression simulator (tests/simulate_progression.gd): day-by-day career model, real-engine battles — verdict: full campaign clears in ~7d hardcore / ~14d casual → content lifecycle plan in GDD §6.1
 
 ### In progress
 - [ ] Manual playtest pass on the visual build (feel, pacing, clarity) — **owner: Kareem**
@@ -41,6 +42,12 @@ that changes status.** Roadmap definitions live in GDD.md §14.
 - [ ] Mobile export test on a real device (do EARLY — GDD §13.4)
 - [ ] Tutorial/first-session flow
 - [ ] Codex ("The Traveler's Notebook") first entries — the dawah layer (GDD §1.1)
+- [ ] Content lifecycle (GDD §6.1): 3-star stage objectives, Hard-mode valley re-clears, The Minaret (now a pre-launch requirement), weekly Vice trials
+
+### Roadmap notes (not scheduled)
+- **Part 2 campaign: *The Twelve Moons*** — 12 chapters x 9 stages, stage 108
+  ends at the Fountain of Abundance; completion reward "Fountain of Youth"
+  perma-buff. Full notes: GDD §6.2. Design begins with Phase 3 planning.
 
 ### Deliberately deferred (Phase 3+)
 Backend/server-authoritative pulls, IAP, PvP, Lodges (guilds), Valleys 2–7,
