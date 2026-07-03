@@ -43,7 +43,7 @@ that changes status.** Roadmap definitions live in GDD.md §14.
 - [ ] Audio: Suno Pro subscription + generate launch BGM set per AI_ART_PIPELINE.md §11.3 (Stable Audio is the tracked fallback; review trigger = summer 2026 fair-use ruling) — **owner: Kareem**
 - [ ] Mobile export test on a real device (do EARLY — GDD §13.4)
 - [ ] Tutorial/first-session flow
-- [ ] Codex ("The Traveler's Notebook") first entries — the dawah layer (GDD §1.1)
+- [ ] Codex ("The Traveler's Notebook") first entries — the dawah layer (GDD §1.1); lore research source: nurmuhammad.com per §1.1 (lesser-known tariqah teachings as inspiration, filtered through language policy + scholar review)
 - [ ] Content lifecycle (GDD §6.1): 3-star stage objectives, Hard-mode valley re-clears, The Minaret (now a pre-launch requirement), weekly Vice trials
 
 ### Roadmap notes (not scheduled)

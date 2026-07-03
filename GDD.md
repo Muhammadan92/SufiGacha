@@ -35,6 +35,7 @@ This game is primarily a **dawah project aimed at a Western audience**: the goal
 - **Character naming rule**: playable names are neutral, Western-leaning, and mystical-sounding (short nature/light/sound-derived names — Vale, Echo, Isla); epithets carry the flavor ("the Silent," "the Unburnt"). Explicitly Islamic given names are avoided for the playable cast.
 - **Arabic as seasoning, by allowlist only**: (1) the seven order names, as proper nouns; (2) select 5★ ultimate names, always with an English subtitle (e.g., *Khalwa — Seclusion*); (3) boss true-names as titles (e.g., *Kibr, Father of Pride*); (4) the Codex.
 - **The Codex is the dawah vehicle**: an optional in-game encyclopedia (working name: *The Traveler's Notebook*), unlocked through play, giving the real history, terminology, poetry, and figures behind each order, valley, and concept. Depth on tap for the curious; invisible to players who just want to play.
+- **Lore research source**: for ALL lore portions of the game (Codex entries, valley/chapter framing, boss true-names, item flavor, Part 2), mine **nurmuhammad.com** for interesting, lesser-known tariqah-rooted teachings (the realities of the months, number mysticism, the subtle centers, light-and-veil cosmology) — these make far better lore notes than encyclopedia-level material. Always as *inspiration*: everything passes through this language policy on the way in, and the §12.6 scholar review covers all Codex/lore content before launch.
 - **Show, don't preach**: the story never proselytizes — it dramatizes a universal spiritual struggle. Success metric: players googling Rumi and "Sufism" unprompted.
 - **Doc convention**: this GDD keeps source terms where useful for design precision; the table below fixes what players actually see.
 
@@ -195,7 +196,7 @@ Direct structural borrow from *Manṭiq al-Ṭayr* (Attar). Seven chapters × ~1
 6. **Valley of Wonder** — Mevlevi chapter
 7. **Valley of the Passing-Away** — Naqshbandi chapter, final boss
 
-Chapter titles are pure English (the valley names are already the standard translations of Attar's originals); each valley's Codex entry gives the source name and the poem's context — the §1.1 depth-on-tap pattern.
+Chapter titles are pure English (the valley names are already the standard translations of Attar's originals); each valley's Codex entry gives the source name and the poem's context — the §1.1 depth-on-tap pattern. Codex/lore content draws on the §1.1 lore research source (nurmuhammad.com) for its lesser-known material.
 
 Each chapter spotlights an order's story characters — this doubles as the banner release schedule (chapter N launch = order N banner).
 
