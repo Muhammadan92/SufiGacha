@@ -92,11 +92,16 @@ Six affinities form three pairs in a rock-paper-scissors triangle; **Heart sits 
 
 ### 3.1 Rarity Tiers (spiritual ranks)
 
-| Rarity | Rank name | Source concept | Gacha rate | Notes |
-|---|---|---|---|---|
-| ★★★ | **Novice** | *murīd* — committed student | 77% | Farmable, fodder-adjacent but a few hidden gems (genre tradition) |
-| ★★★★ | **Wayfarer** | *sālik* — traveler on the path | 20% | Backbone of most teams |
-| ★★★★★ | **Luminary** | *'ārif* — the knower | 3% | Banner units; all launch Naqshbandis live here or high 4★ |
+| Rarity | Rank name | Source concept | Signal color | Gacha rate | Notes |
+|---|---|---|---|---|---|
+| ★★★ | **Novice** | *murīd* — committed student | Silver | 77% | Farmable, fodder-adjacent but a few hidden gems (genre tradition) |
+| ★★★★ | **Wayfarer** | *sālik* — traveler on the path | Violet | 20% | Backbone of most teams |
+| ★★★★★ | **Luminary** | *'ārif* — the knower | **Emerald green** | 3% | Banner units; all launch Naqshbandis live here or high 4★ |
+
+Rarity signal colors are deliberate: **the strongest color is green** — the
+noblest color in the source tradition — not gacha-standard gold. Gold remains
+the general UI accent (§11 palette); green means *rarity and attainment*.
+Canonical values: `Enums.RARITY_COLORS`.
 
 ### 3.2 Stats
 

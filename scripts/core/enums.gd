@@ -65,6 +65,14 @@ const BUFF_IDS := [
 
 const RARITY_NAMES := { 3: "Novice", 4: "Wayfarer", 5: "Luminary" }
 
+## Rarity signal colors — the strongest color is GREEN (the noblest color in
+## the source tradition), deliberately not gacha-standard gold.
+const RARITY_COLORS := {
+	3: Color(0.62, 0.64, 0.7),   # Novice — silver
+	4: Color(0.68, 0.53, 0.95),  # Wayfarer — violet
+	5: Color(0.25, 0.85, 0.45),  # Luminary — emerald green
+}
+
 ## Signature color per affinity — used by battle cards, placeholder art,
 ## and VFX tinting, so the whole game keys off one table.
 const AFFINITY_COLORS := {

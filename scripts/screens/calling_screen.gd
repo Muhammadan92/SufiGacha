@@ -18,12 +18,7 @@ var queue: Array = []
 var revealed: Array = []
 var busy := false
 
-const RARITY_BB := { 3: "gray", 4: "violet", 5: "gold" }
-const RARITY_COLORS := {
-	3: Color(0.62, 0.64, 0.7),
-	4: Color(0.68, 0.53, 0.95),
-	5: Color(0.95, 0.8, 0.35),
-}
+const RARITY_BB := { 3: "gray", 4: "violet", 5: "green" }
 const RARITY_SFX := { 3: "reveal_novice", 4: "reveal_wayfarer", 5: "reveal_luminary" }
 
 
@@ -125,9 +120,9 @@ func _build_reveal_overlay() -> void:
 	skip.pressed.connect(_skip_all)
 	reveal_overlay.add_child(skip)
 
-	# Full-screen flash for Luminary reveals.
+	# Full-screen flash for Luminary reveals — emerald, the strongest color.
 	flash = ColorRect.new()
-	flash.color = Color(0.95, 0.85, 0.5, 0.0)
+	flash.color = Color(0.3, 0.9, 0.5, 0.0)
 	flash.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	flash.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	reveal_overlay.add_child(flash)
@@ -161,7 +156,7 @@ func _show_next() -> void:
 	var r: Dictionary = queue.pop_front()
 	revealed.append(r)
 	var u: UnitData = r["unit"]
-	var color: Color = RARITY_COLORS[r["rarity"]]
+	var color: Color = Enums.RARITY_COLORS[r["rarity"]]
 
 	door_style.border_color = color
 	door_portrait.texture = db.unit_art(String(u.id), "portrait")

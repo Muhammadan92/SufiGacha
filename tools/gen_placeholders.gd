@@ -44,7 +44,9 @@ func _portrait(size: int, color: Color, rarity: int, is_enemy: bool) -> Image:
 	var max_d := size / 2.0 * 1.42
 	var dark := color.darkened(0.72)
 	var light := color.darkened(0.1) if is_enemy else color.lightened(0.15)
-	var ring_color := Color(0.87, 0.75, 0.42) if not is_enemy else color.lightened(0.3)
+	# Playable units ring in their RARITY color (strongest = green, Enums
+	# .RARITY_COLORS); enemies ring in their own affinity.
+	var ring_color: Color = Enums.RARITY_COLORS.get(rarity, Color.WHITE) if not is_enemy else color.lightened(0.3)
 	var rings: Array = []
 	for i in maxi(1, rarity - 2):
 		rings.append(0.5 + 0.13 * i)
