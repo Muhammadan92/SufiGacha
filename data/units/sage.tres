@@ -1,0 +1,78 @@
+[gd_resource type="Resource" load_steps=11 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/unit_data.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/data/skill_data.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/data/effect_block.gd" id="3"]
+
+[sub_resource type="Resource" id="eff_lit"]
+script = ExtResource("3")
+kind = 0
+power = 0.8
+
+[sub_resource type="Resource" id="eff_rem_barrier"]
+script = ExtResource("3")
+kind = 2
+status_id = 8
+chance = 1.0
+duration = 2
+amount = 1.0
+
+[sub_resource type="Resource" id="eff_trance_heal"]
+script = ExtResource("3")
+kind = 1
+power = 1.0
+
+[sub_resource type="Resource" id="eff_trance_cleanse"]
+script = ExtResource("3")
+kind = 5
+power = 0.3
+
+[sub_resource type="Resource" id="skill_lit"]
+script = ExtResource("2")
+id = &"sage_litany"
+display_name = "Guardian's Breath"
+slot = 0
+cooldown = 0
+target_type = 0
+fervor_gain = 20
+effects = [SubResource("eff_lit")]
+
+[sub_resource type="Resource" id="skill_rem"]
+script = ExtResource("2")
+id = &"sage_remembrance"
+display_name = "Coiled Ward"
+slot = 1
+cooldown = 3
+target_type = 3
+fervor_gain = 15
+effects = [SubResource("eff_rem_barrier")]
+
+[sub_resource type="Resource" id="skill_trance"]
+script = ExtResource("2")
+id = &"sage_trance"
+display_name = "The Wellspring"
+slot = 2
+cooldown = 0
+target_type = 3
+fervor_gain = 0
+effects = [SubResource("eff_trance_heal"), SubResource("eff_trance_cleanse")]
+
+[resource]
+script = ExtResource("1")
+id = &"sage"
+display_name = "Sage"
+epithet = "Guardian of the First Spring"
+art_notes = "great emerald dragon of light coiled protectively around a mountain spring, Persian miniature azhdaha silhouette, luminous scales, ancient kind eyes, wings of soft mist"
+order_name = "Guardian"
+affinity = 0
+rarity = 5
+is_enemy = false
+max_hp = 1300
+atk = 88
+def = 100
+spd = 96
+crit_rate = 0.1
+crit_damage = 1.5
+effectiveness = 0.0
+resilience = 0.2
+skills = [SubResource("skill_lit"), SubResource("skill_rem"), SubResource("skill_trance")]

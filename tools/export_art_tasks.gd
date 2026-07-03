@@ -16,6 +16,7 @@ const ORDER_BLOCKS := {
 	"Shadhili": "deep royal-blue and white robes, prayer beads, tidewater and wave motifs, calm protective presence",
 	"Chishti": "warm rose and ochre robes, musical geometry motifs, daf frame drum, radiating warmth and welcome",
 	"Suhrawardi": "pale gold and sun-ray patterned robes, lenses and beams of light, precise illuminated presence",
+	"Guardian": "serpentine dragon of light, Persian miniature azhdaha silhouette, benevolent ancient presence, protective coil, luminous scales",
 	"": "demon of black shadow veined with blood-red corrupted light, no human features, fantasy folklore register",  # enemies
 }
 

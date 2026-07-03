@@ -150,6 +150,29 @@ Two examples per order; full launch roster target: **28 characters** (7 orders �
 - **Modesty is the art direction**, not a limitation: flowing cloth, calligraphy-pattern auras, light and geometry do the visual spectacle work that skin does in other gacha games. This is also a market differentiator.
 - Ability VFX language: each order gets a signature motif — Naqshbandi = expanding concentric circles of script; Qadiri = lightning + sound rings; Mevlevi = spiral trails; Suhrawardi = rays/lens flares; Shadhili = water calligraphy; Chishti = musical geometry; Rifai = embers/molten cracks.
 
+### 3.6 Guardians — the Dragons of the Springs
+
+Dragons fight **on the side of light**. This is grounded in the source
+tradition: the research source (§1.1) teaches of *spiritual dragons
+protecting believers*, and of the prophetic staff become a dragon that
+**devours illusion and falsehood** — while Persian miniature painting (our
+§11 art anchor) supplies the *azhdaha* serpent-dragon silhouette.
+
+- **Guardians are a rare summonable class outside the seven orders** — each
+  is the ancient protector of one of the Seven Springs (finally putting the
+  title's springs into the fiction). Roadmap: seven Guardians total,
+  released across the live-ops calendar; they are the collection's crown
+  pieces.
+- **Mechanical identity: protection and the devouring of falsehood** —
+  barriers, cleansing, taunts, and (future effect block) *stripping enemy
+  buffs*, the staff-dragon devouring the sorcerers' works.
+- First Guardian shipped: **Sage, Guardian of the First Spring**
+  (`data/units/sage.tres`) — Luminary, Heart affinity, protective
+  support kit.
+- Codex entry: dragons-as-protectors is prime dawah lore — a discovery even
+  for Muslim players (§1.1 research source; internal refs: "Spiritual
+  Dragons Protecting Believers," the Thuban teachings).
+
 ---
 
 ## 4. Combat System
@@ -181,6 +204,9 @@ Demons and personified vices only — never human, never anything resembling wor
 | Final arc | **The Whisperer** — an archdemon of despair (Iblis-*inspired*, deliberately not named as such — see §12) |
 
 Boss design rule: each Vice boss mechanically embodies its vice (Pride reflects buffs back as damage unless dispelled; Envy steals your buffs; Despair drains Fervor) — so counterplay teaches the order system.
+
+Dragons are explicitly **not** enemies — see §3.6: they fight on the side of
+light.
 
 ---
 

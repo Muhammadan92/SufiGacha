@@ -47,6 +47,11 @@ that changes status.** Roadmap definitions live in GDD.md §14.
 - [ ] Content lifecycle (GDD §6.1): 3-star stage objectives, Hard-mode valley re-clears, The Minaret (now a pre-launch requirement), weekly Vice trials
 
 ### Roadmap notes (not scheduled)
+- **Guardians (dragon allies)** — GDD §3.6: seven Guardian dragons, one per
+  Spring, released across live-ops; first (Sage, Guardian of the First
+  Spring) is in the summon pool now. Future engine work: buff-strip effect
+  ("devours illusion"). Lore refs: nurmuhammad.com spiritual-dragons +
+  Thuban teachings.
 - **Part 2 campaign: *The Twelve Moons*** — 12 chapters x 9 stages, stage 108
   ends at the Fountain of Abundance; completion reward "Fountain of Youth"
   perma-buff. Full notes: GDD §6.2. Design begins with Phase 3 planning.
