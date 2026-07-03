@@ -1,0 +1,83 @@
+[gd_resource type="Resource" load_steps=11 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/unit_data.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/data/skill_data.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/data/effect_block.gd" id="3"]
+
+[sub_resource type="Resource" id="eff_lit"]
+script = ExtResource("3")
+kind = 0
+power = 0.8
+
+[sub_resource type="Resource" id="eff_rem_barrier"]
+script = ExtResource("3")
+kind = 2
+status_id = 8
+chance = 1.0
+duration = 2
+amount = 1.2
+
+[sub_resource type="Resource" id="eff_trance_barrier"]
+script = ExtResource("3")
+kind = 2
+status_id = 8
+chance = 1.0
+duration = 2
+amount = 2.2
+
+[sub_resource type="Resource" id="eff_trance_defup"]
+script = ExtResource("3")
+kind = 2
+status_id = 2
+chance = 1.0
+duration = 2
+amount = 0.3
+
+[sub_resource type="Resource" id="skill_lit"]
+script = ExtResource("2")
+id = &"seren_litany"
+display_name = "Starlight"
+slot = 0
+cooldown = 0
+target_type = 0
+fervor_gain = 20
+effects = [SubResource("eff_lit")]
+
+[sub_resource type="Resource" id="skill_rem"]
+script = ExtResource("2")
+id = &"seren_remembrance"
+display_name = "Veil of Calm"
+slot = 1
+cooldown = 3
+target_type = 3
+fervor_gain = 15
+effects = [SubResource("eff_rem_barrier")]
+
+[sub_resource type="Resource" id="skill_trance"]
+script = ExtResource("2")
+id = &"seren_trance"
+display_name = "Inner Fortress"
+slot = 2
+cooldown = 0
+target_type = 3
+fervor_gain = 0
+effects = [SubResource("eff_trance_barrier"), SubResource("eff_trance_defup")]
+
+[resource]
+script = ExtResource("1")
+id = &"seren"
+display_name = "Seren"
+epithet = ""
+order_name = "Naqshbandi"
+affinity = 0
+rarity = 4
+is_enemy = false
+max_hp = 1050
+atk = 90
+def = 95
+spd = 98
+crit_rate = 0.1
+crit_damage = 1.5
+effectiveness = 0.0
+resilience = 0.1
+skills = [SubResource("skill_lit"), SubResource("skill_rem"), SubResource("skill_trance")]

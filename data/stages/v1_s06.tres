@@ -1,0 +1,16 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/stage_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"v1_s06"
+display_name = "A Chorus of Whispers"
+valley = 1
+index = 6
+breath_cost = 6
+enemy_ids = ["whisperling", "whisperling", "whisperling"]
+enemy_scale = 0.8
+xp_reward = 56
+pearls_reward = 2
+first_clear_pearls = 10

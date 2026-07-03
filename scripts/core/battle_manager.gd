@@ -19,16 +19,19 @@ var ended := false
 var auto_mode := false
 
 
-func setup(player_data: Array, enemy_data: Array) -> void:
+## player_mults: optional per-unit stat multipliers (character level).
+## enemy_scale: stage difficulty multiplier applied to all enemies.
+func setup(player_data: Array, enemy_data: Array, player_mults: Array = [], enemy_scale: float = 1.0) -> void:
 	players.clear()
 	enemies.clear()
 	ended = false
 	awaiting_player = false
 	current_actor = null
-	for d: UnitData in player_data:
-		players.append(BattleUnit.new(d, true))
+	for i in player_data.size():
+		var mult: float = player_mults[i] if i < player_mults.size() else 1.0
+		players.append(BattleUnit.new(player_data[i], true, mult))
 	for d: UnitData in enemy_data:
-		enemies.append(BattleUnit.new(d, false))
+		enemies.append(BattleUnit.new(d, false, enemy_scale))
 	log_message.emit("The battle begins.")
 	state_refreshed.emit()
 
@@ -116,12 +119,12 @@ func _start_of_turn(actor: BattleUnit) -> void:
 		actor.cooldowns[key] = maxi(0, actor.cooldowns[key] - 1)
 	for s: StatusEffect in actor.statuses.duplicate():
 		if s.id == Enums.StatusId.BURN:
-			var dmg := maxi(1, int(actor.data.max_hp * s.magnitude))
+			var dmg := maxi(1, int(actor.max_hp * s.magnitude))
 			actor.hp = maxi(0, actor.hp - dmg)
 			log_message.emit("%s takes %d burn damage." % [actor.data.display_name, dmg])
 		elif s.id == Enums.StatusId.REGEN:
-			var heal := int(actor.data.max_hp * s.magnitude)
-			actor.hp = mini(actor.data.max_hp, actor.hp + heal)
+			var heal := int(actor.max_hp * s.magnitude)
+			actor.hp = mini(actor.max_hp, actor.hp + heal)
 			log_message.emit("%s regenerates %d HP." % [actor.data.display_name, heal])
 	# Durations tick down once per own turn, in one place only. A 2-turn
 	# status therefore lives through two of this unit's turn starts.
@@ -159,7 +162,7 @@ func _is_wasted_heal(actor: BattleUnit, skill: SkillData) -> bool:
 	if not heals:
 		return false
 	for u: BattleUnit in _alive(players if actor.is_player_side else enemies):
-		if float(u.hp) / u.data.max_hp < 0.8:
+		if float(u.hp) / u.max_hp < 0.8:
 			return false
 	return true
 
@@ -236,7 +239,7 @@ func _apply_effect(actor: BattleUnit, eff: EffectBlock, target: BattleUnit) -> v
 			_deal_damage(actor, target, eff.power)
 		Enums.EffectKind.HEAL:
 			var amount := int(actor.atk() * eff.power)
-			target.hp = mini(target.data.max_hp, target.hp + amount)
+			target.hp = mini(target.max_hp, target.hp + amount)
 			log_message.emit("  %s recovers %d HP." % [target.data.display_name, amount])
 		Enums.EffectKind.APPLY_STATUS:
 			var is_debuff := eff.status_id not in Enums.BUFF_IDS
@@ -244,10 +247,20 @@ func _apply_effect(actor: BattleUnit, eff: EffectBlock, target: BattleUnit) -> v
 			if is_debuff:
 				land_chance *= 1.0 + actor.data.effectiveness - target.data.resilience
 			if randf() < land_chance:
-				target.add_status(eff.status_id, eff.duration, eff.amount, eff.stack_cap)
+				# Barrier magnitude is an absorb pool scaled off the caster's ATK.
+				var magnitude := eff.amount * actor.atk() if eff.status_id == Enums.StatusId.BARRIER else eff.amount
+				target.add_status(eff.status_id, eff.duration, magnitude, eff.stack_cap)
 				log_message.emit("  %s gains %s." % [target.data.display_name, Enums.STATUS_NAMES[eff.status_id]])
 			elif is_debuff:
 				log_message.emit("  %s resists %s." % [target.data.display_name, Enums.STATUS_NAMES[eff.status_id]])
+		Enums.EffectKind.CLEANSE:
+			var removed := target.remove_debuffs()
+			if removed > 0:
+				log_message.emit("  %s is cleansed of %d affliction(s)." % [target.data.display_name, removed])
+				if eff.power > 0.0:
+					var heal_amt := int(actor.atk() * eff.power) * removed
+					target.hp = mini(target.max_hp, target.hp + heal_amt)
+					log_message.emit("  %s recovers %d HP." % [target.data.display_name, heal_amt])
 		Enums.EffectKind.GAIN_FERVOR:
 			target.gain_fervor(eff.amount)
 			log_message.emit("  %s gains %d Fervor." % [target.data.display_name, int(eff.amount)])
@@ -260,12 +273,20 @@ func _deal_damage(actor: BattleUnit, target: BattleUnit, power: float) -> void:
 	if target.has_status(Enums.StatusId.IMMUNITY):
 		log_message.emit("  %s is immune!" % target.data.display_name)
 		return
+	if target.has_status(Enums.StatusId.EVASION) and randf() < target.status_magnitude(Enums.StatusId.EVASION):
+		log_message.emit("  %s evades!" % target.data.display_name)
+		return
 	var mult := Affinity.damage_multiplier(actor.data.affinity, target.data.affinity)
 	var base := actor.atk() * power * mult
 	var mitigation := 300.0 / (300.0 + target.def())
 	var crit := randf() < actor.data.crit_rate
 	var crit_mult := actor.data.crit_damage if crit else 1.0
-	var dmg := maxi(1, int(base * mitigation * crit_mult * randf_range(0.95, 1.05)))
+	var raw := maxi(1, int(base * mitigation * crit_mult * randf_range(0.95, 1.05)))
+	var dmg := int(target.absorb_with_barrier(raw))
+	if dmg < raw:
+		log_message.emit("  %s's barrier absorbs %d." % [target.data.display_name, raw - dmg])
+		if dmg <= 0:
+			return
 	target.hp = maxi(0, target.hp - dmg)
 	target.gain_fervor(BattleUnit.FERVOR_ON_HIT)
 	var notes: Array = []

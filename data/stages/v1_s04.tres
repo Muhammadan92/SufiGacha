@@ -1,0 +1,16 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/stage_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"v1_s04"
+display_name = "Shadows Multiply"
+valley = 1
+index = 4
+breath_cost = 6
+enemy_ids = ["whisperling", "whisperling", "shadow_vermin"]
+enemy_scale = 0.7
+xp_reward = 44
+pearls_reward = 2
+first_clear_pearls = 10

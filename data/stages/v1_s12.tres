@@ -1,0 +1,16 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/stage_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"v1_s12"
+display_name = "Kibr, Father of Pride"
+valley = 1
+index = 12
+breath_cost = 10
+enemy_ids = ["whisperling", "kibr", "whisperling"]
+enemy_scale = 1.28
+xp_reward = 100
+pearls_reward = 5
+first_clear_pearls = 40

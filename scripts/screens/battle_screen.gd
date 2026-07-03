@@ -1,29 +1,14 @@
-extends Control
-## Grey-box battle UI (Phase 1). Everything is buttons and text bars — this
-## screen only *listens* to BattleManager signals and submits player choices.
-
-const UNIT_PATHS := {
-	"bram": "res://data/units/bram.tres",
-	"echo": "res://data/units/echo.tres",
-	"brand": "res://data/units/brand.tres",
-	"aria": "res://data/units/aria.tres",
-	"whisperling": "res://data/units/whisperling.tres",
-	"shadow_vermin": "res://data/units/shadow_vermin.tres",
-	"ash_ghoul": "res://data/units/ash_ghoul.tres",
-	"kibr": "res://data/units/kibr.tres",
-}
-
-const PLAYER_TEAM := ["bram", "echo", "brand", "aria"]
-const ENCOUNTERS := {
-	"Valley Patrol": ["whisperling", "shadow_vermin", "ash_ghoul"],
-	"Kibr, Father of Pride": ["whisperling", "kibr", "whisperling"],
-}
+extends ScreenBase
+## Battle screen: grey-box UI over BattleManager. Reads the stage from
+## Screens.payload {"stage_id": ...}; team and levels come from Game.
 
 var manager: BattleManager
 var timer: Timer
+var stage: StageData
 var unit_panels := {}  # BattleUnit -> Button
 var skill_buttons: Array = []
 var pending_skill: SkillData = null
+var finished_summary: Dictionary = {}
 
 var player_column: VBoxContainer
 var enemy_column: VBoxContainer
@@ -31,10 +16,11 @@ var log_label: RichTextLabel
 var skill_bar: HBoxContainer
 var prompt_label: Label
 var auto_check: CheckButton
-var start_overlay: CenterContainer
 
 
-func _ready() -> void:
+func _build() -> void:
+	stage = db.stages[screens.payload["stage_id"]]
+
 	manager = BattleManager.new()
 	add_child(manager)
 	manager.log_message.connect(_on_log)
@@ -48,7 +34,7 @@ func _ready() -> void:
 	add_child(timer)
 
 	_build_layout()
-	_show_start_overlay()
+	_start_battle()
 
 
 func _build_layout() -> void:
@@ -64,13 +50,16 @@ func _build_layout() -> void:
 	center.size_flags_stretch_ratio = 1.6
 	root.add_child(center)
 
+	var stage_label := Label.new()
+	stage_label.text = "%d-%d  %s" % [stage.valley, stage.index, stage.display_name]
+	center.add_child(stage_label)
+
 	log_label = RichTextLabel.new()
 	log_label.scroll_following = true
 	log_label.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	center.add_child(log_label)
 
 	prompt_label = Label.new()
-	prompt_label.text = ""
 	center.add_child(prompt_label)
 
 	skill_bar = HBoxContainer.new()
@@ -90,10 +79,6 @@ func _build_layout() -> void:
 
 	enemy_column = _make_column(root, "THE DARKNESS")
 
-	start_overlay = CenterContainer.new()
-	start_overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
-	add_child(start_overlay)
-
 
 func _make_column(parent: Control, title: String) -> VBoxContainer:
 	var col := VBoxContainer.new()
@@ -106,48 +91,22 @@ func _make_column(parent: Control, title: String) -> VBoxContainer:
 	return col
 
 
-func _show_start_overlay() -> void:
-	for child in start_overlay.get_children():
-		child.queue_free()
-	var box := VBoxContainer.new()
-	box.add_theme_constant_override("separation", 12)
-	start_overlay.add_child(box)
-	var title := Label.new()
-	title.text = "SEVEN SPRINGS — combat prototype\nChoose an encounter:"
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	box.add_child(title)
-	for encounter_name in ENCOUNTERS:
-		var b := Button.new()
-		b.text = encounter_name
-		b.custom_minimum_size = Vector2(320, 44)
-		b.pressed.connect(_start_encounter.bind(encounter_name))
-		box.add_child(b)
-	start_overlay.visible = true
-	timer.stop()
-
-
-func _start_encounter(encounter_name: String) -> void:
-	start_overlay.visible = false
-	log_label.clear()
+func _start_battle() -> void:
 	var player_data: Array = []
-	for id in PLAYER_TEAM:
-		player_data.append(load(UNIT_PATHS[id]))
+	var mults: Array = []
+	for id in game.team:
+		player_data.append(db.units[id])
+		mults.append(game.level_mult(game.level_of(id)))
 	var enemy_data: Array = []
-	for id in ENCOUNTERS[encounter_name]:
-		enemy_data.append(load(UNIT_PATHS[id]))
-	manager.auto_mode = auto_check.button_pressed
-	manager.setup(player_data, enemy_data)
+	for eid in stage.enemy_ids:
+		enemy_data.append(db.units[eid])
+	manager.setup(player_data, enemy_data, mults, stage.enemy_scale)
 	_build_unit_panels()
 	timer.start()
 
 
 func _build_unit_panels() -> void:
 	unit_panels.clear()
-	for col in [player_column, enemy_column]:
-		while col.get_child_count() > 1:  # keep header label
-			var c: Node = col.get_child(col.get_child_count() - 1)
-			col.remove_child(c)
-			c.queue_free()
 	for unit: BattleUnit in manager.players:
 		unit_panels[unit] = _make_panel(player_column, unit)
 	for unit: BattleUnit in manager.enemies:
@@ -182,13 +141,12 @@ func _refresh_panels() -> void:
 			b.modulate = Color(1, 1, 1, 0.35)
 			continue
 		b.modulate = Color.WHITE
-		var lines := "%s%s  [%s]\nHP %s %d/%d\nFV %s %d\n%s" % [
+		b.text = "%s%s  [%s]\nHP %s %d/%d\nFV %s %d\n%s" % [
 			marker, unit.data.label(), affinity,
-			_bar(unit.hp, unit.data.max_hp), unit.hp, unit.data.max_hp,
+			_bar(unit.hp, unit.max_hp), unit.hp, unit.max_hp,
 			_bar(unit.fervor, BattleUnit.FERVOR_MAX), int(unit.fervor),
 			unit.status_line(),
 		]
-		b.text = lines
 
 
 func _on_tick() -> void:
@@ -262,12 +220,10 @@ func _on_log(text: String) -> void:
 
 func _on_battle_ended(victory: bool) -> void:
 	timer.stop()
+	finished_summary = game.finish_stage(stage, victory)
 	prompt_label.text = "VICTORY — the darkness recedes" if victory else "DEFEAT — try a different approach"
-	var retry := Button.new()
-	retry.text = "Back to encounter select"
-	retry.pressed.connect(func() -> void:
-		retry.queue_free()
-		prompt_label.text = ""
-		_show_start_overlay())
-	skill_bar.add_child(retry)
-	skill_buttons.append(retry)
+	var cont := Button.new()
+	cont.text = "Continue"
+	cont.pressed.connect(func() -> void: screens.goto("results", finished_summary))
+	skill_bar.add_child(cont)
+	skill_buttons.append(cont)

@@ -72,7 +72,7 @@ func _run_battle(comp_ids: Array, enemy_ids: Array) -> Dictionary:
 	out["stalemate"] = not mgr.ended
 	var frac := 0.0
 	for u: BattleUnit in mgr.players:
-		frac += float(u.hp) / u.data.max_hp
+		frac += float(u.hp) / u.max_hp
 	out["team_hp"] = frac / mgr.players.size()
 	mgr.free()
 	return out

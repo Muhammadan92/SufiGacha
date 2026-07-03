@@ -19,7 +19,7 @@ enum Slot { LITANY, REMEMBRANCE, TRANCE }
 
 enum TargetType { ENEMY_SINGLE, ENEMY_ALL, ALLY_SINGLE, ALLY_ALL, SELF }
 
-enum EffectKind { DAMAGE, HEAL, APPLY_STATUS, GAIN_FERVOR, MODIFY_TURN_METER }
+enum EffectKind { DAMAGE, HEAL, APPLY_STATUS, GAIN_FERVOR, MODIFY_TURN_METER, CLEANSE }
 
 enum StatusId {
 	ATK_UP, ATK_DOWN,
@@ -62,3 +62,5 @@ const BUFF_IDS := [
 	StatusId.REGEN, StatusId.BARRIER, StatusId.IMMUNITY,
 	StatusId.EVASION, StatusId.TAUNT,
 ]
+
+const RARITY_NAMES := { 3: "Novice", 4: "Wayfarer", 5: "Luminary" }

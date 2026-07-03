@@ -1,0 +1,43 @@
+extends ScreenBase
+## Post-battle rewards summary. Payload: the dict from Game.finish_stage().
+
+
+func _build() -> void:
+	var summary: Dictionary = screens.payload if screens.payload is Dictionary else {}
+	var root := make_root()
+	add_header(root, "")
+	var center := CenterContainer.new()
+	center.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	root.add_child(center)
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 10)
+	center.add_child(v)
+
+	var title := Label.new()
+	title.add_theme_font_size_override("font_size", 34)
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.text = "VICTORY" if summary.get("victory", false) else "DEFEAT"
+	v.add_child(title)
+
+	var body := Label.new()
+	body.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	var lines: Array = [summary.get("stage_name", "")]
+	if summary.get("victory", false):
+		lines.append("")
+		lines.append("XP gained: %d per companion" % summary.get("xp_each", 0))
+		lines.append("Pearls: +%d" % summary.get("pearls", 0))
+		if summary.get("first_clear_pearls", 0) > 0:
+			lines.append("First clear bonus: +%d Pearls!" % summary["first_clear_pearls"])
+		for msg in summary.get("level_ups", []):
+			lines.append(str(msg))
+	else:
+		lines.append("")
+		lines.append("The darkness holds this ground... for now.")
+	body.text = "\n".join(lines)
+	v.add_child(body)
+
+	var cont := Button.new()
+	cont.text = "Continue"
+	cont.custom_minimum_size = Vector2(280, 48)
+	cont.pressed.connect(func() -> void: screens.goto("stages"))
+	v.add_child(cont)

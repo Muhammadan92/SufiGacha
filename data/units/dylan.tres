@@ -1,0 +1,73 @@
+[gd_resource type="Resource" load_steps=10 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/unit_data.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/data/skill_data.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/data/effect_block.gd" id="3"]
+
+[sub_resource type="Resource" id="eff_lit"]
+script = ExtResource("3")
+kind = 0
+power = 0.8
+
+[sub_resource type="Resource" id="eff_rem_regen"]
+script = ExtResource("3")
+kind = 2
+status_id = 7
+chance = 1.0
+duration = 2
+amount = 0.05
+stack_cap = 2.0
+
+[sub_resource type="Resource" id="eff_trance_heal"]
+script = ExtResource("3")
+kind = 1
+power = 1.0
+
+[sub_resource type="Resource" id="skill_lit"]
+script = ExtResource("2")
+id = &"dylan_litany"
+display_name = "Ripple"
+slot = 0
+cooldown = 0
+target_type = 0
+fervor_gain = 20
+effects = [SubResource("eff_lit")]
+
+[sub_resource type="Resource" id="skill_rem"]
+script = ExtResource("2")
+id = &"dylan_remembrance"
+display_name = "Steady Current"
+slot = 1
+cooldown = 3
+target_type = 3
+fervor_gain = 15
+effects = [SubResource("eff_rem_regen")]
+
+[sub_resource type="Resource" id="skill_trance"]
+script = ExtResource("2")
+id = &"dylan_trance"
+display_name = "Riverturn"
+slot = 2
+cooldown = 0
+target_type = 3
+fervor_gain = 0
+effects = [SubResource("eff_trance_heal")]
+
+[resource]
+script = ExtResource("1")
+id = &"dylan"
+display_name = "Dylan"
+epithet = ""
+order_name = "Shadhili"
+affinity = 4
+rarity = 3
+is_enemy = false
+max_hp = 850
+atk = 75
+def = 65
+spd = 95
+crit_rate = 0.1
+crit_damage = 1.5
+effectiveness = 0.0
+resilience = 0.1
+skills = [SubResource("skill_lit"), SubResource("skill_rem"), SubResource("skill_trance")]

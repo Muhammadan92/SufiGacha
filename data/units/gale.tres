@@ -1,0 +1,73 @@
+[gd_resource type="Resource" load_steps=10 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/unit_data.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/data/skill_data.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/data/effect_block.gd" id="3"]
+
+[sub_resource type="Resource" id="eff_lit"]
+script = ExtResource("3")
+kind = 0
+power = 0.9
+
+[sub_resource type="Resource" id="eff_rem_spin"]
+script = ExtResource("3")
+kind = 2
+status_id = 0
+chance = 1.0
+duration = 99
+amount = 0.15
+stack_cap = 5.0
+
+[sub_resource type="Resource" id="eff_trance"]
+script = ExtResource("3")
+kind = 0
+power = 2.0
+
+[sub_resource type="Resource" id="skill_lit"]
+script = ExtResource("2")
+id = &"gale_litany"
+display_name = "Turning Step"
+slot = 0
+cooldown = 0
+target_type = 0
+fervor_gain = 20
+effects = [SubResource("eff_lit")]
+
+[sub_resource type="Resource" id="skill_rem"]
+script = ExtResource("2")
+id = &"gale_remembrance"
+display_name = "Gathering Spin"
+slot = 1
+cooldown = 2
+target_type = 4
+fervor_gain = 15
+effects = [SubResource("eff_rem_spin")]
+
+[sub_resource type="Resource" id="skill_trance"]
+script = ExtResource("2")
+id = &"gale_trance"
+display_name = "The Turning Sky"
+slot = 2
+cooldown = 0
+target_type = 1
+fervor_gain = 0
+effects = [SubResource("eff_trance")]
+
+[resource]
+script = ExtResource("1")
+id = &"gale"
+display_name = "Gale"
+epithet = "the Turning Sky"
+order_name = "Mevlevi"
+affinity = 3
+rarity = 5
+is_enemy = false
+max_hp = 950
+atk = 115
+def = 65
+spd = 118
+crit_rate = 0.15
+crit_damage = 1.5
+effectiveness = 0.0
+resilience = 0.0
+skills = [SubResource("skill_lit"), SubResource("skill_rem"), SubResource("skill_trance")]

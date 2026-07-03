@@ -1,0 +1,84 @@
+[gd_resource type="Resource" load_steps=11 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/unit_data.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/data/skill_data.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/data/effect_block.gd" id="3"]
+
+[sub_resource type="Resource" id="eff_lit"]
+script = ExtResource("3")
+kind = 0
+power = 0.9
+
+[sub_resource type="Resource" id="eff_rem_atkup"]
+script = ExtResource("3")
+kind = 2
+status_id = 0
+chance = 1.0
+duration = 2
+amount = 0.25
+
+[sub_resource type="Resource" id="eff_trance_evasion"]
+script = ExtResource("3")
+kind = 2
+status_id = 10
+chance = 1.0
+duration = 1
+amount = 0.5
+
+[sub_resource type="Resource" id="eff_trance_atkup"]
+script = ExtResource("3")
+kind = 2
+status_id = 0
+chance = 1.0
+duration = 2
+amount = 0.4
+
+[sub_resource type="Resource" id="skill_lit"]
+script = ExtResource("2")
+id = &"vale_litany"
+display_name = "Still Point"
+slot = 0
+cooldown = 0
+target_type = 0
+fervor_gain = 20
+effects = [SubResource("eff_lit")]
+
+[sub_resource type="Resource" id="skill_rem"]
+script = ExtResource("2")
+id = &"vale_remembrance"
+display_name = "Quiet Mind"
+slot = 1
+cooldown = 3
+target_type = 3
+fervor_gain = 15
+effects = [SubResource("eff_rem_atkup")]
+
+[sub_resource type="Resource" id="skill_trance"]
+script = ExtResource("2")
+id = &"vale_trance"
+display_name = "Khalwa"
+subtitle = "Seclusion"
+slot = 2
+cooldown = 0
+target_type = 3
+fervor_gain = 0
+effects = [SubResource("eff_trance_evasion"), SubResource("eff_trance_atkup")]
+
+[resource]
+script = ExtResource("1")
+id = &"vale"
+display_name = "Vale"
+epithet = "the Silent"
+order_name = "Naqshbandi"
+affinity = 0
+rarity = 5
+is_enemy = false
+max_hp = 1000
+atk = 105
+def = 80
+spd = 108
+crit_rate = 0.15
+crit_damage = 1.5
+effectiveness = 0.1
+resilience = 0.15
+skills = [SubResource("skill_lit"), SubResource("skill_rem"), SubResource("skill_trance")]

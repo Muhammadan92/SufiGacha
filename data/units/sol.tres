@@ -1,0 +1,69 @@
+[gd_resource type="Resource" load_steps=10 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/unit_data.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/data/skill_data.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/data/effect_block.gd" id="3"]
+
+[sub_resource type="Resource" id="eff_lit"]
+script = ExtResource("3")
+kind = 0
+power = 1.0
+
+[sub_resource type="Resource" id="eff_rem"]
+script = ExtResource("3")
+kind = 0
+power = 1.6
+
+[sub_resource type="Resource" id="eff_trance"]
+script = ExtResource("3")
+kind = 0
+power = 2.8
+
+[sub_resource type="Resource" id="skill_lit"]
+script = ExtResource("2")
+id = &"sol_litany"
+display_name = "Ray"
+slot = 0
+cooldown = 0
+target_type = 0
+fervor_gain = 20
+effects = [SubResource("eff_lit")]
+
+[sub_resource type="Resource" id="skill_rem"]
+script = ExtResource("2")
+id = &"sol_remembrance"
+display_name = "Focused Beam"
+slot = 1
+cooldown = 2
+target_type = 0
+fervor_gain = 15
+effects = [SubResource("eff_rem")]
+
+[sub_resource type="Resource" id="skill_trance"]
+script = ExtResource("2")
+id = &"sol_trance"
+display_name = "Zenith"
+slot = 2
+cooldown = 0
+target_type = 0
+fervor_gain = 0
+effects = [SubResource("eff_trance")]
+
+[resource]
+script = ExtResource("1")
+id = &"sol"
+display_name = "Sol"
+epithet = ""
+order_name = "Suhrawardi"
+affinity = 6
+rarity = 3
+is_enemy = false
+max_hp = 800
+atk = 95
+def = 55
+spd = 104
+crit_rate = 0.3
+crit_damage = 1.7
+effectiveness = 0.0
+resilience = 0.0
+skills = [SubResource("skill_lit"), SubResource("skill_rem"), SubResource("skill_trance")]

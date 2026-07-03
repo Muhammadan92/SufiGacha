@@ -1,0 +1,16 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/stage_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"v1_s08"
+display_name = "Vermin Tide"
+valley = 1
+index = 8
+breath_cost = 8
+enemy_ids = ["shadow_vermin", "shadow_vermin", "ash_ghoul"]
+enemy_scale = 0.9
+xp_reward = 68
+pearls_reward = 3
+first_clear_pearls = 10

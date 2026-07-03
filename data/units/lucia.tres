@@ -1,0 +1,85 @@
+[gd_resource type="Resource" load_steps=12 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/unit_data.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/data/skill_data.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/data/effect_block.gd" id="3"]
+
+[sub_resource type="Resource" id="eff_lit"]
+script = ExtResource("3")
+kind = 0
+power = 0.9
+
+[sub_resource type="Resource" id="eff_rem_dmg"]
+script = ExtResource("3")
+kind = 0
+power = 0.8
+
+[sub_resource type="Resource" id="eff_rem_defdown"]
+script = ExtResource("3")
+kind = 2
+status_id = 3
+chance = 0.85
+duration = 2
+amount = 0.35
+
+[sub_resource type="Resource" id="eff_trance_dmg"]
+script = ExtResource("3")
+kind = 0
+power = 1.4
+
+[sub_resource type="Resource" id="eff_trance_defdown"]
+script = ExtResource("3")
+kind = 2
+status_id = 3
+chance = 0.7
+duration = 2
+amount = 0.25
+
+[sub_resource type="Resource" id="skill_lit"]
+script = ExtResource("2")
+id = &"lucia_litany"
+display_name = "Glimmer"
+slot = 0
+cooldown = 0
+target_type = 0
+fervor_gain = 20
+effects = [SubResource("eff_lit")]
+
+[sub_resource type="Resource" id="skill_rem"]
+script = ExtResource("2")
+id = &"lucia_remembrance"
+display_name = "Illuminate"
+slot = 1
+cooldown = 2
+target_type = 0
+fervor_gain = 15
+effects = [SubResource("eff_rem_dmg"), SubResource("eff_rem_defdown")]
+
+[sub_resource type="Resource" id="skill_trance"]
+script = ExtResource("2")
+id = &"lucia_trance"
+display_name = "Noonday Truth"
+slot = 2
+cooldown = 0
+target_type = 1
+fervor_gain = 0
+effects = [SubResource("eff_trance_dmg"), SubResource("eff_trance_defdown")]
+
+[resource]
+script = ExtResource("1")
+id = &"lucia"
+display_name = "Lucia"
+epithet = ""
+order_name = "Suhrawardi"
+affinity = 6
+rarity = 5
+is_enemy = false
+max_hp = 900
+atk = 110
+def = 65
+spd = 106
+crit_rate = 0.2
+crit_damage = 1.5
+effectiveness = 0.3
+resilience = 0.0
+skills = [SubResource("skill_lit"), SubResource("skill_rem"), SubResource("skill_trance")]

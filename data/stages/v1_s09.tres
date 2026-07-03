@@ -1,0 +1,16 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/stage_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"v1_s09"
+display_name = "The Narrowing"
+valley = 1
+index = 9
+breath_cost = 8
+enemy_ids = ["whisperling", "ash_ghoul", "shadow_vermin"]
+enemy_scale = 0.95
+xp_reward = 74
+pearls_reward = 3
+first_clear_pearls = 10

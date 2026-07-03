@@ -2,24 +2,29 @@ class_name BattleUnit
 extends RefCounted
 ## Runtime state of one combatant. Pure state + stat math — all combat
 ## resolution and event emission happens in BattleManager.
+## `stat_mult` scales base stats for character level / stage difficulty.
 
 var data: UnitData
 var is_player_side: bool
+var stat_mult: float
 
+var max_hp: int
 var hp: int
 var fervor: float = 0.0
 var turn_meter: float = 0.0
-var statuses: Array = []      # Array of StatusEffect
+var statuses: Array = []        # Array of StatusEffect
 var cooldowns: Dictionary = {}  # skill id (StringName) -> turns remaining
 
 const FERVOR_MAX := 100.0
 const FERVOR_ON_HIT := 10.0
 
 
-func _init(p_data: UnitData, p_player_side: bool) -> void:
+func _init(p_data: UnitData, p_player_side: bool, p_stat_mult: float = 1.0) -> void:
 	data = p_data
 	is_player_side = p_player_side
-	hp = data.max_hp
+	stat_mult = p_stat_mult
+	max_hp = maxi(1, int(data.max_hp * stat_mult))
+	hp = max_hp
 
 
 func is_alive() -> bool:
@@ -37,11 +42,11 @@ func _stat_mod(up_id: int, down_id: int) -> float:
 
 
 func atk() -> float:
-	return data.atk * _stat_mod(Enums.StatusId.ATK_UP, Enums.StatusId.ATK_DOWN)
+	return data.atk * stat_mult * _stat_mod(Enums.StatusId.ATK_UP, Enums.StatusId.ATK_DOWN)
 
 
 func def() -> float:
-	return data.def * _stat_mod(Enums.StatusId.DEF_UP, Enums.StatusId.DEF_DOWN)
+	return data.def * stat_mult * _stat_mod(Enums.StatusId.DEF_UP, Enums.StatusId.DEF_DOWN)
 
 
 func spd() -> float:
@@ -55,6 +60,14 @@ func has_status(id: int) -> bool:
 	return false
 
 
+func status_magnitude(id: int) -> float:
+	var best := 0.0
+	for s: StatusEffect in statuses:
+		if s.id == id:
+			best = maxf(best, s.magnitude)
+	return best
+
+
 func add_status(id: int, turns: int, magnitude: float, stack_cap: float = 3.0) -> void:
 	for s: StatusEffect in statuses:
 		if s.id == id:
@@ -65,6 +78,25 @@ func add_status(id: int, turns: int, magnitude: float, stack_cap: float = 3.0) -
 			s.magnitude = minf(s.magnitude + magnitude, magnitude * stack_cap)
 			return
 	statuses.append(StatusEffect.new(id, turns, magnitude))
+
+
+## Consumes barrier absorb pools; returns the damage that gets through.
+func absorb_with_barrier(amount: float) -> float:
+	for s: StatusEffect in statuses:
+		if s.id == Enums.StatusId.BARRIER and s.magnitude > 0.0 and amount > 0.0:
+			var absorbed := minf(s.magnitude, amount)
+			s.magnitude -= absorbed
+			amount -= absorbed
+	statuses = statuses.filter(func(s: StatusEffect) -> bool:
+		return s.id != Enums.StatusId.BARRIER or s.magnitude > 0.0)
+	return amount
+
+
+## Removes all debuffs; returns how many were removed.
+func remove_debuffs() -> int:
+	var before := statuses.size()
+	statuses = statuses.filter(func(s: StatusEffect) -> bool: return s.is_buff())
+	return before - statuses.size()
 
 
 func expire_statuses() -> void:

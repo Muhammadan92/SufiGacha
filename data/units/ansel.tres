@@ -1,0 +1,82 @@
+[gd_resource type="Resource" load_steps=12 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/unit_data.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/data/skill_data.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/data/effect_block.gd" id="3"]
+
+[sub_resource type="Resource" id="eff_lit"]
+script = ExtResource("3")
+kind = 0
+power = 0.8
+
+[sub_resource type="Resource" id="eff_rem_defup"]
+script = ExtResource("3")
+kind = 2
+status_id = 2
+chance = 1.0
+duration = 2
+amount = 0.4
+
+[sub_resource type="Resource" id="eff_rem_heal"]
+script = ExtResource("3")
+kind = 1
+power = 0.6
+
+[sub_resource type="Resource" id="eff_trance_heal"]
+script = ExtResource("3")
+kind = 1
+power = 0.9
+
+[sub_resource type="Resource" id="eff_trance_fervor"]
+script = ExtResource("3")
+kind = 3
+amount = 15.0
+
+[sub_resource type="Resource" id="skill_lit"]
+script = ExtResource("2")
+id = &"ansel_litany"
+display_name = "Welcome"
+slot = 0
+cooldown = 0
+target_type = 0
+fervor_gain = 20
+effects = [SubResource("eff_lit")]
+
+[sub_resource type="Resource" id="skill_rem"]
+script = ExtResource("2")
+id = &"ansel_remembrance"
+display_name = "Open Door"
+slot = 1
+cooldown = 3
+target_type = 2
+fervor_gain = 15
+effects = [SubResource("eff_rem_defup"), SubResource("eff_rem_heal")]
+
+[sub_resource type="Resource" id="skill_trance"]
+script = ExtResource("2")
+id = &"ansel_trance"
+display_name = "Feast of Hearts"
+slot = 2
+cooldown = 0
+target_type = 3
+fervor_gain = 0
+effects = [SubResource("eff_trance_heal"), SubResource("eff_trance_fervor")]
+
+[resource]
+script = ExtResource("1")
+id = &"ansel"
+display_name = "Ansel"
+epithet = "the Open Door"
+order_name = "Chishti"
+affinity = 5
+rarity = 4
+is_enemy = false
+max_hp = 1000
+atk = 85
+def = 85
+spd = 100
+crit_rate = 0.1
+crit_damage = 1.5
+effectiveness = 0.0
+resilience = 0.1
+skills = [SubResource("skill_lit"), SubResource("skill_rem"), SubResource("skill_trance")]

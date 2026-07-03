@@ -1,0 +1,16 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/stage_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"v1_s11"
+display_name = "The Doorstep"
+valley = 1
+index = 11
+breath_cost = 8
+enemy_ids = ["whisperling", "whisperling", "ash_ghoul", "ash_ghoul"]
+enemy_scale = 1.05
+xp_reward = 86
+pearls_reward = 3
+first_clear_pearls = 15
