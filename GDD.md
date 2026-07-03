@@ -145,7 +145,7 @@ Two examples per order; full launch roster target: **28 characters** (7 orders �
 
 ### 3.5 Visual Guidelines
 
-- Traditional dress by order: Mevlevi *sikke* (tall felt cap) and whirling skirts; Naqshbandi understated turbans and muted robes; Qadiri green accents; Rifai black/iron tones. Beards for most adult men; women in dignified modest dress (hijab styles varied by region — Turkic, Maghrebi, South Asian, West African for diversity across orders).
+- Traditional dress by order, **keyed to the §2 signature colors** (outfits mostly match faction color; iconic exceptions like the honey-felt Mevlevi sikke stay): Naqshbandi deep emerald, understated; Qadiri turquoise accents on storm greys; Rifai black/iron with deep red; Mevlevi white whirling skirts; Shadhili royal blue; Chishti rose/ochre warmth; Suhrawardi pale gold sun-ray patterns. Beards for most adult men; women in dignified modest dress (hijab styles varied by region — Turkic, Maghrebi, South Asian, West African for diversity across orders).
 - **Modesty is the art direction**, not a limitation: flowing cloth, calligraphy-pattern auras, light and geometry do the visual spectacle work that skin does in other gacha games. This is also a market differentiator.
 - Ability VFX language: each order gets a signature motif — Naqshbandi = expanding concentric circles of script; Qadiri = lightning + sound rings; Mevlevi = spiral trails; Suhrawardi = rays/lens flares; Shadhili = water calligraphy; Chishti = musical geometry; Rifai = embers/molten cracks.
 

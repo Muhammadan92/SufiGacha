@@ -9,14 +9,14 @@ const STYLE_BLOCK := "stylized anime, painterly rendering, clean lineart, deep l
 
 ## Per-order costume/mood blocks — GDD §3.5. Edit here AND in the GDD together.
 const ORDER_BLOCKS := {
-	"Naqshbandi": "understated small turban, muted slate-blue robes, silent composed presence, concentric circles of soft light",
-	"Qadiri": "deep green turban and trim, storm-grey layered robes, thunder and sound-ring motifs, commanding presence",
-	"Rifai": "iron-black turban or head-wrap, scorched leather and chain accents, ember glow, unshakeable stance",
+	"Naqshbandi": "understated small turban, plain deep emerald robes, silent composed presence, concentric circles of soft light",
+	"Qadiri": "turquoise turban and trim, storm-grey layered robes, thunder and sound-ring motifs, commanding presence",
+	"Rifai": "iron-black turban or head-wrap, deep red robes with scorched leather and chain accents, ember glow, unshakeable stance",
 	"Mevlevi": "tall honey-colored felt sikke cap, flowing white tennure whirling skirt, black hirka cloak, spiral wind trails",
-	"Shadhili": "sea-blue and white robes, prayer beads, tidewater and wave motifs, calm protective presence",
+	"Shadhili": "deep royal-blue and white robes, prayer beads, tidewater and wave motifs, calm protective presence",
 	"Chishti": "warm rose and ochre robes, musical geometry motifs, daf frame drum, radiating warmth and welcome",
 	"Suhrawardi": "pale gold and sun-ray patterned robes, lenses and beams of light, precise illuminated presence",
-	"": "shadow-demon of corrupted smoke and ember, no human features, fantasy folklore register",  # enemies
+	"": "demon of black shadow veined with blood-red corrupted light, no human features, fantasy folklore register",  # enemies
 }
 
 const NEGATIVE_NOTES := "NO text, NO Arabic or pseudo-Arabic script, NO calligraphy glyphs (hard rule — AI_ART_PIPELINE.md §0.3), no sacred imagery, modest dress always. Cultural-accuracy check against real regional dress references before any LoRA training."
