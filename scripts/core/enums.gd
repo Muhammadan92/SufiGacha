@@ -75,13 +75,16 @@ const RARITY_COLORS := {
 
 ## Signature color per affinity — used by battle cards, placeholder art,
 ## and VFX tinting, so the whole game keys off one table.
+## Naqshbandi wears deep emerald: the strongest order carries the strongest
+## color (see RARITY_COLORS rationale). Only Suhrawardi sits in the
+## yellow/gold family, keeping it distinct from the UI accent gold.
 const AFFINITY_COLORS := {
-	Affinity.HEART: Color(0.93, 0.83, 0.53),      # warm gold
+	Affinity.HEART: Color(0.16, 0.66, 0.4),       # deep emerald green
 	Affinity.THUNDER: Color(0.62, 0.47, 0.94),    # violet
 	Affinity.EMBER: Color(0.94, 0.45, 0.28),      # burnt orange
-	Affinity.WIND: Color(0.42, 0.83, 0.55),       # green
-	Affinity.SEA: Color(0.35, 0.62, 0.93),        # sea blue
+	Affinity.WIND: Color(0.5, 0.87, 0.83),        # sky turquoise
+	Affinity.SEA: Color(0.27, 0.52, 0.95),        # deep royal blue
 	Affinity.HARMONY: Color(0.93, 0.55, 0.72),    # rose
-	Affinity.LIGHT: Color(0.98, 0.91, 0.45),      # bright yellow
+	Affinity.LIGHT: Color(0.98, 0.91, 0.45),      # radiant yellow
 	Affinity.CORRUPTION: Color(0.48, 0.22, 0.55), # bruised purple
 }
