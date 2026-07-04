@@ -239,7 +239,7 @@ func make_minaret_stage(floor: int) -> StageData:
 	else:
 		s.enemy_ids = MINARET_SETS[(floor - 1) % MINARET_SETS.size()]
 		s.index = 1
-	s.enemy_scale = 0.6 + 0.05 * floor
+	s.enemy_scale = 0.6 + 0.07 * floor  # steeper than campaign: the tower should wall
 	return s
 
 
@@ -263,7 +263,8 @@ func finish_minaret(floor: int, victory: bool) -> Dictionary:
 		if floor % 10 == 0:
 			summary["first_clear_sigils"] = 1
 			sigils += 1
-		summary["xp_each"] = 15 + 3 * floor
+		# Modest XP — economy sim showed rich tower XP collapses campaign pacing
+		summary["xp_each"] = 10 + 2 * floor
 		for id in team:
 			var gained := add_xp(id, summary["xp_each"])
 			if gained > 0:

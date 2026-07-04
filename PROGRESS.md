@@ -31,6 +31,7 @@ that changes status.** Roadmap definitions live in GDD.md §14.
 - [x] Placeholder audio generator (tools/gen_placeholder_audio.gd): 12 synthesized SFX + 6 seamless loops — game fully audible with zero real tracks; real imports (.ogg/.mp3) auto-outrank placeholder .wav
 - [x] Summon reveal: sequential door-of-light animation on The Calling (rarity-colored, Luminary full-screen flash, tap-to-advance, Skip)
 - [x] Asset audit extended to audio (70 tracked assets total)
+- [x] **Economy & Engagement simulator** (tests/simulate_economy.gd, supersedes the progression sim) + **ECONOMY_TUNING.md playbook** (KPI targets, tuning levers, expansion protocol). Baseline recorded; first tuning pass applied (Minaret XP/curve). Verdict: minutes/day and revenue in band under staggered release; daily sanctums are the missing recurring loop
 - [x] Teaching Scrolls spend: mastery system (5 ranks, +6% dmg/heal each, escalating scroll costs, roster UI)
 - [x] 3-star stage objectives (clear / no falls / within turn target) with token rewards, per-stage best persisted, stage-select + results display
 - [x] The Codex — "The Traveler's Notebook": 6 entries with Learn-more hyperlinks to recorded source pages; data-driven (data/codex/)
@@ -50,6 +51,7 @@ that changes status.** Roadmap definitions live in GDD.md §14.
 - [ ] Mobile export test (joint session — needs device + platform tooling)
 - [ ] Tutorial/first-session flow
 - [ ] Mobile export test on a real device (do EARLY — GDD §13.4)
+- [ ] Daily material sanctums (GDD §7) — **elevated: the economy sim shows this is the missing recurring loop** (dry-progression days ~75/90 without it)
 - [ ] Content lifecycle remainder (GDD §6.1): Hard-mode valley re-clears, weekly Vice trials
 - [ ] Comp-sim tuning backlog: no-tank L8 breakpoint quirk; turtle wins early but at 358 turns (enrage = time punishment; acceptable for grey-box, revisit with real kits)
 
