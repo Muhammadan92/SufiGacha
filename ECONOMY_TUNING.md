@@ -48,7 +48,8 @@ convert surplus Marks into Scrolls into team Mastery.
 | Session time, hardcore | 40–70 min/day | >90 |
 | Campaign clear, casual | 14–25 days (pre-staggered-release) | <10 days |
 | F2P chosen-Luminary rate | 1 per 2–4 weeks steady-state | >1/week (over-generous) |
-| Dry days (no progression) in 90 | < 15, none before day 30 | any before day 21 |
+| First no-progression-event day | ≥ day 7 (week 1 always progresses) | before day 5 |
+| Long-run no-progression days | expected & fine — dailies/minutes carry engagement; watch MINUTES instead | minutes < 10/day |
 | Pass holder value feel | visibly ahead of f2p casual | indistinguishable |
 | Light spender 90-day revenue | $80–110 (passes + packs + ~1 cosmetic/mo) | budget unspent (nothing worth buying) |
 | Completionist 90-day revenue | $450–550, growing with content cadence | <$300 (catalog/cadence too thin) |
@@ -141,6 +142,37 @@ hobbyist-scale audiences, and scales with content shipped. The ethics are not
 a revenue sacrifice; they are the differentiator that earns the audience.
 Ethics invariants in every line: fixed prices, permanent catalog, no expiry
 countdowns, no power exclusives in passes, §12.9 forever.
+
+## 6c. RETENTION MODEL — revenue per INSTALL, not per retained player
+
+The sim now weights each profile's **daily revenue** by scenario survival
+curves (log-interpolated D1/D7/D30/D90 anchors — genre-benchmark
+PLACEHOLDERS until soft-launch analytics replace them). One curve applies to
+all profiles, which is conservative: payers churn less than f2p in reality.
+
+**Results (2026-07-04, full content: campaign+stars+Minaret+Sanctum+Deeds+
+season pass+hard/nightmare+trials+cadence):**
+
+| Scenario | D1/D7/D30/D90 | 90d revenue / 1k installs | LTV/install (net of 15% store fee) |
+|---|---|---|---|
+| pessimistic | 30/8/2.5/1% | $813 | **$0.69** |
+| baseline | 40/14/6/3% | $1,133 | **$0.96** |
+| optimistic | 50/20/10/5.5% | $1,465 | **$1.25** |
+
+**Break-even restated per installs** (baseline, $500/mo solo cost base):
+~520 installs/month. Pessimistic: ~725/month. Both hobbyist-community scale.
+**UA ceiling**: paid installs only make sense under ~$0.90 CPI at baseline —
+i.e., organic/dawah-community acquisition first; paid UA is not the plan.
+
+**Churn-risk finding (measured)**: every profile hits its first
+no-progression-event day between **day 8 and day 11** — the level wall
+before the boss/frontier. Minutes stay healthy (dailies carry the day), but
+this is THE retention danger window: a week-2 player waits on Breath and
+levels just as novelty fades. Mitigation candidates (open item): a week-2
+beat (first Trial unlock fanfare, a guaranteed first-Luminary milestone at
+day ~10, or an early hard-mode taste). Tune the *first fortnight* before
+tuning anything else — under every scenario, most lifetime value is decided
+there.
 
 ## 7. Baseline — 2026-07-04 (grey-box, staggered release modeled)
 

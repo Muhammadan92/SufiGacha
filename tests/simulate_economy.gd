@@ -65,6 +65,29 @@ const MIX := {
 	"pass holder": 20, "light spender": 20, "completionist": 5,
 }
 
+## Retention scenarios (fraction of installs still active on day D) —
+## genre-benchmark PLACEHOLDERS until soft-launch analytics. Survival is
+## log-linearly interpolated between anchors. Payers churn less than f2p in
+## reality; applying one curve to all profiles is conservative for revenue.
+const RETENTION := {
+	"pessimistic": { 1: 0.30, 7: 0.08, 30: 0.025, 90: 0.010 },
+	"baseline":    { 1: 0.40, 7: 0.14, 30: 0.060, 90: 0.030 },
+	"optimistic":  { 1: 0.50, 7: 0.20, 30: 0.100, 90: 0.055 },
+}
+
+
+static func _survival(day: int, curve: Dictionary) -> float:
+	if day <= 0:
+		return 1.0
+	var anchors := [0, 1, 7, 30, 90]
+	var values := [1.0, curve[1], curve[7], curve[30], curve[90]]
+	for i in range(1, anchors.size()):
+		if day <= anchors[i]:
+			var t := (log(float(day) + 0.0001) - log(float(anchors[i - 1]) + 0.0001)) \
+				/ (log(float(anchors[i]) + 0.0001) - log(float(anchors[i - 1]) + 0.0001))
+			return lerpf(values[i - 1], values[i], clampf(t, 0.0, 1.0))
+	return curve[90]
+
 const DESIRES := [
 	"sage", "vale", "gale", "isla", "lucia",
 	"seren", "rowan", "ansel",
@@ -187,8 +210,17 @@ func _run_career(profile_name: String, profile: Dictionary, stages: Array) -> Di
 	var minutes_total := 0.0
 	var campaign_day := -1
 	var snapshots := {}
+	var daily_rev: Array = []       # revenue delta per day (retention weighting)
+	var dry_days_progress := 0      # days with NO progression event (churn risk)
+	var first_dry_day := -1
 
 	for day in range(1, DAYS + 1):
+		var rev_before: float = rev["packs"] + rev["pass"] + rev["season"] + rev["cosmetics"]
+		var owned_before := owned_desires
+		var minaret_before := minaret
+		var frontier_before := next_idx
+		var mastery_before := mastery
+		var diff_before: int = int(diff_frontier.get("hard", 0)) + int(diff_frontier.get("nm", 0))
 		# --- monthly beats ---
 		if day % 30 == 1:
 			budget_left = profile["budget"]
@@ -396,6 +428,14 @@ func _run_career(profile_name: String, profile: Dictionary, stages: Array) -> Di
 			mastery += 1
 
 		minutes_total += minutes_today
+		daily_rev.append(rev["packs"] + rev["pass"] + rev["season"] + rev["cosmetics"] - rev_before)
+		var progressed := next_idx > frontier_before or minaret > minaret_before \
+			or owned_desires > owned_before or mastery > mastery_before \
+			or (int(diff_frontier.get("hard", 0)) + int(diff_frontier.get("nm", 0))) > diff_before
+		if not progressed:
+			dry_days_progress += 1
+			if first_dry_day < 0:
+				first_dry_day = day
 		if day == 30 or day == 60 or day == 90:
 			snapshots[day] = {
 				"level": level, "campaign": next_idx, "minaret": minaret,
@@ -417,19 +457,38 @@ func _run_career(profile_name: String, profile: Dictionary, stages: Array) -> Di
 			s["min_per_day"], s["revenue"]])
 	print("  lines: packs $%.2f | monthly pass $%.2f | season pass $%.2f | cosmetics $%.2f" % [
 		rev["packs"], rev["pass"], rev["season"], rev["cosmetics"]])
-	return snapshots
+	print("  churn-risk: %d days without a progression event (first: day %s)" % [
+		dry_days_progress, str(first_dry_day) if first_dry_day > 0 else "none"])
+	var result := snapshots.duplicate()
+	result["daily_rev"] = daily_rev
+	return result
 
 
 func _print_blended(results: Dictionary) -> void:
-	print("\n=== BLENDED PROJECTION per 1,000 installs (mix is a placeholder — replace with soft-launch analytics) ===")
+	print("\n=== BLENDED PROJECTION per 1,000 RETAINED players (mix is a placeholder) ===")
 	print("  mix: %s" % str(MIX))
 	for d in [30, 60, 90]:
 		var total := 0.0
 		for profile_name in MIX:
 			total += results[profile_name][d]["revenue"] * MIX[profile_name]
-		print("  day %-3d  revenue/1k installs: $%8.2f   (ARPU $%.3f/player, $%.3f/player/month)" % [
-			d, total, total / 1000.0, total / 1000.0 / (d / 30.0)])
-	print("  NOTE: no churn modeled — treat as revenue per 1k RETAINED players; real blended revenue = this x retention curve.")
+		print("  day %-3d  revenue/1k retained: $%8.2f   (ARPU $%.3f/player/month)" % [
+			d, total, total / 1000.0 / (d / 30.0)])
+
+	# Retention-weighted: expected revenue per INSTALL = sum over days of
+	# survival(day) x that day's revenue delta, under each scenario curve.
+	print("\n=== RETENTION-WEIGHTED per 1,000 INSTALLS (scenario curves — ECONOMY_TUNING.md §6c) ===")
+	for scenario in RETENTION:
+		var curve: Dictionary = RETENTION[scenario]
+		var total := 0.0
+		for profile_name in MIX:
+			var daily: Array = results[profile_name]["daily_rev"]
+			var expected := 0.0
+			for i in daily.size():
+				expected += _survival(i + 1, curve) * float(daily[i])
+			total += expected * MIX[profile_name]
+		print("  %-12s D1/D7/D30/D90 = %d/%d/%.1f/%.1f%%   90d revenue/1k installs: $%8.2f   (LTV $%.3f/install, ~$%.3f net of store fee)" % [
+			scenario, curve[1] * 100, curve[7] * 100, curve[30] * 100, curve[90] * 100,
+			total, total / 1000.0, total / 1000.0 * 0.85])
 
 
 func _grant_xp(level: int, xp: int, amount: int) -> Array:
