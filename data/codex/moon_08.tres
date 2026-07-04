@@ -1,0 +1,11 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/codex_entry.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"moon_08"
+title = "The Moon of Preparation"
+order_index = 17
+body = "The eighth moon is the bridge to the light. The travelers call it the moon of the Beloved's own keeping, and honor its middle night as a night of salvation, when destinies for the coming year are written anew. Its number is seventy-two. Everything in this moon leans forward — provisions gathered, hearts swept clean, lamps trimmed for what comes next."
+links = ["Teachings of the Eighth Moon | https://nurmuhammad.com/tag/shaban/"]

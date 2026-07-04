@@ -1,0 +1,11 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/codex_entry.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"moon_02"
+title = "The Journeying Moon"
+order_index = 11
+body = "The second moon belongs to the road and to the cave. The travelers tell of companions who fled a corrupt age and slept in a cave under the Divine mercy — and they teach: when the way darkens, run to the cave of safety, and mercy will find you there. Its number is eighteen, nine doubled, which the teachings tie to the ocean of everlasting life."
+links = ["Teachings of the Second Moon | https://nurmuhammad.com/2-safar/", "The Cave and the Realities of 18 | https://www.nurmuhammad.com/safar-and-the-cave-realities-of-18-the-heart-of-the-divine/"]

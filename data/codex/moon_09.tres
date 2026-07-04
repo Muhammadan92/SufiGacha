@@ -1,0 +1,11 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/codex_entry.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"moon_09"
+title = "The Moon of Light"
+order_index = 18
+body = "The ninth moon is the crown of the year. The travelers fast its days — hunger of the body, feast of the soul — and seek near its end a hidden night said to outweigh years of ordinary time. Its number is eighty-one, nine times nine: light upon light. In Seven Springs this is the generosity season: gifts given, burdens lightened, nothing sold with pressure."
+links = ["Teachings of the Ninth Moon | https://nurmuhammad.com/9-ramadan/"]

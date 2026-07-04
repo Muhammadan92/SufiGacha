@@ -1,0 +1,11 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/codex_entry.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"moon_01"
+title = "The Sacred Moon"
+order_index = 10
+body = "The year begins in restraint. The first moon is one of the sacred months, in which all fighting was forbidden — the travelers open their year not with noise but with stillness, honoring beginnings by guarding them. Its number is nine: the first veil of the year of light. In this game, the Sacred Moon opens each new season-year of Seven Springs."
+links = ["Teachings of the First Moon | https://nurmuhammad.com/1-muharram/"]

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/codex_entry.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"moon_07"
+title = "The Moon of Ascent"
+order_index = 16
+body = "The seventh moon, the travelers say, belongs wholly to the Divine — it is called the Month of God. In it the road turns upward: the tradition remembers a night journey beyond the highest veil, and teaches that ascent is offered to every heart in this moon, each according to its longing. Its number is sixty-three. Climb the Minaret in this season."
+links = ["Teachings of the Seventh Moon | https://nurmuhammad.com/7-rajab/", "Three Moons of Opportunity | https://nurmuhammad.com/immense-opportunities-next-3-months-rajab-shaban-ramadan/"]

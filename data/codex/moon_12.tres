@@ -1,0 +1,11 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/codex_entry.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"moon_12"
+title = "The Moon of the Fountain"
+order_index = 21
+body = "The twelfth moon completes the count: twelve nines are one hundred and eight, and at the hundred-and-eighth step, the teachings say, stands the Fountain of Abundance — the inexhaustible gift at the end of every true road. Pilgrims travel in this moon; sacrifice is offered; the year pours itself out and is refilled. Where the Seven Valleys end, this moon points. One day, the game will take you there."
+links = ["Teachings of the Twelfth Moon | https://nurmuhammad.com/12-dhul_hijjah/", "The Mystical Number 108 | https://nurmuhammad.com/mystical-number-108-kawthar-haq-and-reality-of-sacrifice/"]

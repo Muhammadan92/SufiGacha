@@ -386,15 +386,17 @@ shipped via config, Umm al-Qura reference) — deterministic and global, no
 regional sighting differences in-game; flag for §12.6 scholar review.
 
 **The twelve seasons are the Twelve Moons**, presented per §1.1 with
-evocative English names; each Moon's Codex entry carries the real month
-name, its traditional meaning, and source links (draft names, review pass
-pending): the Sacred Moon (1), the Journeying Moon (2), the Moon of the
-Beloved (3), the Moon of Blossoms (4), the Moon of Endurance (5), the
-Enduring Moon (6), the Moon of Ascent (7), the Moon of Preparation (8),
-**the Moon of Light (9 — Ramadan: the flagship generosity season: gift
-events, lightened Deeds for fasting players, no purchase pressure)**, the
-Rejoicing Moon (10), the Resting Moon (11), and **the Moon of the Fountain
-(12 — each year's climax, foreshadowing Part 2 §6.2)**.
+evocative English names. **The game itself never names the real months**
+(decided 2026-07): each Moon's Codex entry carries teachings drawn from the
+research source's article on that month plus a Learn-more link — the link
+carries the depth (entries live in `data/codex/moon_01..12.tres`): the
+Sacred Moon (1), the Journeying Moon (2), the Moon of the Beloved (3), the
+Moon of Blossoms (4), the Moon of Endurance (5), the Enduring Moon (6), the
+Moon of Ascent (7), the Moon of Preparation (8), **the Moon of Light (9 —
+the flagship generosity season: gift events, lightened Deeds for fasting
+players, no purchase pressure)**, the Rejoicing Moon (10), the Resting Moon
+(11), and **the Moon of the Fountain (12 — each year's climax, foreshadowing
+Part 2 §6.2)**.
 
 **Structure**: 30 tiers earned via **Deeds** (3 daily + 3 weekly objectives —
 clear stages, earn stars, climb the Minaret, refine mastery, read a Codex

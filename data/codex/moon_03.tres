@@ -1,0 +1,11 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/codex_entry.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"moon_03"
+title = "The Moon of the Beloved"
+order_index = 12
+body = "The third moon carries the year's gentlest weight: in it the Beloved was born, the mercy sent to all the worlds — and the travelers teach that his birth was the birth of creation itself, the first light from which every other light was kindled. Its number is twenty-seven. Companions of the rose orders keep this moon with songs of welcome."
+links = ["Teachings of the Third Moon | https://nurmuhammad.com/3-rabiul-awwal/", "The Birth that Began Creation | https://nurmuhammad.com/the-birth-of-prophet-muhammad-s-is-the-birth-of-creation/"]
