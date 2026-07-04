@@ -50,3 +50,9 @@ func _build() -> void:
 	cont.custom_minimum_size = Vector2(280, 48)
 	cont.pressed.connect(func() -> void: screens.goto("stages"))
 	v.add_child(cont)
+
+	if game.tutorial_at(3) and summary.get("victory", false):
+		show_tutorial([
+			"Your first victory. XP raises your companions' levels; Marks and Seals fill your purse.",
+			"Spend them in THE CALLING: every companion of every order has a fixed, visible price. No chance, no gambling — you choose exactly who walks beside you, and the Journey provides the means.",
+		], func() -> void: game.advance_tutorial(3))

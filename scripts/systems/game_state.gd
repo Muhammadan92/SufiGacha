@@ -83,6 +83,21 @@ var season := {}   # {"id", "tier_xp": int, "tier": int, "paid": bool}
 var deeds := {}    # {"day_key", "week_key", "daily": [..], "weekly": [..]}
 var sanctum := {}  # {"day_key", "runs": int}
 
+## First-session tutorial progress: 0 intro → 1 stage select → 2 first
+## battle → 3 first results → 4 systems reveal → 5 done.
+var tutorial_step := 0
+const TUTORIAL_DONE := 5
+
+
+func tutorial_at(step: int) -> bool:
+	return tutorial_step == step
+
+
+func advance_tutorial(from_step: int) -> void:
+	if tutorial_step == from_step:
+		tutorial_step += 1
+		save()
+
 # Lazy sibling lookup (not @onready, not an absolute path) so headless tests
 # that build the tree manually still work — autoloads and test doubles are
 # both children of root, so the parent always has a "Db" sibling.
@@ -522,6 +537,7 @@ func save() -> void:
 		"breath": breath, "breath_ts": breath_ts, "cleared": cleared,
 		"stars": stars, "minaret_floor": minaret_floor,
 		"season": season, "deeds": deeds, "sanctum": sanctum,
+		"tutorial_step": tutorial_step,
 	}
 	var f := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if f:
@@ -550,6 +566,9 @@ func load_save() -> void:
 			season = blob.get("season", {})
 			deeds = blob.get("deeds", {})
 			sanctum = blob.get("sanctum", {})
+			# migration: pre-tutorial saves with progress skip the tutorial
+			tutorial_step = int(blob.get("tutorial_step",
+				TUTORIAL_DONE if not cleared.is_empty() else 0))
 			for id in roster:  # v2 -> v3: mastery field
 				if not roster[id].has("mastery"):
 					roster[id]["mastery"] = 0
@@ -576,6 +595,7 @@ func reset_profile() -> void:
 	season = {}
 	deeds = {}
 	sanctum = {}
+	tutorial_step = 0
 	for id in STARTERS:
 		grant_unit(id)
 	tick_time()

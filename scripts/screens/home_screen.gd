@@ -35,6 +35,13 @@ func _build() -> void:
 	v.add_child(HSeparator.new())
 	_build_settings(v)
 
+	if game.tutorial_at(0):
+		show_tutorial([
+			"The whispers are spreading. Doubt gnaws at every heart, and the demons of the lower self walk openly. The old orders keep the light — but the roads between their lodges grow dark.",
+			"You are a Seeker. Your calling: gather a company from the great orders, walk the Seven Valleys, and drive the darkness back — one victory at a time.",
+			"Four companions already stand with you — a voice of thunder, an echo of it, an unburnt shield, and a healing song. The Journey begins with a single step.\n\nChoose JOURNEY.",
+		], func() -> void: game.advance_tutorial(0))
+
 
 func _build_settings(parent: Control) -> void:
 	if audio == null:

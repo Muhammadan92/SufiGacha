@@ -160,6 +160,16 @@ func _initialize() -> void:
 	assert(game.seals == seals_after_free + 2, "paid track grants 2 Seals")
 	print("deeds + season pass ok")
 
+	# --- tutorial flow ---
+	assert(game.tutorial_step == 0, "fresh profile starts the tutorial")
+	game.advance_tutorial(0)
+	game.advance_tutorial(0)  # double-advance must be a no-op
+	assert(game.tutorial_step == 1)
+	for s in range(1, 5):
+		game.advance_tutorial(s)
+	assert(game.tutorial_step == game.TUTORIAL_DONE)
+	print("tutorial ok")
+
 	# --- sanctum ---
 	assert(not game.sanctum_unlocked())
 	game.cleared[game.SANCTUM_UNLOCK_STAGE] = true

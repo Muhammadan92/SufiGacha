@@ -41,6 +41,17 @@ func _build() -> void:
 	for stage: StageData in db.stage_order:
 		list.add_child(_stage_button(stage))
 
+	if game.tutorial_at(1):
+		show_tutorial([
+			"Each stage costs Breath, and Breath returns with time — one every six minutes, even while you're away.\n\nVictory earns Silver Marks and XP; a stage's FIRST clear grants Violet Seals, and valley bosses guard Emerald Sigils.",
+			"Every stage holds three stars: clear it, let no companion fall, and finish within the turn target. There are no dice in this world — a star you cannot reach today is a puzzle, not bad luck.\n\nBegin with 1-1: First Steps.",
+		], func() -> void: game.advance_tutorial(1))
+	elif game.tutorial_at(4):
+		show_tutorial([
+			"The Path widens as you walk it. The SANCTUM opens after stage 1-4 — a different order keeps it each day, and Teaching Scrolls earned there refine your companions' technique.",
+			"The MINARET opens after 1-6: an endless climb, free of Breath, with treasures on every fifth floor.\n\nAnd each day brings DEEDS — find them under the season's name on the home screen. Fulfilling them raises your season tier, and the season's story waits in the Traveler's Notebook.\n\nWalk well, Seeker.",
+		], func() -> void: game.advance_tutorial(4))
+
 
 func _stage_button(stage: StageData) -> Button:
 	var b := Button.new()

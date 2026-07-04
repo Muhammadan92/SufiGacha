@@ -80,6 +80,57 @@ func refresh_resources() -> void:
 		game.marks, game.seals, game.sigils, game.scrolls, game.breath, game.BREATH_MAX]
 
 
+## Sequential tutorial panels: dims the screen, shows messages one tap at a
+## time, then calls on_done. Used by the first-session flow (GDD §14 tutorial).
+func show_tutorial(messages: Array, on_done: Callable = Callable()) -> void:
+	var overlay := ColorRect.new()
+	overlay.color = Color(0, 0, 0, 0.72)
+	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(overlay)
+
+	var center := CenterContainer.new()
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	overlay.add_child(center)
+
+	var panel := PanelContainer.new()
+	panel.custom_minimum_size = Vector2(640, 0)
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color(0.08, 0.1, 0.17)
+	style.set_border_width_all(2)
+	style.border_color = ACCENT
+	style.set_corner_radius_all(8)
+	style.set_content_margin_all(24)
+	panel.add_theme_stylebox_override("panel", style)
+	center.add_child(panel)
+
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 12)
+	panel.add_child(v)
+	var text := Label.new()
+	text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	text.custom_minimum_size = Vector2(592, 0)
+	v.add_child(text)
+	var hint := Label.new()
+	hint.text = "tap to continue"
+	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	hint.add_theme_color_override("font_color", Color(1, 1, 1, 0.4))
+	v.add_child(hint)
+
+	var queue: Array = messages.duplicate()
+	text.text = str(queue.pop_front())
+	overlay.gui_input.connect(func(event: InputEvent) -> void:
+		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			sfx("ui_tap")
+			if queue.is_empty():
+				overlay.queue_free()
+				if on_done.is_valid():
+					on_done.call()
+			else:
+				text.text = str(queue.pop_front()))
+
+
 func unit_title(id: String) -> String:
 	var u: UnitData = db.units[id]
 	return "%s  [%s %s]  Lv %d" % [

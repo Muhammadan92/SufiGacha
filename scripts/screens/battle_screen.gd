@@ -167,7 +167,16 @@ func _start_battle() -> void:
 	for unit: BattleUnit in manager.enemies:
 		cards[unit] = _make_card(enemy_column, unit)
 	_refresh_cards()
-	timer.start()
+	if game.tutorial_at(2) and minaret_floor == 0 and not is_sanctum:
+		show_tutorial([
+			"Your company stands on the left; the darkness on the right. The card with the GOLD border acts now — speed decides the order, and the bars show each fighter's health and Fervor.",
+			"Each companion carries three abilities:\n\nLITANY — always ready; builds Fervor.\nREMEMBRANCE — stronger, with a cooldown.\nTRANCE — their ultimate, unleashed when the Fervor bar fills.",
+			"Watch the enemy's Fervor too: when a foe's bar burns red with warning, their Trance is coming — plan for it.\n\nThere are no dice here. Every number is exact; every outcome is earned. If you fall short, your plan was short. Begin.",
+		], func() -> void:
+			game.advance_tutorial(2)
+			timer.start())
+	else:
+		timer.start()
 
 
 # --- unit cards -----------------------------------------------------------------
