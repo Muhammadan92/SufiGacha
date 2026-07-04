@@ -1,0 +1,18 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/stage_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"v4_s05"
+display_name = "The Grasping Dark"
+valley = 4
+index = 5
+breath_cost = 6
+enemy_ids = ["hollow_brute", "ash_ghoul"]
+enemy_scale = 1.611
+turn_target = 70
+xp_reward = 125
+marks_reward = 20
+first_clear_seals = 1
+first_clear_sigils = 0

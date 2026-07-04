@@ -1,0 +1,91 @@
+[gd_resource type="Resource" load_steps=12 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/unit_data.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/data/skill_data.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/data/effect_block.gd" id="3"]
+
+[sub_resource type="Resource" id="e1"]
+script = ExtResource("3")
+kind = 0
+power = 1.0
+
+[sub_resource type="Resource" id="e2"]
+script = ExtResource("3")
+kind = 2
+status_id = 7
+chance = 1.0
+duration = 99
+amount = 0.022
+stack_cap = 2.0
+
+[sub_resource type="Resource" id="e3"]
+script = ExtResource("3")
+kind = 2
+status_id = 2
+chance = 1.0
+duration = 99
+amount = 0.1
+stack_cap = 3.0
+
+[sub_resource type="Resource" id="e4"]
+script = ExtResource("3")
+kind = 0
+power = 1.4
+
+[sub_resource type="Resource" id="e5"]
+script = ExtResource("3")
+kind = 2
+status_id = 5
+chance = 0.9
+duration = 2
+amount = 0.25
+
+[sub_resource type="Resource" id="s1"]
+script = ExtResource("2")
+id = &"kasal_lit"
+display_name = "Heavy Hand"
+slot = 0
+cooldown = 0
+target_type = 0
+fervor_gain = 20
+effects = [SubResource("e1")]
+
+[sub_resource type="Resource" id="s2"]
+script = ExtResource("2")
+id = &"kasal_rem"
+display_name = "Settle Deeper"
+slot = 1
+cooldown = 3
+target_type = 4
+fervor_gain = 15
+effects = [SubResource("e2"), SubResource("e3")]
+
+[sub_resource type="Resource" id="s3"]
+script = ExtResource("2")
+id = &"kasal_trance"
+display_name = "Why Strive At All"
+slot = 2
+cooldown = 0
+target_type = 1
+fervor_gain = 0
+effects = [SubResource("e4"), SubResource("e5")]
+
+[resource]
+script = ExtResource("1")
+id = &"kasal"
+display_name = "Kasal"
+epithet = "the Unmoving"
+art_notes = "immense slumped archdemon of sloth, black moss-stone flesh, blood-red embers dying in its hollows"
+order_name = ""
+affinity = 7
+rarity = 5
+is_enemy = true
+max_hp = 5200
+atk = 118
+def = 112
+spd = 80
+crit_rate = 0.1
+crit_damage = 1.5
+effectiveness = 0.1
+resilience = 0.25
+skills = [SubResource("s1"), SubResource("s2"), SubResource("s3")]

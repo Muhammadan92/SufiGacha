@@ -1,0 +1,18 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/stage_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"v7_s09"
+display_name = "The Final Veil"
+valley = 7
+index = 9
+breath_cost = 8
+enemy_ids = ["hollow_brute", "smoke_serpent", "mirror_shade", "whisperling"]
+enemy_scale = 2.586
+turn_target = 104
+xp_reward = 296
+marks_reward = 30
+first_clear_seals = 1
+first_clear_sigils = 0

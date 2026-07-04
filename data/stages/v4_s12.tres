@@ -1,0 +1,18 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/stage_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"v4_s12"
+display_name = "Hirs, the Hollow Maw"
+valley = 4
+index = 12
+breath_cost = 10
+enemy_ids = ["hollow_brute", "hirs", "hollow_brute"]
+enemy_scale = 2.12
+turn_target = 174
+xp_reward = 230
+marks_reward = 50
+first_clear_seals = 3
+first_clear_sigils = 2

@@ -1,0 +1,18 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/stage_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"v3_s12"
+display_name = "Ghadab, the Blazing"
+valley = 3
+index = 12
+breath_cost = 10
+enemy_ids = ["mirror_shade", "ghadab", "mirror_shade"]
+enemy_scale = 1.84
+turn_target = 168
+xp_reward = 184
+marks_reward = 50
+first_clear_seals = 3
+first_clear_sigils = 2

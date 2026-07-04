@@ -1,0 +1,90 @@
+[gd_resource type="Resource" load_steps=12 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/unit_data.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/data/skill_data.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/data/effect_block.gd" id="3"]
+
+[sub_resource type="Resource" id="e1"]
+script = ExtResource("3")
+kind = 0
+power = 1.3
+
+[sub_resource type="Resource" id="e2"]
+script = ExtResource("3")
+kind = 2
+status_id = 6
+chance = 0.6
+duration = 2
+amount = 0.03
+
+[sub_resource type="Resource" id="e3"]
+script = ExtResource("3")
+kind = 2
+status_id = 0
+chance = 1.0
+duration = 99
+amount = 0.1
+stack_cap = 4.0
+
+[sub_resource type="Resource" id="e4"]
+script = ExtResource("3")
+kind = 0
+power = 1.6
+
+[sub_resource type="Resource" id="e5"]
+script = ExtResource("3")
+kind = 2
+status_id = 6
+chance = 0.8
+duration = 2
+amount = 0.04
+
+[sub_resource type="Resource" id="s1"]
+script = ExtResource("2")
+id = &"ghadab_lit"
+display_name = "Backhand of Fire"
+slot = 0
+cooldown = 0
+target_type = 0
+fervor_gain = 20
+effects = [SubResource("e1"), SubResource("e2")]
+
+[sub_resource type="Resource" id="s2"]
+script = ExtResource("2")
+id = &"ghadab_rem"
+display_name = "Feed the Fury"
+slot = 1
+cooldown = 3
+target_type = 4
+fervor_gain = 15
+effects = [SubResource("e3")]
+
+[sub_resource type="Resource" id="s3"]
+script = ExtResource("2")
+id = &"ghadab_trance"
+display_name = "Everything Burns"
+slot = 2
+cooldown = 0
+target_type = 1
+fervor_gain = 0
+effects = [SubResource("e4"), SubResource("e5")]
+
+[resource]
+script = ExtResource("1")
+id = &"ghadab"
+display_name = "Ghadab"
+epithet = "the Blazing"
+art_notes = "roaring archdemon of wrath, molten cracks over black hide, mane of blood-red fire"
+order_name = ""
+affinity = 7
+rarity = 5
+is_enemy = true
+max_hp = 5200
+atk = 132
+def = 80
+spd = 106
+crit_rate = 0.15
+crit_damage = 1.5
+effectiveness = 0.1
+resilience = 0.15
+skills = [SubResource("s1"), SubResource("s2"), SubResource("s3")]

@@ -1,0 +1,18 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/stage_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"v6_s05"
+display_name = "The Ornamented Gate"
+valley = 6
+index = 5
+breath_cost = 6
+enemy_ids = ["mirror_shade", "ash_ghoul", "whisperling"]
+enemy_scale = 2.038
+turn_target = 82
+xp_reward = 175
+marks_reward = 20
+first_clear_seals = 1
+first_clear_sigils = 0

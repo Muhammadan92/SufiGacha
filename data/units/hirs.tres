@@ -1,0 +1,96 @@
+[gd_resource type="Resource" load_steps=13 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/unit_data.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/data/skill_data.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/data/effect_block.gd" id="3"]
+
+[sub_resource type="Resource" id="e1"]
+script = ExtResource("3")
+kind = 0
+power = 1.2
+
+[sub_resource type="Resource" id="e2"]
+script = ExtResource("3")
+kind = 2
+status_id = 12
+chance = 0.8
+duration = 2
+amount = 15.0
+
+[sub_resource type="Resource" id="e3"]
+script = ExtResource("3")
+kind = 3
+amount = 40.0
+target_override = 4
+
+[sub_resource type="Resource" id="e4"]
+script = ExtResource("3")
+kind = 2
+status_id = 2
+chance = 1.0
+duration = 2
+amount = 0.3
+target_override = 4
+
+[sub_resource type="Resource" id="e5"]
+script = ExtResource("3")
+kind = 0
+power = 1.7
+
+[sub_resource type="Resource" id="e6"]
+script = ExtResource("3")
+kind = 2
+status_id = 12
+chance = 1.0
+duration = 2
+amount = 20.0
+
+[sub_resource type="Resource" id="s1"]
+script = ExtResource("2")
+id = &"hirs_lit"
+display_name = "Grasp"
+slot = 0
+cooldown = 0
+target_type = 0
+fervor_gain = 20
+effects = [SubResource("e1"), SubResource("e2")]
+
+[sub_resource type="Resource" id="s2"]
+script = ExtResource("2")
+id = &"hirs_rem"
+display_name = "Hoard the Light"
+slot = 1
+cooldown = 3
+target_type = 4
+fervor_gain = 15
+effects = [SubResource("e3"), SubResource("e4")]
+
+[sub_resource type="Resource" id="s3"]
+script = ExtResource("2")
+id = &"hirs_trance"
+display_name = "Never Enough"
+slot = 2
+cooldown = 0
+target_type = 1
+fervor_gain = 0
+effects = [SubResource("e5"), SubResource("e6")]
+
+[resource]
+script = ExtResource("1")
+id = &"hirs"
+display_name = "Hirs"
+epithet = "the Hollow Maw"
+art_notes = "bloated archdemon of greed, vast black maw ringed with blood-red light, hoard of shadows clutched beneath it"
+order_name = ""
+affinity = 7
+rarity = 5
+is_enemy = true
+max_hp = 6000
+atk = 128
+def = 95
+spd = 96
+crit_rate = 0.1
+crit_damage = 1.5
+effectiveness = 0.15
+resilience = 0.2
+skills = [SubResource("s1"), SubResource("s2"), SubResource("s3")]

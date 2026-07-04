@@ -1,0 +1,18 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/stage_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"v2_s01"
+display_name = "The Murmuring Orchard"
+valley = 2
+index = 1
+breath_cost = 6
+enemy_ids = ["whisperling", "smoke_serpent"]
+enemy_scale = 0.922
+turn_target = 42
+xp_reward = 39
+marks_reward = 20
+first_clear_seals = 1
+first_clear_sigils = 0

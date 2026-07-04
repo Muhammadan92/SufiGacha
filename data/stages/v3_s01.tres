@@ -1,0 +1,18 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/stage_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"v3_s01"
+display_name = "The Hall of Echoes"
+valley = 3
+index = 1
+breath_cost = 6
+enemy_ids = ["mirror_shade", "whisperling"]
+enemy_scale = 1.123
+turn_target = 48
+xp_reward = 52
+marks_reward = 20
+first_clear_seals = 1
+first_clear_sigils = 0

@@ -1,0 +1,18 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/stage_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"v7_s12"
+display_name = "Ya's, the Last Whisper"
+valley = 7
+index = 12
+breath_cost = 10
+enemy_ids = ["mirror_shade", "yas", "hollow_brute"]
+enemy_scale = 2.88
+turn_target = 192
+xp_reward = 368
+marks_reward = 50
+first_clear_seals = 3
+first_clear_sigils = 2

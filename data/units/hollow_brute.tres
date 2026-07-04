@@ -1,0 +1,65 @@
+[gd_resource type="Resource" load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/unit_data.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/data/skill_data.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/data/effect_block.gd" id="3"]
+
+[sub_resource type="Resource" id="e1"]
+script = ExtResource("3")
+kind = 0
+power = 1.1
+
+[sub_resource type="Resource" id="e2"]
+script = ExtResource("3")
+kind = 2
+status_id = 2
+chance = 1.0
+duration = 2
+amount = 0.3
+
+[sub_resource type="Resource" id="e3"]
+script = ExtResource("3")
+kind = 2
+status_id = 13
+chance = 1.0
+duration = 1
+
+[sub_resource type="Resource" id="s1"]
+script = ExtResource("2")
+id = &"brute_lit"
+display_name = "Slam"
+slot = 0
+cooldown = 0
+target_type = 0
+fervor_gain = 20
+effects = [SubResource("e1")]
+
+[sub_resource type="Resource" id="s2"]
+script = ExtResource("2")
+id = &"brute_rem"
+display_name = "Stone Guard"
+slot = 1
+cooldown = 3
+target_type = 4
+fervor_gain = 15
+effects = [SubResource("e2"), SubResource("e3")]
+
+[resource]
+script = ExtResource("1")
+id = &"hollow_brute"
+display_name = "Hollow Brute"
+epithet = ""
+art_notes = "hulking hollow demon of cracked black stone, blood-red glow in the fissures"
+order_name = ""
+affinity = 2
+rarity = 3
+is_enemy = true
+max_hp = 1000
+atk = 80
+def = 90
+spd = 78
+crit_rate = 0.1
+crit_damage = 1.5
+effectiveness = 0.0
+resilience = 0.1
+skills = [SubResource("s1"), SubResource("s2")]

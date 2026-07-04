@@ -9,8 +9,8 @@ that changes status.** Roadmap definitions live in GDD.md §14.
 |---|---|
 | 0 — Game Design Document | ✅ done (living doc — GDD.md) |
 | 1 — Grey-box combat prototype | ✅ done |
-| 2 — Vertical slice | 🔨 in progress |
-| 3 — Content & backend | ⬜ not started |
+| 2 — Vertical slice | 🔨 systems complete; awaiting art/audio (Kareem) + mobile test |
+| 3 — Content & backend | 🔨 in progress — **campaign content COMPLETE** (all 7 valleys authored & tuned); backend awaits Stage 0 (Kareem) |
 | 4 — Soft launch | ⬜ not started |
 
 ## Phase 2 — vertical slice checklist
@@ -31,6 +31,7 @@ that changes status.** Roadmap definitions live in GDD.md §14.
 - [x] Placeholder audio generator (tools/gen_placeholder_audio.gd): 12 synthesized SFX + 6 seamless loops — game fully audible with zero real tracks; real imports (.ogg/.mp3) auto-outrank placeholder .wav
 - [x] Summon reveal: sequential door-of-light animation on The Calling (rarity-colored, Luminary full-screen flash, tap-to-advance, Skip)
 - [x] Asset audit extended to audio (70 tracked assets total)
+- [x] **PHASE 3 CONTENT: all 7 valleys authored** — 72 new stages (v2-7) on the sim-calibrated curves; 6 new Vice bosses with vice-embodying kits (Hasad dispels blessings — new DISPEL effect; Ghadab's burning enrage; Hirs's Fervor-hoarding; Kasal's heal-race; Zeenah's gilded escorts; Ya's silence/despair) + 3 new trash enemies; all boss walls validated to E±1 contiguous via win-pattern sweeps (4 tuning passes); economy re-run on authored data: KPIs hold, minutes into band
 - [x] Content lifecycle complete (GDD §6.1): Hard/Nightmare valley re-clears (x2.2/x3.2 scale, x2/x3 rewards, +1 Sigil per boss tier, chain-gated) + weekly Vice Trial (5 tiers vs Pride, weekly-claimable, no Sigils). Economy sim re-run: KPIs hold
 - [x] Tutorial/first-session flow: 5-step guided intro (framing → Breath/stars → battle abilities & enemy-Trance warning → tokens/Calling → systems reveal) in the §1.1 register; per-screen overlay panels; save migration skips it for existing progress
 - [x] **The daily loop (GDD §9.3.1 + §7)**: lunar season calendar (tabular Hijri, verified vs real date), Deeds (3 daily rotating + 3 weekly → Marks/Seals + season XP), Season Pass scaffolding (30 tiers, free/paid tracks matching the sim, retroactive prototype unlock), daily Sanctum (today's order, adaptive difficulty, 2 runs/day → Scrolls+Marks). Sim re-run: revenue/KPIs hold, F2P Luminary rate unchanged

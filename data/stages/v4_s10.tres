@@ -1,0 +1,18 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/stage_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"v4_s10"
+display_name = "Appetite Unbound"
+valley = 4
+index = 10
+breath_cost = 8
+enemy_ids = ["hollow_brute", "shadow_vermin"]
+enemy_scale = 1.974
+turn_target = 90
+xp_reward = 200
+marks_reward = 30
+first_clear_seals = 1
+first_clear_sigils = 0

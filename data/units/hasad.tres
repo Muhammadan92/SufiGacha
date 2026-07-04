@@ -1,0 +1,79 @@
+[gd_resource type="Resource" load_steps=11 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/unit_data.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/data/skill_data.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/data/effect_block.gd" id="3"]
+
+[sub_resource type="Resource" id="e1"]
+script = ExtResource("3")
+kind = 0
+power = 1.2
+
+[sub_resource type="Resource" id="e2"]
+script = ExtResource("3")
+kind = 6
+
+[sub_resource type="Resource" id="e3"]
+script = ExtResource("3")
+kind = 2
+status_id = 0
+chance = 1.0
+duration = 99
+amount = 0.12
+stack_cap = 5.0
+target_override = 4
+
+[sub_resource type="Resource" id="e4"]
+script = ExtResource("3")
+kind = 0
+power = 1.6
+
+[sub_resource type="Resource" id="s1"]
+script = ExtResource("2")
+id = &"hasad_lit"
+display_name = "Covet"
+slot = 0
+cooldown = 0
+target_type = 0
+fervor_gain = 20
+effects = [SubResource("e1")]
+
+[sub_resource type="Resource" id="s2"]
+script = ExtResource("2")
+id = &"hasad_rem"
+display_name = "Tear Away the Blessing"
+slot = 1
+cooldown = 3
+target_type = 1
+fervor_gain = 15
+effects = [SubResource("e2"), SubResource("e3")]
+
+[sub_resource type="Resource" id="s3"]
+script = ExtResource("2")
+id = &"hasad_trance"
+display_name = "All You Have Is Mine"
+slot = 2
+cooldown = 0
+target_type = 1
+fervor_gain = 0
+effects = [SubResource("e4")]
+
+[resource]
+script = ExtResource("1")
+id = &"hasad"
+display_name = "Hasad"
+epithet = "Devourer of Blessings"
+art_notes = "gaunt archdemon of envy, black smoke body straining toward everything, grasping too-long hands veined blood-red, hollow covetous eyes"
+order_name = ""
+affinity = 7
+rarity = 5
+is_enemy = true
+max_hp = 5400
+atk = 140
+def = 85
+spd = 104
+crit_rate = 0.15
+crit_damage = 1.5
+effectiveness = 0.15
+resilience = 0.2
+skills = [SubResource("s1"), SubResource("s2"), SubResource("s3")]

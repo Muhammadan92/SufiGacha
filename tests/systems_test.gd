@@ -29,8 +29,8 @@ func _initialize() -> void:
 	game.load_save()
 
 	# --- database ---
-	assert(db.units.size() == 19, "expected 19 units, got %d" % db.units.size())
-	assert(db.stages.size() == 12, "expected 12 stages, got %d" % db.stages.size())
+	assert(db.units.size() == 28, "expected 28 units, got %d" % db.units.size())
+	assert(db.stages.size() == 84, "expected 84 stages, got %d" % db.stages.size())
 	assert(String(db.stage_order[0].id) == "v1_s01", "stage order broken")
 	assert(db.playable_pool(5).size() == 8, "Luminary pool should be 8 (incl. Sage)")
 	assert(db.playable_pool(4).size() == 4, "Wayfarer pool should be 4")

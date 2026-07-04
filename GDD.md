@@ -234,7 +234,7 @@ Demons and personified vices only — never human, never anything resembling wor
 |---|---|
 | Fodder | **Whisperlings** (whisper wisps), shadow-vermin, ash ghouls |
 | Elite | **Mirror shades** (dark doubles of the player's own units — reuses rigs, cheap content), smoke serpents, hollow brutes |
-| Chapter bosses | **The Seven Vices**, one per valley: Pride, Envy, Wrath, Greed, Sloth, Worldliness, Despair — English names in all UI; each boss additionally bears an Arabic **true-name** as a title (e.g., *Kibr, Father of Pride*), the sanctioned §1.1 flavor use |
+| Chapter bosses | **The Seven Vices**, one per valley — English vice names in all UI; each bears an Arabic **true-name** as a title (sanctioned §1.1 flavor). ALL SEVEN SHIPPED (Phase 3): *Kibr, Father of Pride* (v1) · *Hasad, Devourer of Blessings* (v2 — DISPELS your blessings, feeds on them) · *Ghadab, the Blazing* (v3 — fast unbounded-feeling enrage + burns) · *Hirs, the Hollow Maw* (v4 — drains Fervor, hoards its own) · *Kasal, the Unmoving* (v5 — the heal-race: stacking regen behind stone) · *Zeenah, the Gilded* (v6 — gilds her escorts in barriers, dazzles your strength away) · *Ya's, the Last Whisper* (v7 — silence and despair-drain; the hardest wall) |
 | Final arc | **The Whisperer** — an archdemon of despair (Iblis-*inspired*, deliberately not named as such — see §12) |
 
 Boss design rule: each Vice boss mechanically embodies its vice (Pride reflects buffs back as damage unless dispelled; Envy steals your buffs; Despair drains Fervor) — so counterplay teaches the order system.

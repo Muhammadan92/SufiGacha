@@ -121,11 +121,8 @@ func _level_mult(l: int) -> float:
 	return 1.0 + 0.04 * (l - 1)
 
 
-func _expected_level(v: int, i: int) -> int:
-	var prev: float = 1.0 if v == 1 else float(BOSS_TARGET_LEVELS[v - 2])
-	return int(round(lerpf(prev, float(BOSS_TARGET_LEVELS[v - 1]), float(i) / 11.0)))
-
-
+## All 7 valleys are AUTHORED as of Phase 3 — the sim reads real stage data.
+## (The old synthetic v2-7 generator seeded their authored curves and is gone.)
 func _build_campaign() -> Array:
 	var out: Array = []
 	for s: StageData in db.stage_order:
@@ -135,24 +132,7 @@ func _build_campaign() -> Array:
 			"xp": s.xp_reward, "marks": s.marks_reward, "turn_target": s.turn_target,
 			"fc_seals": s.first_clear_seals, "fc_sigils": s.first_clear_sigils,
 		})
-	var sets := [["whisperling", "shadow_vermin"], ["shadow_vermin", "ash_ghoul"],
-		["whisperling", "whisperling", "ash_ghoul"], ["ash_ghoul", "ash_ghoul", "shadow_vermin"],
-		["whisperling", "ash_ghoul", "shadow_vermin"], ["whisperling", "whisperling", "whisperling"]]
-	for v in range(2, 8):
-		for i in 12:
-			var is_boss := i == 11
-			var pressure := 1.0 if is_boss else 0.72 + 0.28 * float(i) / 11.0
-			out.append({
-				"key": "v%d_s%02d" % [v, i + 1], "boss": is_boss, "valley": v,
-				"enemy_ids": ["whisperling", "kibr", "whisperling"] if is_boss else sets[i % sets.size()],
-				"scale": _level_mult(_expected_level(v, i)) * pressure,
-				"breath": 10 if is_boss else (6 if i < 6 else 8),
-				"xp": int((26 + 6 * i) * (1.0 + XP_VALLEY_BONUS * (v - 1))),
-				"marks": 50 if is_boss else (20 if i < 6 else 30),
-				"turn_target": (150 if is_boss else 30 + 4 * i) + 6 * v,
-				"fc_seals": 3 if is_boss else (2 if i == 10 else 1),
-				"fc_sigils": 2 if is_boss else 0,
-			})
+	assert(out.size() == 84, "expected the full authored campaign")
 	return out
 
 

@@ -1,0 +1,18 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/stage_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"v6_s04"
+display_name = "Glitter and Dust"
+valley = 6
+index = 4
+breath_cost = 6
+enemy_ids = ["smoke_serpent", "mirror_shade"]
+enemy_scale = 1.975
+turn_target = 78
+xp_reward = 154
+marks_reward = 20
+first_clear_seals = 1
+first_clear_sigils = 0

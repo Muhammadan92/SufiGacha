@@ -1,0 +1,18 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/stage_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"v4_s08"
+display_name = "Never Enough"
+valley = 4
+index = 8
+breath_cost = 8
+enemy_ids = ["hollow_brute", "ash_ghoul"]
+enemy_scale = 1.796
+turn_target = 82
+xp_reward = 170
+marks_reward = 30
+first_clear_seals = 1
+first_clear_sigils = 0

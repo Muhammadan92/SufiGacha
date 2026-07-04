@@ -1,0 +1,18 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/stage_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"v3_s05"
+display_name = "The Library of Smoke"
+valley = 3
+index = 5
+breath_cost = 6
+enemy_ids = ["mirror_shade", "smoke_serpent"]
+enemy_scale = 1.381
+turn_target = 64
+xp_reward = 100
+marks_reward = 20
+first_clear_seals = 1
+first_clear_sigils = 0

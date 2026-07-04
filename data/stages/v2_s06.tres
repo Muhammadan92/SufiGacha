@@ -1,0 +1,18 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/stage_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"v2_s06"
+display_name = "Sweetness Soured"
+valley = 2
+index = 6
+breath_cost = 6
+enemy_ids = ["whisperling", "smoke_serpent", "shadow_vermin"]
+enemy_scale = 1.186
+turn_target = 62
+xp_reward = 84
+marks_reward = 20
+first_clear_seals = 1
+first_clear_sigils = 0

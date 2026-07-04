@@ -1,0 +1,18 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/stage_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"v2_s08"
+display_name = "Green-Eyed Hollow"
+valley = 2
+index = 8
+breath_cost = 8
+enemy_ids = ["smoke_serpent", "shadow_vermin"]
+enemy_scale = 1.293
+turn_target = 70
+xp_reward = 102
+marks_reward = 30
+first_clear_seals = 1
+first_clear_sigils = 0

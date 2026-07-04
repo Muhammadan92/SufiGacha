@@ -1,0 +1,58 @@
+[gd_resource type="Resource" load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/unit_data.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/data/skill_data.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/data/effect_block.gd" id="3"]
+
+[sub_resource type="Resource" id="e1"]
+script = ExtResource("3")
+kind = 0
+power = 1.0
+
+[sub_resource type="Resource" id="e2"]
+script = ExtResource("3")
+kind = 2
+status_id = 12
+chance = 0.7
+duration = 2
+amount = 15.0
+
+[sub_resource type="Resource" id="s1"]
+script = ExtResource("2")
+id = &"serpent_lit"
+display_name = "Coil Strike"
+slot = 0
+cooldown = 0
+target_type = 0
+fervor_gain = 20
+effects = [SubResource("e1")]
+
+[sub_resource type="Resource" id="s2"]
+script = ExtResource("2")
+id = &"serpent_rem"
+display_name = "Choking Smoke"
+slot = 1
+cooldown = 3
+target_type = 0
+fervor_gain = 15
+effects = [SubResource("e2")]
+
+[resource]
+script = ExtResource("1")
+id = &"smoke_serpent"
+display_name = "Smoke Serpent"
+epithet = ""
+art_notes = "long serpent of black smoke, blood-red seams along its coils, wisp fangs"
+order_name = ""
+affinity = 3
+rarity = 3
+is_enemy = true
+max_hp = 550
+atk = 70
+def = 45
+spd = 118
+crit_rate = 0.1
+crit_damage = 1.5
+effectiveness = 0.1
+resilience = 0.0
+skills = [SubResource("s1"), SubResource("s2")]

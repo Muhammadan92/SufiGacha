@@ -1,0 +1,18 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/stage_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"v2_s04"
+display_name = "A Song Half-Heard"
+valley = 2
+index = 4
+breath_cost = 6
+enemy_ids = ["whisperling", "smoke_serpent"]
+enemy_scale = 1.083
+turn_target = 54
+xp_reward = 66
+marks_reward = 20
+first_clear_seals = 1
+first_clear_sigils = 0

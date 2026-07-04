@@ -1,10 +1,14 @@
 extends SceneTree
-## Deterministic-combat balance metric (GDD §4.4): the minimum starter-team
-## level at which auto-battle clears each stage. The "wall" is the gap
-## between a stage's min-clear level and the level a player naturally has.
+## Deterministic-combat balance tool (GDD §4.4): win pattern by level around
+## each key stage's EXPECTED level (window ±4). Covers stages 1, 6, and 12 of
+## every valley — the full sweep at 84 stages would take an hour; these are
+## the load-bearing points. Balance target: trash W across the window; bosses
+## block at expected level and clear contiguously 1-2 above.
 ## Run:  godot --headless --path . -s res://tests/min_clear_levels.gd
 
 const TEAM := ["bram", "echo", "brand", "aria"]
+const BOSS_TARGETS := [8, 15, 22, 29, 36, 42, 48]
+const WINDOW := 4
 
 
 func _initialize() -> void:
@@ -19,26 +23,35 @@ func _initialize() -> void:
 	for id in TEAM:
 		team_data.append(db.units[id])
 
-	print("stage                          win pattern by level 1..14 (W/l, auto, starters)")
-	print("NOTE: deterministic combat is NOT monotonic in level — turn-sequence")
-	print("breakpoints can flip. Balance target: contiguous W from the expected level up.")
+	print("win pattern around expected level (E-4 .. E+4) | . = loss, W = win, E marks expected")
+	print("NOTE: deterministic combat is NOT monotonic — check the whole window.")
 	for stage: StageData in db.stage_order:
-		var enemy_data: Array = []
-		for eid in stage.enemy_ids:
-			enemy_data.append(db.units[eid])
+		if stage.index not in [1, 6, 12]:
+			continue
+		var expected := _expected_level(stage.valley, stage.index - 1)
 		var pattern := ""
-		for level in range(1, 15):
+		for offset in range(-WINDOW, WINDOW + 1):
+			var level := clampi(expected + offset, 1, 60)
 			var mult := 1.0 + 0.04 * (level - 1)
+			var enemy_data: Array = []
+			for eid in stage.enemy_ids:
+				enemy_data.append(db.units[eid])
 			var mgr := BattleManager.new()
 			mgr.auto_mode = true
 			var out := {}
 			mgr.battle_ended.connect(func(v: bool) -> void: out["v"] = v)
 			mgr.setup(team_data, enemy_data, [mult, mult, mult, mult], stage.enemy_scale)
 			var steps := 0
-			while not mgr.ended and steps < 1200:
+			while not mgr.ended and steps < 1500:
 				mgr.step()
 				steps += 1
 			mgr.free()
 			pattern += "W" if out.get("v", false) else "."
-		print("  %d-%02d %-24s %s" % [stage.valley, stage.index, stage.display_name, pattern])
+		print("  %d-%02d %-28s E=Lv%-3d  [%s]" % [
+			stage.valley, stage.index, stage.display_name, expected, pattern])
 	quit(0)
+
+
+func _expected_level(v: int, i: int) -> int:
+	var prev: float = 1.0 if v == 1 else float(BOSS_TARGETS[v - 2])
+	return int(round(lerpf(prev, float(BOSS_TARGETS[v - 1]), float(i) / 11.0)))

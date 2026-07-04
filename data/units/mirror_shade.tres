@@ -1,0 +1,55 @@
+[gd_resource type="Resource" load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/unit_data.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/data/skill_data.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/data/effect_block.gd" id="3"]
+
+[sub_resource type="Resource" id="e1"]
+script = ExtResource("3")
+kind = 0
+power = 1.1
+
+[sub_resource type="Resource" id="e2"]
+script = ExtResource("3")
+kind = 0
+power = 1.5
+
+[sub_resource type="Resource" id="s1"]
+script = ExtResource("2")
+id = &"shade_lit"
+display_name = "Mirrored Cut"
+slot = 0
+cooldown = 0
+target_type = 0
+fervor_gain = 20
+effects = [SubResource("e1")]
+
+[sub_resource type="Resource" id="s2"]
+script = ExtResource("2")
+id = &"shade_rem"
+display_name = "Familiar Strike"
+slot = 1
+cooldown = 2
+target_type = 0
+fervor_gain = 15
+effects = [SubResource("e2")]
+
+[resource]
+script = ExtResource("1")
+id = &"mirror_shade"
+display_name = "Mirror Shade"
+epithet = ""
+art_notes = "dark reflection of a traveler, featureless mirror face, black robes veined blood-red"
+order_name = ""
+affinity = 0
+rarity = 3
+is_enemy = true
+max_hp = 700
+atk = 90
+def = 55
+spd = 105
+crit_rate = 0.25
+crit_damage = 1.6
+effectiveness = 0.0
+resilience = 0.0
+skills = [SubResource("s1"), SubResource("s2")]

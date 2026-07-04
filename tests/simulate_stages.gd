@@ -7,9 +7,13 @@ extends SceneTree
 # Deterministic combat (GDD §4.4): one run per stage is exact.
 const RUNS := 1
 const TEAM := ["bram", "echo", "brand", "aria"]
-## Expected character level when first attempting stage 1..12 (one pass
-## through the valley, no grinding).
-const EXPECTED_LEVELS := [1, 1, 2, 2, 3, 3, 4, 5, 5, 6, 7, 8]
+## Expected level curve across all 7 valleys (boss targets per valley).
+const BOSS_TARGETS := [8, 15, 22, 29, 36, 42, 48]
+
+
+func _expected_level(v: int, i: int) -> int:
+	var prev: float = 1.0 if v == 1 else float(BOSS_TARGETS[v - 2])
+	return int(round(lerpf(prev, float(BOSS_TARGETS[v - 1]), float(i) / 11.0)))
 
 
 func _initialize() -> void:
@@ -28,7 +32,7 @@ func _initialize() -> void:
 	print("%d runs per stage | starter company at expected level" % RUNS)
 	for i in db.stage_order.size():
 		var stage: StageData = db.stage_order[i]
-		var level: int = EXPECTED_LEVELS[i] if i < EXPECTED_LEVELS.size() else 10
+		var level: int = _expected_level(stage.valley, stage.index - 1)
 		var mult := 1.0 + 0.04 * (level - 1)
 		var mults := [mult, mult, mult, mult]
 		var enemy_data: Array = []

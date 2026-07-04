@@ -286,6 +286,11 @@ func _apply_effect(actor: BattleUnit, eff: EffectBlock, target: BattleUnit) -> v
 			target.add_status(eff.status_id, eff.duration, magnitude, eff.stack_cap)
 			log_message.emit("  %s gains %s." % [target.data.display_name, Enums.STATUS_NAMES[eff.status_id]])
 			status_applied.emit(target, eff.status_id)
+		Enums.EffectKind.DISPEL:
+			var stripped := target.remove_buffs()
+			if stripped > 0:
+				log_message.emit("  %s's blessings are torn away (%d)." % [target.data.display_name, stripped])
+				unit_evaded.emit(target, "DISPELLED")
 		Enums.EffectKind.CLEANSE:
 			var removed := target.remove_debuffs()
 			if removed > 0:

@@ -103,6 +103,13 @@ func remove_debuffs() -> int:
 	return before - statuses.size()
 
 
+## Removes all buffs (DISPEL — Envy steals blessings); returns count removed.
+func remove_buffs() -> int:
+	var before := statuses.size()
+	statuses = statuses.filter(func(s: StatusEffect) -> bool: return not s.is_buff())
+	return before - statuses.size()
+
+
 func expire_statuses() -> void:
 	for s: StatusEffect in statuses:
 		s.turns_left -= 1
