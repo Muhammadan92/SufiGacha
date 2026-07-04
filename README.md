@@ -1,6 +1,8 @@
 # Seven Springs
 
 A Sufi-inspired collectible turn-based RPG for mobile, built in Godot 4.
+**Gambling-free**: no loot boxes, no rates, no pity — every hero is a chosen,
+fixed-price purchase (GDD §9).
 
 - **[GDD.md](GDD.md)** — the full game design document (start here)
 - **[AI_ART_PIPELINE.md](AI_ART_PIPELINE.md)** — how art assets are produced (§10: the automated pipeline)

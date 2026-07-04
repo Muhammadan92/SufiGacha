@@ -1,6 +1,6 @@
 extends Node
 ## Autoload "Game": the player profile — roster, currencies, Breath (stamina),
-## stage progress, summoning (The Calling) with pity, and the save file.
+## stage progress, The Calling (deterministic token shop), and the save file.
 ##
 ## NOTE (GDD §13.3): summoning and the wallet MUST move behind a
 ## server-authoritative interface before any real-money launch. This local
@@ -13,19 +13,24 @@ const BREATH_REGEN_SECONDS := 360  # 1 Breath / 6 min (GDD §10)
 const LEVEL_CAP := 60
 const STARTERS := ["bram", "echo", "brand", "aria"]
 
-const PULL_COST := 10
-const PITY_LIMIT := 70         # hard pity: guaranteed Luminary (GDD §9.1)
-const RATE_LUMINARY := 0.03
-const RATE_WAYFARER := 0.20
+# GAMBLING-FREE acquisition (GDD §9): all purchases are deterministic,
+# fixed-price, in tiered tokens. No rolls, no rates, no pity — ever (§12.9).
+const UNIT_COSTS := {
+	3: { "currency": "marks", "amount": 300 },   # Novice — Silver Marks
+	4: { "currency": "seals", "amount": 10 },    # Wayfarer — Violet Seals
+	5: { "currency": "sigils", "amount": 6 },    # Luminary — Emerald Sigils
+}
+const SCROLL_COST_MARKS := 60
 
 var roster := {}   # id (String) -> {"level": int, "xp": int, "dupes": int}
 var team: Array = STARTERS.duplicate()
-var pearls := 30
-var scrolls := 0   # Teaching Scrolls, from duplicate summons
+var marks := 200   # Silver Marks
+var seals := 0     # Violet Seals
+var sigils := 0    # Emerald Sigils
+var scrolls := 0   # Teaching Scrolls
 var breath := BREATH_MAX
 var breath_ts := 0
 var cleared := {}  # stage id (String) -> true
-var pity := 0
 
 # Lazy sibling lookup (not @onready, not an absolute path) so headless tests
 # that build the tree manually still work — autoloads and test doubles are
@@ -125,17 +130,19 @@ func finish_stage(stage: StageData, victory: bool) -> Dictionary:
 	var summary := {
 		"victory": victory,
 		"stage_name": stage.display_name,
-		"xp_each": 0, "pearls": 0, "first_clear_pearls": 0,
+		"xp_each": 0, "marks": 0, "first_clear_seals": 0, "first_clear_sigils": 0,
 		"level_ups": [],
 	}
 	if victory:
 		summary["xp_each"] = stage.xp_reward
-		summary["pearls"] = stage.pearls_reward
-		pearls += stage.pearls_reward
+		summary["marks"] = stage.marks_reward
+		marks += stage.marks_reward
 		if not cleared.has(String(stage.id)):
 			cleared[String(stage.id)] = true
-			summary["first_clear_pearls"] = stage.first_clear_pearls
-			pearls += stage.first_clear_pearls
+			summary["first_clear_seals"] = stage.first_clear_seals
+			summary["first_clear_sigils"] = stage.first_clear_sigils
+			seals += stage.first_clear_seals
+			sigils += stage.first_clear_sigils
 		for id in team:
 			var gained := add_xp(id, stage.xp_reward)
 			if gained > 0:
@@ -144,58 +151,59 @@ func finish_stage(stage: StageData, victory: bool) -> Dictionary:
 	return summary
 
 
-# --- The Calling (summoning) --------------------------------------------------
+# --- The Calling (deterministic shop, GDD §9.1) --------------------------------
 
-## Performs `count` summons. Returns [] if pearls are insufficient, else a
-## list of {"unit": UnitData, "is_new": bool, "rarity": int}.
-func pull(count: int) -> Array:
-	var cost := PULL_COST * count
-	if pearls < cost:
-		return []
-	pearls -= cost
-	var results: Array = []
-	for i in count:
-		results.append(_pull_one())
-	# 10-pull guarantee: at least one Wayfarer or better (GDD §9.1).
-	if count >= 10:
-		var has_good := false
-		for r: Dictionary in results:
-			if r["rarity"] >= 4:
-				has_good = true
-				break
-		if not has_good:
-			results[results.size() - 1] = _pull_rarity(4)
+func currency_amount(currency: String) -> int:
+	match currency:
+		"marks": return marks
+		"seals": return seals
+		"sigils": return sigils
+		_: return 0
+
+
+func unit_cost(rarity: int) -> Dictionary:
+	return UNIT_COSTS[rarity]
+
+
+func can_afford_unit(unit: UnitData) -> bool:
+	var cost: Dictionary = UNIT_COSTS[unit.rarity]
+	return currency_amount(cost["currency"]) >= cost["amount"]
+
+
+## Deterministic purchase of a CHOSEN unit. Returns "ok", "owned", or "poor".
+func buy_unit(id: String) -> String:
+	if roster.has(id):
+		return "owned"
+	var unit: UnitData = db.units[id]
+	var cost: Dictionary = UNIT_COSTS[unit.rarity]
+	if not can_afford_unit(unit):
+		return "poor"
+	match cost["currency"]:
+		"marks": marks -= cost["amount"]
+		"seals": seals -= cost["amount"]
+		"sigils": sigils -= cost["amount"]
+	grant_unit(id)
 	save()
-	return results
+	return "ok"
 
 
-func _pull_one() -> Dictionary:
-	pity += 1
-	var roll := randf()
-	if pity >= PITY_LIMIT:
-		return _pull_rarity(5)
-	if roll < RATE_LUMINARY:
-		return _pull_rarity(5)
-	if roll < RATE_LUMINARY + RATE_WAYFARER:
-		return _pull_rarity(4)
-	return _pull_rarity(3)
-
-
-func _pull_rarity(rarity: int) -> Dictionary:
-	if rarity == 5:
-		pity = 0
-	var pool: Array = db.playable_pool(rarity)
-	var unit: UnitData = pool[randi() % pool.size()]
-	var is_new := grant_unit(String(unit.id))
-	return {"unit": unit, "is_new": is_new, "rarity": rarity}
+func buy_scroll(count: int = 1) -> bool:
+	var cost := SCROLL_COST_MARKS * count
+	if marks < cost:
+		return false
+	marks -= cost
+	scrolls += count
+	save()
+	return true
 
 
 # --- save file ------------------------------------------------------------------
 
 func save() -> void:
 	var blob := {
-		"roster": roster, "team": team, "pearls": pearls, "scrolls": scrolls,
-		"breath": breath, "breath_ts": breath_ts, "cleared": cleared, "pity": pity,
+		"roster": roster, "team": team, "scrolls": scrolls,
+		"marks": marks, "seals": seals, "sigils": sigils,
+		"breath": breath, "breath_ts": breath_ts, "cleared": cleared,
 	}
 	var f := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if f:
@@ -209,12 +217,16 @@ func load_save() -> void:
 		if blob is Dictionary:
 			roster = blob.get("roster", {})
 			team = blob.get("team", STARTERS.duplicate())
-			pearls = int(blob.get("pearls", 30))
 			scrolls = int(blob.get("scrolls", 0))
+			marks = int(blob.get("marks", 200))
+			seals = int(blob.get("seals", 0))
+			sigils = int(blob.get("sigils", 0))
+			# migration: pre-token saves held Pearls — convert 1 Pearl -> 10 Marks
+			if blob.has("pearls"):
+				marks += int(blob["pearls"]) * 10
 			breath = int(blob.get("breath", BREATH_MAX))
 			breath_ts = int(blob.get("breath_ts", 0))
 			cleared = blob.get("cleared", {})
-			pity = int(blob.get("pity", 0))
 	if roster.is_empty():
 		for id in STARTERS:
 			grant_unit(id)
@@ -226,12 +238,13 @@ func load_save() -> void:
 func reset_profile() -> void:
 	roster = {}
 	team = STARTERS.duplicate()
-	pearls = 30
+	marks = 200
+	seals = 0
+	sigils = 0
 	scrolls = 0
 	breath = BREATH_MAX
 	breath_ts = 0
 	cleared = {}
-	pity = 0
 	for id in STARTERS:
 		grant_unit(id)
 	save()

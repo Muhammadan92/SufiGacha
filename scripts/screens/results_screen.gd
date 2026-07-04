@@ -25,9 +25,11 @@ func _build() -> void:
 	if summary.get("victory", false):
 		lines.append("")
 		lines.append("XP gained: %d per companion" % summary.get("xp_each", 0))
-		lines.append("Pearls: +%d" % summary.get("pearls", 0))
-		if summary.get("first_clear_pearls", 0) > 0:
-			lines.append("First clear bonus: +%d Pearls!" % summary["first_clear_pearls"])
+		lines.append("Silver Marks: +%d" % summary.get("marks", 0))
+		if summary.get("first_clear_seals", 0) > 0:
+			lines.append("First clear: +%d Violet Seal(s)!" % summary["first_clear_seals"])
+		if summary.get("first_clear_sigils", 0) > 0:
+			lines.append("First clear: +%d Emerald Sigil(s)!" % summary["first_clear_sigils"])
 		for msg in summary.get("level_ups", []):
 			lines.append(str(msg))
 	else:

@@ -69,14 +69,15 @@ func _expected_level(v: int, i: int) -> int:
 	return int(round(lerpf(prev, float(BOSS_TARGET_LEVELS[v - 1]), float(i) / 11.0)))
 
 
-## Each stage: {valley, index, name, enemy_ids, scale, breath, xp, pearls, first_clear}
+## Each stage: {valley, index, name, enemy_ids, scale, breath, xp, marks, fc_seals, fc_sigils}
 func _build_campaign() -> Array:
 	var out: Array = []
 	for s: StageData in db.stage_order:  # authored valley 1
 		out.append({
 			"valley": s.valley, "index": s.index, "name": s.display_name,
 			"enemy_ids": s.enemy_ids, "scale": s.enemy_scale, "breath": s.breath_cost,
-			"xp": s.xp_reward, "pearls": s.pearls_reward, "first_clear": s.first_clear_pearls,
+			"xp": s.xp_reward, "marks": s.marks_reward,
+			"fc_seals": s.first_clear_seals, "fc_sigils": s.first_clear_sigils,
 		})
 	for v in range(2, 8):
 		for i in 12:
@@ -91,8 +92,9 @@ func _build_campaign() -> Array:
 				"scale": _level_mult(_expected_level(v, i)) * pressure,
 				"breath": 10 if is_boss else (6 if i < 6 else 8),
 				"xp": int((26 + 6 * i) * (1.0 + XP_VALLEY_BONUS * (v - 1))),
-				"pearls": 5 if is_boss else (2 if i < 6 else 3),
-				"first_clear": 40 if is_boss else (15 if i == 10 else 10),
+				"marks": 50 if is_boss else (20 if i < 6 else 30),
+				"fc_seals": 3 if is_boss else (2 if i == 10 else 1),
+				"fc_sigils": 2 if is_boss else 0,
 			})
 	return out
 
@@ -135,7 +137,9 @@ func _run_career(profile: String, daily_breath: int, stages: Array) -> void:
 		team_levels[id] = 1
 		team_xp[id] = 0
 	var cleared := {}
-	var pearls := 30
+	var marks := 200
+	var seals := 0
+	var sigils := 0
 	var total_runs := 0
 	var fail_streak := 0
 	var next_idx := 0
@@ -161,11 +165,12 @@ func _run_career(profile: String, daily_breath: int, stages: Array) -> void:
 			total_runs += 1
 			var won := _run_battle(stage)
 			if won:
-				pearls += stage["pearls"]
+				marks += stage["marks"]
 				var leveled := _grant_xp(stage["xp"])
 				if not farm_mode:
 					if not cleared.has(next_idx):
-						pearls += stage["first_clear"]
+						seals += stage["fc_seals"]
+						sigils += stage["fc_sigils"]
 						cleared[next_idx] = true
 					if target["index"] == 12:
 						boss_days[target["valley"]] = [day, team_levels["bram"], days_on_current]
@@ -181,9 +186,11 @@ func _run_career(profile: String, daily_breath: int, stages: Array) -> void:
 					fail_streak += 1
 		day += 1
 
-	print("  full clear: %s | total runs: %d | pearls earned: %d (%d summons)" % [
+	print("  full clear: %s | total runs: %d" % [
 		("day %d" % (day - 1)) if next_idx >= stages.size() else "NOT in %d days (stuck at %s)" % [MAX_DAYS, stages[next_idx]["name"]],
-		total_runs, pearls, pearls / 10])
+		total_runs])
+	print("  tokens earned: %d Marks, %d Seals, %d Sigils -> affords %d Novices + %d Wayfarers + %d Luminaries (GDD 9.2 draft prices)" % [
+		marks, seals, sigils, marks / 300, seals / 10, sigils / 6])
 	for v in boss_days:
 		print("  valley %d boss: day %-3d team L%-2d (%d days in valley)" % [
 			v, boss_days[v][0], boss_days[v][1], boss_days[v][2]])

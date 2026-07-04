@@ -31,6 +31,7 @@ that changes status.** Roadmap definitions live in GDD.md §14.
 - [x] Placeholder audio generator (tools/gen_placeholder_audio.gd): 12 synthesized SFX + 6 seamless loops — game fully audible with zero real tracks; real imports (.ogg/.mp3) auto-outrank placeholder .wav
 - [x] Summon reveal: sequential door-of-light animation on The Calling (rarity-colored, Luminary full-screen flash, tap-to-advance, Skip)
 - [x] Asset audit extended to audio (70 tracked assets total)
+- [x] **Monetization pivot — GAMBLING-FREE (GDD §9, charter §12.9)**: all %-roll acquisition removed as maysir. Tiered token currencies (Silver Marks / Violet Seals / Emerald Sigils), fixed-price deterministic Calling (player chooses the hero; ceremony kept), Teaching Scrolls sold directly, dupes/pity/rates deleted. Bundle pricing anchored to preserve expected revenue per team comp. Marketing identity: "the gambling-free hero collector"
 
 ### In progress
 - [ ] Manual playtest pass on the visual build (feel, pacing, clarity) — **owner: Kareem**

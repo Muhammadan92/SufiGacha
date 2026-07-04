@@ -9,7 +9,7 @@
 | **Platform** | iOS + Android (portrait or landscape — TBD, see §13) |
 | **Engine** | Godot 4.x (GDScript) |
 | **Art style** | Stylized 2D anime with Islamic ornamental framing (geometry, illumination, calligraphy motifs in UI) |
-| **Monetization** | Premium-currency gacha with pity system + battle pass (see §9) |
+| **Monetization** | **Gambling-free**: fixed-price tiered token shop (no random paid acquisition — see §9). Marketed as a gambling-free hero collector |
 | **Audience** | Western gacha RPG players 16+. Primarily a **dawah project**: an accessible, welcoming introduction to Sufi spirituality for a general Western audience (see §1.1) |
 
 ---
@@ -37,7 +37,7 @@ This game is primarily a **dawah project aimed at a Western audience**: the goal
 - **The Codex is the dawah vehicle**: an optional in-game encyclopedia (working name: *The Traveler's Notebook*), unlocked through play, giving the real history, terminology, poetry, and figures behind each order, valley, and concept. Depth on tap for the curious; invisible to players who just want to play.
 - **Lore research source**: for ALL lore portions of the game (Codex entries, valley/chapter framing, boss true-names, item flavor, Part 2), mine **[nurmuhammad.com](https://nurmuhammad.com)** for interesting, lesser-known tariqah-rooted teachings (the realities of the months, number mysticism, the subtle centers, light-and-veil cosmology) — these make far better lore notes than encyclopedia-level material. Always as *inspiration*: everything passes through this language policy on the way in, and the §12.6 scholar review covers all Codex/lore content before launch.
   - Source pages used so far: [the mystical number 108 → the Fountain](https://nurmuhammad.com/mystical-number-108-kawthar-haq-and-reality-of-sacrifice/) and [the twelfth month](https://nurmuhammad.com/12-dhul_hijjah/) (Part 2, §6.2); [Spiritual Dragons Protecting Believers](https://nurmuhammad.com/spiritual-dragons-protecting-believers-sufi-meditation-center/?playlist=17074) and [Thuban & the Fiery Guardian](https://nurmuhammad.com/thuban-and-the-fiery-guardian-sayyidina-malik-as/) (Guardians, §3.6).
-  - **Open decision (Kareem)**: should the in-game Codex *hyperlink out* to these pages ("Learn more"), or keep sources internal? Linking is the strongest dawah funnel, but it visibly affiliates the game with one specific living tariqa's platform — which interacts with the §12.7 positioning ("never claiming to represent any living order") and should be part of the §12.6 scholar/advisor review.
+  - **Decided (2026-07): the in-game Codex hyperlinks out to source pages** ("Learn more" links) — the strongest dawah funnel. Each Codex entry carries its source URLs in data. The §12.6 scholar/advisor review still covers the linked content before launch.
 - **Show, don't preach**: the story never proselytizes — it dramatizes a universal spiritual struggle. Success metric: players googling Rumi and "Sufism" unprompted.
 - **Doc convention**: this GDD keeps source terms where useful for design precision; the table below fixes what players actually see.
 
@@ -303,36 +303,69 @@ Concept notes (to be designed when Phase 3 planning begins):
 
 ---
 
-## 9. Gacha & Monetization
+## 9. Acquisition & Monetization — GAMBLING-FREE
 
-### 9.1 Summoning — "The Calling"
-Thematic frame (from *bay'ah*, the pledge): you don't "pull" a character — you **send out a call**, and a companion answers it and joins your company. Summon animation: a figure answering the call at a lodge doorway; rarity tell = the color of the light in the doorway.
+**Ruling-driven redesign (2026-07): percentage-based paid acquisition — loot
+boxes, gacha rolls, pity systems — is maysir and has been removed entirely.**
+Nothing a player buys resolves by chance. All acquisition is deterministic,
+fixed-price purchase. This is also the marketing identity: **the
+gambling-free hero collector** — all the genre's spectacle, none of its
+gambling.
 
-- **Currency**: *Pearls* (premium, bought + earned) · *Pearl of the Path* (earned-only variant for standard banner).
-- **Rates**: 5★ 3% · 4★ 20% · 3★ 77%. Rate-up banner: 50/50 then guaranteed (Genshin-proven, players trust it).
-- **Pity**: hard pity at **70** pulls, carries across a banner cycle; visible counter in UI (transparency as brand value).
-- **10-pull** guarantees ≥1 4★.
+### 9.1 The Calling (deterministic)
+The ceremony survives; the dice do not. Thematic frame (from *bay'ah*, the
+pledge): the player **chooses** the companion to call, pays their fixed price
+in tier tokens, and the door-of-light ceremony plays. No rates, no pity, no
+duplicates — skill-ups come from Teaching Scrolls, purchased directly.
 
-### 9.2 Revenue lines
-1. Pearl packs (first-purchase double bonus)
-2. **Monthly Traveler's Pass** (~$5: daily Pearl drip — best value, whale-independent baseline revenue)
-3. Battle pass per chapter-season (~$10: cosmetics, materials, a 4★ selector — no exclusive power)
-4. Cosmetics: outfit variants, lodge (home screen) decorations
+### 9.2 Tiered token currencies
+Three token currencies, keyed to the rarity signal colors (§3.1):
 
-### 9.3 Compliance & guardrails (required, not optional)
-- **Publish exact odds** in-game (Apple App Store 3.1.1 / Google Play both require disclosed loot-box odds).
-- **Belgium & Netherlands**: paid loot boxes are legally restricted — plan to geo-disable paid summons or don't ship there at launch.
-- Age rating will carry a gambling-mechanics descriptor (ESRB/PEGI in-game purchases + random items label).
-- House rules for our own conscience given the theme: visible pity counter, no "you almost got it!" near-miss animations, no limited-time countdown pressure on first-time buyers, monthly spend-limit setting the player can turn on. *(Flagged earlier and acknowledged: paid randomized gacha sits badly with maysir concerns for part of this game's natural audience. These guardrails are the mitigation; a fuller halal-certification review with a scholar before launch is strongly recommended — see §12.)*
+| Token | Buys | Earned in play by | Real-money anchor |
+|---|---|---|---|
+| **Silver Marks** | Novices, Teaching Scrolls | every stage clear | fractions of a cent–bulk packs |
+| **Violet Seals** | Wayfarers | stage first-clears, weeklies | ~$1.20–1.80 each |
+| **Emerald Sigils** | Luminaries (incl. Guardians) | valley-boss first-clears, achievements, events | ~$10–12 each |
+
+Draft fixed prices (tune via the progression sim): **Novice 300 Marks ·
+Wayfarer 10 Seals · Luminary 6 Sigils · Teaching Scroll 60 Marks.**
+
+### 9.3 Packs, bundles & revenue lines
+1. **Token packs** — singles at anchor price, bundles discounted (e.g.
+   Sigils 1/$12 · 3/$33 · 6/$66). Bundle pricing puts a chosen Luminary at
+   ≈ $66–72 — deliberately matched to the old expected pity cost ($70–90),
+   so **expected revenue per team composition is preserved** while variance
+   (and the gambling) disappears. Deterministic choice is *worth* the price:
+   players buy exactly the hero they want.
+2. **Monthly Traveler's Pass** (~$5: daily token drip — baseline revenue)
+3. **Battle pass** per chapter-season (cosmetics, materials, tokens — no exclusive power)
+4. **Cosmetics**: outfit variants, lodge decorations
+5. **Company Chest** mixed bundles (Marks+Seals+Sigils) at deeper discount
+
+### 9.4 Compliance & positioning
+- **No loot boxes** → no odds-disclosure requirements, no Belgium/Netherlands
+  restrictions, no gambling age-rating descriptors. Ship everywhere.
+- **Advertise it loudly**: "the gambling-free hero collector" is both a dawah
+  statement and a store-listing differentiator nobody else in the genre has.
+  Parents, regulators, and recovering gacha players are all the audience.
+- Guardrails retained: optional monthly spend-limit setting, no countdown
+  pressure on first-time buyers, all prices visible before purchase.
+- **Scope rule**: combat randomness (crits, debuff chance) involves no money
+  and no stake — gameplay dice, not maysir. The standing charter rule
+  (§12.9): anything money touches must be deterministic, forever.
 
 ---
 
-## 10. Economy Sketch (tune in spreadsheets later)
+## 10. Economy Sketch (tune in spreadsheets + progression sim)
 
-- F2P income target: ~60–70 pulls/month first month (launch generosity), ~35–40/month steady state.
-- One full pity ≈ $70–90 of Pearls (genre-typical anchor).
-- Stamina: 1 Breath/6 min regen, campaign stage = 8–12 Breath.
-- Every currency, cost, and drop table lives in **data files, not code** (see §13) so the economy is tunable without client patches.
+- F2P income target: one full campaign pass earns ~2 chosen Luminaries' worth
+  of Sigils (valley-boss first-clears + achievements); steady state ~1
+  Luminary per 6–8 weeks for a dailies player.
+- Honest whale ceiling: a full chosen-Luminary comp ≈ $260–290 — comparable
+  to old expected gacha spend for the same outcome, with zero variance.
+- Stamina: 1 Breath/6 min regen, campaign stage = 6–10 Breath.
+- Every currency, cost, and reward lives in **data files, not code** (see
+  §13); rerun `tests/simulate_progression.gd` after any economy change.
 
 ---
 
@@ -356,6 +389,7 @@ This section is load-bearing — the theme is the product, and mishandling it is
 6. **Before public launch: paid review by 1–2 scholars/community advisors** (ideally one with tariqa affiliation) covering names, art, monetization, and story. Budget line item, not a favor.
 7. Community positioning: "inspired by the heritage of tasawwuf," made with love — never claiming to *represent* any living order.
 8. **AI art guardrails**: no AI-generated Arabic or calligraphic script ever ships (models produce gibberish pseudo-Arabic that could mangle or accidentally evoke sacred text) — ornament is real vetted geometry or clearly non-linguistic invented glyphs, reviewed by a native reader. Every AI-based character design gets a human cultural-accuracy check against real regional dress references before production (models default to Orientalist costume clichés). Full policy in `AI_ART_PIPELINE.md` §0 and §7.
+9. **No paid randomness, ever**: anything money touches resolves deterministically (§9). Percentage-based paid acquisition is maysir — this determination is permanent and applies to all future systems (events, cosmetics, talisman rolls, anything).
 
 ---
 

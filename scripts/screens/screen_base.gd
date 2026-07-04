@@ -76,8 +76,8 @@ func refresh_resources() -> void:
 	if resources_label == null:
 		return
 	game.regen_breath()
-	resources_label.text = "Pearls %d   Scrolls %d   Breath %d/%d" % [
-		game.pearls, game.scrolls, game.breath, game.BREATH_MAX]
+	resources_label.text = "Marks %d   Seals %d   Sigils %d   Scrolls %d   Breath %d/%d" % [
+		game.marks, game.seals, game.sigils, game.scrolls, game.breath, game.BREATH_MAX]
 
 
 func unit_title(id: String) -> String:
