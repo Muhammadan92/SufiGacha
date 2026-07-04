@@ -63,8 +63,11 @@ Backend build-out (fully planned in **BACKEND.md** — Nakama, authoritative
 wallet, IAP validation, replay-verification anti-cheat; build with first
 IAP), PvP, Lodges (guilds), Valleys 2–7, Talismans, scholar review
 (pre-launch requirement), localization.
-Near-term client prep from BACKEND.md §3: EconomyService interface seam,
-save_version field, battle action-log recording.
+Near-term client prep from BACKEND.md §3: EconomyService interface seam
+(done: save_version field, battle action-log recording).
+Full build order + manual-step checklists: **BACKEND_IMPLEMENTATION.md**
+(stage 0 accounts/VPS/secrets is all Kareem-manual and review-latency-bound —
+start it ~a month before first IAP).
 
 ## Balance targets (DETERMINISTIC combat — GDD §4.4; rerun sims after any data change)
 - Combat has zero dice: identical inputs = identical battles. The balance

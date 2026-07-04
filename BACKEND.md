@@ -4,6 +4,8 @@ Companion to GDD §13.3. Status: **planned, not built** — deliberately. The
 backend becomes mandatory the moment real money enters (Phase 3); building it
 earlier is wasted motion while systems still change shape.
 
+**Step-by-step build order with all manual steps: `BACKEND_IMPLEMENTATION.md`.**
+
 ## 0. What our design decisions already bought us
 
 Two recent rulings simplified this plan dramatically:
