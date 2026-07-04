@@ -57,7 +57,10 @@ func _initialize() -> void:
 	assert(not game.is_unlocked(db.stages["v1_s02"]))
 	var summary: Dictionary = game.finish_stage(s1, true)
 	assert(summary["victory"] and summary["first_clear_seals"] == 1)
-	assert(game.seals == 1 and game.marks == 200 + 20)
+	# bare clear = 1 star (default stats fail the other objectives):
+	# marks = 200 start + 20 stage + 20 star; seals = 1 first-clear + 1 star
+	assert(summary["stars"] == 1 and summary["new_stars"] == 1)
+	assert(game.seals == 2 and game.marks == 200 + 20 + 20)
 	assert(game.is_unlocked(db.stages["v1_s02"]))
 	assert(not game.is_unlocked(db.stages["v1_s12"]))
 	print("stage flow ok")
@@ -77,6 +80,43 @@ func _initialize() -> void:
 	assert(not game.buy_scroll(1), "scroll purchase with 0 marks must fail")
 	# audit: no randomness in acquisition — buying is exact and repeatable
 	print("calling ok: deterministic purchases, no rolls")
+
+	# --- mastery (Teaching Scrolls spend) ---
+	assert(game.mastery_of("bram") == 0 and is_equal_approx(game.skill_mult_of("bram"), 1.0))
+	game.scrolls = 3
+	assert(game.upgrade_mastery("bram") and game.mastery_of("bram") == 1 and game.scrolls == 2)
+	assert(game.upgrade_mastery("bram") and game.scrolls == 0, "level 2 costs 2 scrolls")
+	assert(not game.upgrade_mastery("bram"), "no scrolls -> no upgrade")
+	assert(is_equal_approx(game.skill_mult_of("bram"), 1.12))
+	print("mastery ok")
+
+	# --- star objectives ---
+	var s2: StageData = db.stages["v1_s02"]
+	var flawless: Dictionary = game.finish_stage(s2, true, {"deaths": 0, "turns": 10})
+	assert(flawless["stars"] == 3 and flawless["new_stars"] == 3, "flawless should be 3 stars")
+	assert(flawless["star_seals"] == 3, "3 new stars -> 3 seals")
+	var repeat: Dictionary = game.finish_stage(s2, true, {"deaths": 2, "turns": 999})
+	assert(repeat["stars"] == 1 and repeat["new_stars"] == 0, "worse repeat must not re-reward")
+	assert(int(game.stars["v1_s02"]) == 3, "best stars persist")
+	print("stars ok")
+
+	# --- The Minaret ---
+	assert(not game.minaret_unlocked(), "minaret should be locked pre-1-6")
+	game.cleared[game.MINARET_UNLOCK_STAGE] = true
+	assert(game.minaret_unlocked())
+	var f1: StageData = game.make_minaret_stage(1)
+	assert(f1.breath_cost == 0 and f1.enemy_scale > 0.6)
+	var f10: StageData = game.make_minaret_stage(10)
+	assert(f10.enemy_ids == ["kibr"], "every 10th floor is a Vice floor")
+	var before_sigils: int = game.sigils
+	var climb: Dictionary = game.finish_minaret(1, true)
+	assert(game.minaret_floor == 1 and climb["marks"] == 35)
+	var skip: Dictionary = game.finish_minaret(5, true)
+	assert(skip["marks"] == 0 and game.minaret_floor == 1, "cannot skip floors")
+	for f in range(2, 11):
+		game.finish_minaret(f, true)
+	assert(game.minaret_floor == 10 and game.sigils == before_sigils + 1, "floor 10 pays a Sigil")
+	print("minaret ok")
 
 	# --- save roundtrip ---
 	game.sigils = 4242

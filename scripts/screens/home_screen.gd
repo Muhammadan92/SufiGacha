@@ -24,8 +24,10 @@ func _build() -> void:
 	v.add_child(HSeparator.new())
 
 	_nav_button(v, "Journey", "stages")
+	_nav_button(v, "The Minaret", "minaret")
 	_nav_button(v, "The Company", "roster")
 	_nav_button(v, "The Calling", "calling")
+	_nav_button(v, "The Traveler's Notebook", "codex")
 
 	v.add_child(HSeparator.new())
 	_build_settings(v)

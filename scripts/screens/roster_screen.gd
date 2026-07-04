@@ -3,6 +3,8 @@ extends ScreenBase
 
 var detail: RichTextLabel
 var detail_portrait: TextureRect
+var mastery_btn: Button
+var shown_id := ""
 
 
 func _build() -> void:
@@ -37,6 +39,11 @@ func _build() -> void:
 	detail.bbcode_enabled = true
 	detail_pane.add_child(detail)
 
+	mastery_btn = Button.new()
+	mastery_btn.custom_minimum_size = Vector2(0, 44)
+	mastery_btn.pressed.connect(_on_mastery_pressed)
+	detail_pane.add_child(mastery_btn)
+
 	var ids: Array = game.roster.keys()
 	ids.sort()
 	for id in ids:
@@ -51,17 +58,20 @@ func _build() -> void:
 
 
 func _show_detail(id: String) -> void:
+	shown_id = id
 	detail_portrait.texture = db.unit_art(id, "portrait")
 	var u: UnitData = db.units[id]
 	var level: int = game.level_of(id)
 	var mult: float = game.level_mult(level)
 	var entry: Dictionary = game.roster[id]
+	var mastery: int = game.mastery_of(id)
 	var lines: Array = []
 	lines.append("[b]%s[/b]" % u.label())
 	lines.append("%s of the %s Order — %s affinity" % [
 		Enums.RARITY_NAMES[u.rarity], u.order_name, Enums.AFFINITY_NAMES[u.affinity]])
-	lines.append("Level %d   (%d/%d XP)   Dupes: %d" % [
-		level, entry["xp"], game.xp_to_next(level), entry["dupes"]])
+	lines.append("Level %d   (%d/%d XP)" % [level, entry["xp"], game.xp_to_next(level)])
+	lines.append("Mastery %d/%d  (+%d%% damage & healing)" % [
+		mastery, game.MASTERY_CAP, int(game.MASTERY_BONUS_PER_LEVEL * mastery * 100)])
 	lines.append("")
 	lines.append("HP %d   ATK %d   DEF %d   SPD %d" % [
 		int(u.max_hp * mult), int(u.atk * mult), int(u.def * mult), u.spd])
@@ -76,3 +86,23 @@ func _show_detail(id: String) -> void:
 			Enums.SLOT_NAMES[skill.slot], skill.full_name(),
 			"  (cooldown %d)" % skill.cooldown if skill.cooldown > 0 else ""])
 	detail.text = "\n".join(lines)
+	_refresh_mastery_button()
+
+
+func _refresh_mastery_button() -> void:
+	var mastery: int = game.mastery_of(shown_id)
+	if mastery >= game.MASTERY_CAP:
+		mastery_btn.text = "Mastery complete"
+		mastery_btn.disabled = true
+		return
+	var cost: int = game.mastery_cost(mastery)
+	mastery_btn.text = "Refine technique  (+%d%% dmg & heal)  —  %d Teaching Scroll%s (have %d)" % [
+		int(game.MASTERY_BONUS_PER_LEVEL * 100), cost, "s" if cost > 1 else "", game.scrolls]
+	mastery_btn.disabled = game.scrolls < cost
+
+
+func _on_mastery_pressed() -> void:
+	if game.upgrade_mastery(shown_id):
+		sfx("reveal_novice")
+		refresh_resources()
+		_show_detail(shown_id)

@@ -21,6 +21,12 @@ const UNIT_COSTS := {
 	5: { "currency": "sigils", "amount": 6 },    # Luminary — Emerald Sigils
 }
 const SCROLL_COST_MARKS := 60
+const MASTERY_CAP := 5
+const MASTERY_BONUS_PER_LEVEL := 0.06  # +6% damage/heal output per mastery
+## Stars: 1 = clear, 2 = + no companion falls, 3 = + within the stage's turn target.
+const STAR_REWARD_MARKS := 20
+const STAR_REWARD_SEALS := 1
+const MINARET_UNLOCK_STAGE := "v1_s06"
 
 var roster := {}   # id (String) -> {"level": int, "xp": int, "dupes": int}
 var team: Array = STARTERS.duplicate()
@@ -31,6 +37,8 @@ var scrolls := 0   # Teaching Scrolls
 var breath := BREATH_MAX
 var breath_ts := 0
 var cleared := {}  # stage id (String) -> true
+var stars := {}    # stage id (String) -> best stars earned (1..3)
+var minaret_floor := 0  # highest Minaret floor cleared
 
 # Lazy sibling lookup (not @onready, not an absolute path) so headless tests
 # that build the tree manually still work — autoloads and test doubles are
@@ -86,7 +94,37 @@ func grant_unit(id: String) -> bool:
 		roster[id]["dupes"] += 1
 		scrolls += 1
 		return false
-	roster[id] = {"level": 1, "xp": 0, "dupes": 0}
+	roster[id] = {"level": 1, "xp": 0, "dupes": 0, "mastery": 0}
+	return true
+
+
+# --- mastery (Teaching Scrolls spend, GDD §8) ---------------------------------
+
+func mastery_of(id: String) -> int:
+	return int(roster[id].get("mastery", 0)) if roster.has(id) else 0
+
+
+func mastery_cost(current: int) -> int:
+	return current + 1  # 1,2,3,4,5 scrolls -> 15 total to max a character
+
+
+func skill_mult_of(id: String) -> float:
+	return 1.0 + MASTERY_BONUS_PER_LEVEL * mastery_of(id)
+
+
+## Spends Teaching Scrolls to raise a character's mastery. Deterministic.
+func upgrade_mastery(id: String) -> bool:
+	if not roster.has(id):
+		return false
+	var current := mastery_of(id)
+	if current >= MASTERY_CAP:
+		return false
+	var cost := mastery_cost(current)
+	if scrolls < cost:
+		return false
+	scrolls -= cost
+	roster[id]["mastery"] = current + 1
+	save()
 	return true
 
 
@@ -126,11 +164,14 @@ func is_unlocked(stage: StageData) -> bool:
 
 
 ## Applies rewards after a battle; returns a summary for the results screen.
-func finish_stage(stage: StageData, victory: bool) -> Dictionary:
+## stats: {"deaths": int, "turns": int} from the battle, for star objectives.
+func finish_stage(stage: StageData, victory: bool, stats: Dictionary = {}) -> Dictionary:
 	var summary := {
 		"victory": victory,
 		"stage_name": stage.display_name,
 		"xp_each": 0, "marks": 0, "first_clear_seals": 0, "first_clear_sigils": 0,
+		"stars": 0, "new_stars": 0, "star_marks": 0, "star_seals": 0,
+		"turn_target": stage.turn_target,
 		"level_ups": [],
 	}
 	if victory:
@@ -143,8 +184,88 @@ func finish_stage(stage: StageData, victory: bool) -> Dictionary:
 			summary["first_clear_sigils"] = stage.first_clear_sigils
 			seals += stage.first_clear_seals
 			sigils += stage.first_clear_sigils
+		# Star objectives (GDD §6.1) — deterministic, so a solvable puzzle:
+		# clear / nobody falls / within the turn target.
+		var earned := 1
+		if int(stats.get("deaths", 99)) == 0:
+			earned += 1
+		if int(stats.get("turns", 99999)) <= stage.turn_target:
+			earned += 1
+		summary["stars"] = earned
+		var prev := int(stars.get(String(stage.id), 0))
+		if earned > prev:
+			var delta := earned - prev
+			stars[String(stage.id)] = earned
+			summary["new_stars"] = delta
+			summary["star_marks"] = STAR_REWARD_MARKS * delta
+			summary["star_seals"] = STAR_REWARD_SEALS * delta
+			marks += summary["star_marks"]
+			seals += summary["star_seals"]
 		for id in team:
 			var gained := add_xp(id, stage.xp_reward)
+			if gained > 0:
+				summary["level_ups"].append("%s reached level %d" % [db.units[id].display_name, level_of(id)])
+	save()
+	return summary
+
+
+# --- The Minaret (endless tower, GDD §7) ----------------------------------------
+
+const MINARET_SETS := [
+	["whisperling", "shadow_vermin"],
+	["shadow_vermin", "ash_ghoul"],
+	["whisperling", "whisperling", "ash_ghoul"],
+	["ash_ghoul", "ash_ghoul", "shadow_vermin"],
+	["whisperling", "ash_ghoul", "shadow_vermin", "whisperling"],
+]
+
+
+func minaret_unlocked() -> bool:
+	return cleared.has(MINARET_UNLOCK_STAGE)
+
+
+## Builds the stage for a Minaret floor in code — floors are formulaic,
+## not authored. Every 10th floor is a Vice (Kibr) floor.
+func make_minaret_stage(floor: int) -> StageData:
+	var s := StageData.new()
+	s.id = StringName("minaret_f%d" % floor)
+	s.display_name = "The Minaret — Floor %d" % floor
+	s.valley = 0
+	s.breath_cost = 0
+	s.turn_target = 999999  # no star objectives in the tower
+	if floor % 10 == 0:
+		s.enemy_ids = ["kibr"]
+		s.index = 12  # boss music
+	else:
+		s.enemy_ids = MINARET_SETS[(floor - 1) % MINARET_SETS.size()]
+		s.index = 1
+	s.enemy_scale = 0.6 + 0.05 * floor
+	return s
+
+
+## Rewards for clearing a NEW highest floor. No Breath cost, no star system —
+## the tower itself is the objective.
+func finish_minaret(floor: int, victory: bool) -> Dictionary:
+	var summary := {
+		"victory": victory,
+		"stage_name": "The Minaret — Floor %d" % floor,
+		"xp_each": 0, "marks": 0, "first_clear_seals": 0, "first_clear_sigils": 0,
+		"stars": 0, "new_stars": 0, "star_marks": 0, "star_seals": 0,
+		"level_ups": [],
+	}
+	if victory and floor == minaret_floor + 1:
+		minaret_floor = floor
+		summary["marks"] = 30 + 5 * floor
+		marks += summary["marks"]
+		if floor % 5 == 0:
+			summary["first_clear_seals"] = 2
+			seals += 2
+		if floor % 10 == 0:
+			summary["first_clear_sigils"] = 1
+			sigils += 1
+		summary["xp_each"] = 15 + 3 * floor
+		for id in team:
+			var gained := add_xp(id, summary["xp_each"])
 			if gained > 0:
 				summary["level_ups"].append("%s reached level %d" % [db.units[id].display_name, level_of(id)])
 	save()
@@ -201,10 +322,11 @@ func buy_scroll(count: int = 1) -> bool:
 
 func save() -> void:
 	var blob := {
-		"save_version": 2,  # v1 = Pearls era; bump on schema change (BACKEND.md §3)
+		"save_version": 3,  # v1 Pearls era; v2 tokens; v3 adds stars/mastery/minaret
 		"roster": roster, "team": team, "scrolls": scrolls,
 		"marks": marks, "seals": seals, "sigils": sigils,
 		"breath": breath, "breath_ts": breath_ts, "cleared": cleared,
+		"stars": stars, "minaret_floor": minaret_floor,
 	}
 	var f := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if f:
@@ -228,6 +350,11 @@ func load_save() -> void:
 			breath = int(blob.get("breath", BREATH_MAX))
 			breath_ts = int(blob.get("breath_ts", 0))
 			cleared = blob.get("cleared", {})
+			stars = blob.get("stars", {})
+			minaret_floor = int(blob.get("minaret_floor", 0))
+			for id in roster:  # v2 -> v3: mastery field
+				if not roster[id].has("mastery"):
+					roster[id]["mastery"] = 0
 	if roster.is_empty():
 		for id in STARTERS:
 			grant_unit(id)
@@ -246,6 +373,8 @@ func reset_profile() -> void:
 	breath = BREATH_MAX
 	breath_ts = 0
 	cleared = {}
+	stars = {}
+	minaret_floor = 0
 	for id in STARTERS:
 		grant_unit(id)
 	save()

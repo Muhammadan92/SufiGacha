@@ -31,6 +31,11 @@ that changes status.** Roadmap definitions live in GDD.md §14.
 - [x] Placeholder audio generator (tools/gen_placeholder_audio.gd): 12 synthesized SFX + 6 seamless loops — game fully audible with zero real tracks; real imports (.ogg/.mp3) auto-outrank placeholder .wav
 - [x] Summon reveal: sequential door-of-light animation on The Calling (rarity-colored, Luminary full-screen flash, tap-to-advance, Skip)
 - [x] Asset audit extended to audio (70 tracked assets total)
+- [x] Teaching Scrolls spend: mastery system (5 ranks, +6% dmg/heal each, escalating scroll costs, roster UI)
+- [x] 3-star stage objectives (clear / no falls / within turn target) with token rewards, per-stage best persisted, stage-select + results display
+- [x] The Codex — "The Traveler's Notebook": 6 entries with Learn-more hyperlinks to recorded source pages; data-driven (data/codex/)
+- [x] The Minaret: endless tower, no Breath cost, Vice floors every 10th, Seals/Sigils income, unlocks after 1-6
+- [x] Comp-sim redesigned for determinism (win-pattern-by-level vs the real boss stage): balanced contiguous from L9 ✓, missing-role comps lag 3-5 levels ✓, turtle self-punishing at 358 turns
 - [x] **Deterministic combat (GDD §4.4)**: full randomness audit; crit→flat Precision, ±5% variance removed, debuffs always land scaled by potency (chance × Potency − Ward) and stack, Evasion→Veil (flat dmg reduction), Whispers→per-turn Fervor drain — all expected-value preserving. Only cosmetic randomness remains. New tuning tools: min_clear_levels (win patterns), boss_scale_sweep
 - [x] **Monetization pivot — GAMBLING-FREE (GDD §9, charter §12.9)**: all %-roll acquisition removed as maysir. Tiered token currencies (Silver Marks / Violet Seals / Emerald Sigils), fixed-price deterministic Calling (player chooses the hero; ceremony kept), Teaching Scrolls sold directly, dupes/pity/rates deleted. Bundle pricing anchored to preserve expected revenue per team comp. Marketing identity: "the gambling-free hero collector"
 
@@ -39,16 +44,18 @@ that changes status.** Roadmap definitions live in GDD.md §14.
 - [ ] Style bible: ~50 explorations → north-star set → `art/STYLE_BIBLE.md` — **owner: Kareem, blocked on tool choice (Niji sub vs. Draw Things)**
 
 ### Next up (ordered)
-- [ ] First real character through full art pipe (Vale: design→LoRA→portrait+chibi→import) — validates pipeline end to end
-- [ ] Chibi battle sprites + Skeleton2D rig template (replaces card pulse animations with real skeletal animation)
-- [ ] Teaching Scrolls spend: skill-up system
-- [ ] Audio: Suno Pro subscription + generate launch BGM set per AI_ART_PIPELINE.md §11.3 (Stable Audio is the tracked fallback; review trigger = summer 2026 fair-use ruling) — **owner: Kareem**
-- [ ] Mobile export test on a real device (do EARLY — GDD §13.4)
+- [ ] First real character through full art pipe (Vale) — **owner: Kareem, walkthrough: CREATIVE_CHECKLIST.md**
+- [ ] Audio: Suno Pro + launch BGM set — **owner: Kareem, walkthrough: CREATIVE_CHECKLIST.md Phase 5**
+- [ ] Chibi battle sprites + Skeleton2D rig template (needs Phase 2 art)
+- [ ] Mobile export test (joint session — needs device + platform tooling)
 - [ ] Tutorial/first-session flow
-- [ ] Codex ("The Traveler's Notebook") first entries — the dawah layer (GDD §1.1); lore research source: nurmuhammad.com per §1.1 (lesser-known tariqah teachings as inspiration, filtered through language policy + scholar review)
-- [ ] Content lifecycle (GDD §6.1): 3-star stage objectives, Hard-mode valley re-clears, The Minaret (now a pre-launch requirement), weekly Vice trials
+- [ ] Mobile export test on a real device (do EARLY — GDD §13.4)
+- [ ] Content lifecycle remainder (GDD §6.1): Hard-mode valley re-clears, weekly Vice trials
+- [ ] Comp-sim tuning backlog: no-tank L8 breakpoint quirk; turtle wins early but at 358 turns (enrage = time punishment; acceptable for grey-box, revisit with real kits)
 
 ### Roadmap notes (not scheduled)
+- **Studio sync with Orders of Light: DROPPED** (2026-07-04, Kareem) — the
+  two games are built fully independently.
 - **Guardians (dragon allies)** — GDD §3.6: seven Guardian dragons, one per
   Spring, released across live-ops; first (Sage, Guardian of the First
   Spring) is in the summon pool now. Future engine work: buff-strip effect

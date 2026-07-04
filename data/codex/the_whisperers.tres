@@ -1,0 +1,11 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/codex_entry.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"the_whisperers"
+title = "The Whisperers and the Ego"
+order_index = 4
+body = "The enemies of this game are not people, and never will be. They are the whisperers — the small gnawing voices of doubt, and behind them the great adversary the tradition calls the lower self: the ego, the commanding self that must be tamed valley by valley.\n\nThe travelers of the path wrote about this enemy with startling honesty. It does not fight fair. It flatters, it delays, it argues. It grows grander the closer you come to the end of the road — which is why the final Vice wears a crown. Pride is the ego's favorite disguise, because it can wear even your victories."
+links = []

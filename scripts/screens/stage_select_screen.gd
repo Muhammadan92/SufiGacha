@@ -48,10 +48,11 @@ func _stage_button(stage: StageData) -> Button:
 	b.custom_minimum_size = Vector2(0, 44)
 	var status := ""
 	if game.cleared.has(String(stage.id)):
-		status = "  [cleared]"
-	b.text = "%d-%d  %s   (%d foes, Breath %d)%s" % [
+		var s: int = int(game.stars.get(String(stage.id), 1))
+		status = "  " + "★".repeat(s) + "☆".repeat(3 - s)
+	b.text = "%d-%d  %s   (%d foes, Breath %d, within %d turns)%s" % [
 		stage.valley, stage.index, stage.display_name,
-		stage.enemy_ids.size(), stage.breath_cost, status]
+		stage.enemy_ids.size(), stage.breath_cost, stage.turn_target, status]
 	if not game.is_unlocked(stage):
 		b.disabled = true
 		b.text += "  [locked]"

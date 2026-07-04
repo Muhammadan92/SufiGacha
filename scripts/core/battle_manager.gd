@@ -28,20 +28,25 @@ var auto_mode := false
 ## §4.4) this log fully reproduces the battle: server-side replay
 ## verification (BACKEND.md §0.2) and bug reports both read from it.
 var action_log: Array = []
+## Total unit-turns elapsed (both sides) — drives the speed star objective.
+var turns_taken := 0
 
 
 ## player_mults: optional per-unit stat multipliers (character level).
 ## enemy_scale: stage difficulty multiplier applied to all enemies.
-func setup(player_data: Array, enemy_data: Array, player_mults: Array = [], enemy_scale: float = 1.0) -> void:
+## player_skill_mults: optional per-unit mastery multipliers (Teaching Scrolls).
+func setup(player_data: Array, enemy_data: Array, player_mults: Array = [], enemy_scale: float = 1.0, player_skill_mults: Array = []) -> void:
 	players.clear()
 	enemies.clear()
 	ended = false
 	awaiting_player = false
 	current_actor = null
 	action_log.clear()
+	turns_taken = 0
 	for i in player_data.size():
 		var mult: float = player_mults[i] if i < player_mults.size() else 1.0
-		players.append(BattleUnit.new(player_data[i], true, mult))
+		var smult: float = player_skill_mults[i] if i < player_skill_mults.size() else 1.0
+		players.append(BattleUnit.new(player_data[i], true, mult, smult))
 	for d: UnitData in enemy_data:
 		enemies.append(BattleUnit.new(d, false, enemy_scale))
 	log_message.emit("The battle begins.")
@@ -65,6 +70,7 @@ func step() -> void:
 		return
 	current_actor = actor
 	actor.turn_meter = 0.0
+	turns_taken += 1
 	_start_of_turn(actor)
 	if ended:
 		return
@@ -258,7 +264,7 @@ func _apply_effect(actor: BattleUnit, eff: EffectBlock, target: BattleUnit) -> v
 		Enums.EffectKind.DAMAGE:
 			_deal_damage(actor, target, eff.power)
 		Enums.EffectKind.HEAL:
-			var amount := int(actor.atk() * eff.power)
+			var amount := int(actor.atk() * eff.power * actor.skill_mult)
 			target.hp = mini(target.max_hp, target.hp + amount)
 			log_message.emit("  %s recovers %d HP." % [target.data.display_name, amount])
 			unit_healed.emit(target, amount)
@@ -310,7 +316,7 @@ func _deal_damage(actor: BattleUnit, target: BattleUnit, power: float) -> void:
 	var mitigation := 300.0 / (300.0 + target.def())
 	var precision := 1.0 + actor.data.crit_rate * (actor.data.crit_damage - 1.0)
 	var veil := 1.0 - clampf(target.status_magnitude(Enums.StatusId.EVASION), 0.0, 0.9)
-	var raw := maxi(1, int(base * mitigation * precision * veil))
+	var raw := maxi(1, int(base * mitigation * precision * veil * actor.skill_mult))
 	var dmg := int(target.absorb_with_barrier(raw))
 	if dmg < raw:
 		log_message.emit("  %s's barrier absorbs %d." % [target.data.display_name, raw - dmg])

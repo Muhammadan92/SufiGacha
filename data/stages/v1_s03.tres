@@ -11,6 +11,7 @@ index = 3
 breath_cost = 6
 enemy_ids = ["shadow_vermin", "shadow_vermin"]
 enemy_scale = 0.65
+turn_target = 20
 xp_reward = 38
 marks_reward = 20
 first_clear_seals = 1

@@ -11,6 +11,7 @@ index = 7
 breath_cost = 8
 enemy_ids = ["ash_ghoul", "ash_ghoul"]
 enemy_scale = 0.85
+turn_target = 26
 xp_reward = 62
 marks_reward = 30
 first_clear_seals = 1

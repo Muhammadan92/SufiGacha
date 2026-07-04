@@ -11,6 +11,7 @@ index = 11
 breath_cost = 8
 enemy_ids = ["whisperling", "whisperling", "ash_ghoul", "ash_ghoul"]
 enemy_scale = 1.05
+turn_target = 44
 xp_reward = 86
 marks_reward = 30
 first_clear_seals = 2

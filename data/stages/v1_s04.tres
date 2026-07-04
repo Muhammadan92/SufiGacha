@@ -11,6 +11,7 @@ index = 4
 breath_cost = 6
 enemy_ids = ["whisperling", "whisperling", "shadow_vermin"]
 enemy_scale = 0.7
+turn_target = 26
 xp_reward = 44
 marks_reward = 20
 first_clear_seals = 1

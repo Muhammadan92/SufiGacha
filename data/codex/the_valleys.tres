@@ -1,0 +1,11 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/codex_entry.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"the_valleys"
+title = "The Seven Valleys"
+order_index = 2
+body = "Eight centuries ago, the Persian poet Attar wrote of a great gathering of birds who set out to find their King. Their road crossed seven valleys — the Quest, Love, Knowledge, Detachment, Unity, Wonder, and last of all a valley where the self is given up entirely. Of the thousands who set out, thirty birds arrived — and what they found at the journey's end was a mirror.\n\nYour Journey through this game walks the same seven valleys. The demons grow more personal the deeper you go. That, too, is from the poem: the farther inward the road turns, the more the enemy looks like you."
+links = []

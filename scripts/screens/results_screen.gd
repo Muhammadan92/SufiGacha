@@ -24,6 +24,11 @@ func _build() -> void:
 	var lines: Array = [summary.get("stage_name", "")]
 	if summary.get("victory", false):
 		lines.append("")
+		if summary.get("stars", 0) > 0:
+			lines.append("★".repeat(summary["stars"]) + "☆".repeat(3 - summary["stars"]))
+			if summary.get("new_stars", 0) > 0:
+				lines.append("New stars: +%d  (+%d Marks, +%d Seals)" % [
+					summary["new_stars"], summary.get("star_marks", 0), summary.get("star_seals", 0)])
 		lines.append("XP gained: %d per companion" % summary.get("xp_each", 0))
 		lines.append("Silver Marks: +%d" % summary.get("marks", 0))
 		if summary.get("first_clear_seals", 0) > 0:

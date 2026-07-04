@@ -1,0 +1,11 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/codex_entry.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"the_path"
+title = "The Orders of the Path"
+order_index = 1
+body = "The companies in this game are inspired by real schools of the inner path — living traditions, centuries old, each with its own way of polishing the heart. The Naqshbandi way is famed for its silence: remembrance carried inwardly, unseen. The Qadiri way fills the night with sound. The Mevlevi turn — the famous whirling — is a moving meditation. The Chishti path feeds every guest who knocks. The Shadhili travel with litanies of protection, the Rifai are famed for bodies made unshakeable by devotion, and the Suhrawardi taught that all knowing is a kind of light.\n\nEvery character in this game is fictional. The paths they walk are not."
+links = ["The teachings that inspired this game | https://nurmuhammad.com"]

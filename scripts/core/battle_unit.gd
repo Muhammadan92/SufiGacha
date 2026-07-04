@@ -7,6 +7,9 @@ extends RefCounted
 var data: UnitData
 var is_player_side: bool
 var stat_mult: float
+## Mastery bonus from Teaching Scrolls (GDD §8): multiplies DAMAGE and HEAL
+## effect output. 1.0 = untrained.
+var skill_mult: float
 
 var max_hp: int
 var hp: int
@@ -19,10 +22,11 @@ const FERVOR_MAX := 100.0
 const FERVOR_ON_HIT := 10.0
 
 
-func _init(p_data: UnitData, p_player_side: bool, p_stat_mult: float = 1.0) -> void:
+func _init(p_data: UnitData, p_player_side: bool, p_stat_mult: float = 1.0, p_skill_mult: float = 1.0) -> void:
 	data = p_data
 	is_player_side = p_player_side
 	stat_mult = p_stat_mult
+	skill_mult = p_skill_mult
 	max_hp = maxi(1, int(data.max_hp * stat_mult))
 	hp = max_hp
 

@@ -7,6 +7,8 @@ extends ScreenBase
 var manager: BattleManager
 var timer: Timer
 var stage: StageData
+var minaret_floor := 0  # >0 when this is a Minaret climb
+var player_deaths := 0
 var cards := {}  # BattleUnit -> Dictionary of card parts
 var skill_buttons: Array = []
 var pending_skill: SkillData = null
@@ -28,7 +30,11 @@ func music_key() -> String:
 
 
 func _build() -> void:
-	stage = db.stages[screens.payload["stage_id"]]
+	if screens.payload.has("minaret_floor"):
+		minaret_floor = int(screens.payload["minaret_floor"])
+		stage = game.make_minaret_stage(minaret_floor)
+	else:
+		stage = db.stages[screens.payload["stage_id"]]
 
 	var art: Texture2D = db.stage_background(stage)
 	if art != null:
@@ -139,15 +145,17 @@ func _make_column(parent: Control, title: String) -> VBoxContainer:
 func _start_battle() -> void:
 	var player_data: Array = []
 	var mults: Array = []
+	var skill_mults: Array = []
 	for id in game.team:
 		player_data.append(db.units[id])
 		mults.append(game.level_mult(game.level_of(id)))
+		skill_mults.append(game.skill_mult_of(id))
 	var enemy_data: Array = []
 	for eid in stage.enemy_ids:
 		enemy_data.append(db.units[eid])
 	if OS.get_environment("SS_AUTO") != "":
 		manager.auto_mode = true
-	manager.setup(player_data, enemy_data, mults, stage.enemy_scale)
+	manager.setup(player_data, enemy_data, mults, stage.enemy_scale, skill_mults)
 	for unit: BattleUnit in manager.players:
 		cards[unit] = _make_card(player_column, unit)
 	for unit: BattleUnit in manager.enemies:
@@ -341,6 +349,8 @@ func _on_unit_evaded(target: BattleUnit, label: String) -> void:
 
 func _on_unit_died(unit: BattleUnit) -> void:
 	sfx("fall")
+	if unit.is_player_side:
+		player_deaths += 1
 	if not cards.has(unit):
 		return
 	var card: PanelContainer = cards[unit]["card"]
@@ -422,7 +432,12 @@ func _on_log(text: String) -> void:
 func _on_battle_ended(victory: bool) -> void:
 	timer.stop()
 	sfx("victory" if victory else "defeat")
-	var summary: Dictionary = game.finish_stage(stage, victory)
+	var summary: Dictionary
+	if minaret_floor > 0:
+		summary = game.finish_minaret(minaret_floor, victory)
+	else:
+		summary = game.finish_stage(stage, victory,
+			{"deaths": player_deaths, "turns": manager.turns_taken})
 	prompt_label.text = "VICTORY — the darkness recedes" if victory else "DEFEAT — try a different approach"
 	var cont := Button.new()
 	cont.text = "Continue"

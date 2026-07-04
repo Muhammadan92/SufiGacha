@@ -6,6 +6,7 @@ extends Node
 var units := {}   # id (String) -> UnitData
 var stages := {}  # id (String) -> StageData
 var stage_order: Array = []  # StageData sorted by (valley, index)
+var codex: Array = []        # CodexEntry sorted by order_index
 
 
 func _ready() -> void:
@@ -16,6 +17,7 @@ func reload() -> void:
 	units.clear()
 	stages.clear()
 	stage_order.clear()
+	codex.clear()
 	for path in _resource_paths("res://data/units"):
 		var u: UnitData = load(path)
 		units[String(u.id)] = u
@@ -25,6 +27,10 @@ func reload() -> void:
 		stage_order.append(s)
 	stage_order.sort_custom(func(a: StageData, b: StageData) -> bool:
 		return a.index < b.index if a.valley == b.valley else a.valley < b.valley)
+	for path in _resource_paths("res://data/codex"):
+		codex.append(load(path))
+	codex.sort_custom(func(a: CodexEntry, b: CodexEntry) -> bool:
+		return a.order_index < b.order_index)
 
 
 # --- art resolution -----------------------------------------------------------

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/codex_entry.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"the_guardians"
+title = "The Guardians — Dragons of Light"
+order_index = 5
+body = "In this game, dragons fight beside you — and that is not an invention. The tradition that inspired Seven Springs teaches of spiritual dragons as protectors of the faithful, and tells of a prophet's staff that became a great serpent and devoured every illusion the sorcerers had spun. In the old miniature paintings of Persia, the serpent-dragon coils through the margins of sacred stories.\n\nSo the Guardians of the Springs guard. Their power in the game is protection and the devouring of falsehood — never conquest. Seven springs; seven Guardians. You have met the first."
+links = ["Spiritual Dragons Protecting Believers | https://nurmuhammad.com/spiritual-dragons-protecting-believers-sufi-meditation-center/?playlist=17074", "Thuban and the Fiery Guardian | https://nurmuhammad.com/thuban-and-the-fiery-guardian-sayyidina-malik-as/"]
