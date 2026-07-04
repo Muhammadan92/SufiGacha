@@ -27,6 +27,44 @@ const MASTERY_BONUS_PER_LEVEL := 0.06  # +6% damage/heal output per mastery
 const STAR_REWARD_MARKS := 20
 const STAR_REWARD_SEALS := 1
 const MINARET_UNLOCK_STAGE := "v1_s06"
+const SANCTUM_UNLOCK_STAGE := "v1_s04"
+
+# --- Season Pass (GDD §9.3.1): 30 tiers, 40 season-XP each ---
+const SEASON_TIERS := 30
+const TIER_XP := 40
+const DEED_XP_DAILY := 10
+const DEED_XP_WEEKLY := 25
+const DEED_MARKS_DAILY := 20
+const DEED_SEALS_WEEKLY := 1
+## Reward tables (paid totals mirror the economy sim: 300 Marks, 2 Seals,
+## 1 Sigil, 5 Scrolls + seasonal outfit placeholder at tier 30).
+const PASS_FREE := {
+	5: {"marks": 30}, 10: {"scrolls": 1}, 15: {"marks": 40},
+	20: {"scrolls": 1}, 25: {"marks": 30}, 30: {"seals": 1},
+}
+const PASS_PAID := {
+	2: {"marks": 30}, 4: {"scrolls": 1}, 6: {"marks": 30}, 8: {"seals": 1},
+	10: {"scrolls": 1}, 12: {"marks": 40}, 14: {"scrolls": 1}, 16: {"marks": 40},
+	18: {"seals": 1}, 20: {"scrolls": 1}, 22: {"marks": 40}, 24: {"scrolls": 1},
+	26: {"marks": 60}, 28: {"marks": 60}, 30: {"sigils": 1},
+}
+
+## Deeds: 3 daily (rotating window over the pool) + 3 fixed weekly.
+const DAILY_DEED_POOL := [
+	{"id": "win3", "desc": "Win 3 battles", "goal": 3, "event": "win"},
+	{"id": "breath24", "desc": "Spend 24 Breath", "goal": 24, "event": "breath"},
+	{"id": "flawless", "desc": "Win a battle with no companion falling", "goal": 1, "event": "flawless"},
+	{"id": "climb2", "desc": "Climb 2 Minaret floors", "goal": 2, "event": "climb"},
+]
+const WEEKLY_DEEDS := [
+	{"id": "win12", "desc": "Win 12 battles", "goal": 12, "event": "win"},
+	{"id": "refine", "desc": "Refine a technique (Mastery)", "goal": 1, "event": "refine"},
+	{"id": "codex", "desc": "Read an entry in the Notebook", "goal": 1, "event": "codex"},
+]
+
+const SANCTUM_RUNS_PER_DAY := 2
+const SANCTUM_BREATH_COST := 10
+const SANCTUM_ORDERS := ["Naqshbandi", "Qadiri", "Rifai", "Mevlevi", "Shadhili", "Chishti", "Suhrawardi"]
 
 var roster := {}   # id (String) -> {"level": int, "xp": int, "dupes": int}
 var team: Array = STARTERS.duplicate()
@@ -39,6 +77,11 @@ var breath_ts := 0
 var cleared := {}  # stage id (String) -> true
 var stars := {}    # stage id (String) -> best stars earned (1..3)
 var minaret_floor := 0  # highest Minaret floor cleared
+
+# --- lunar season / Deeds / Season Pass / Sanctum state (GDD §9.3.1) ---
+var season := {}   # {"id", "tier_xp": int, "tier": int, "paid": bool}
+var deeds := {}    # {"day_key", "week_key", "daily": [..], "weekly": [..]}
+var sanctum := {}  # {"day_key", "runs": int}
 
 # Lazy sibling lookup (not @onready, not an absolute path) so headless tests
 # that build the tree manually still work — autoloads and test doubles are
@@ -124,6 +167,7 @@ func upgrade_mastery(id: String) -> bool:
 		return false
 	scrolls -= cost
 	roster[id]["mastery"] = current + 1
+	deed_event("refine")
 	save()
 	return true
 
@@ -148,6 +192,7 @@ func spend_breath(cost: int) -> bool:
 	if breath < cost:
 		return false
 	breath -= cost
+	deed_event("breath", cost)
 	save()
 	return true
 
@@ -205,6 +250,9 @@ func finish_stage(stage: StageData, victory: bool, stats: Dictionary = {}) -> Di
 			var gained := add_xp(id, stage.xp_reward)
 			if gained > 0:
 				summary["level_ups"].append("%s reached level %d" % [db.units[id].display_name, level_of(id)])
+		deed_event("win")
+		if int(stats.get("deaths", 99)) == 0:
+			deed_event("flawless")
 	save()
 	return summary
 
@@ -269,6 +317,7 @@ func finish_minaret(floor: int, victory: bool) -> Dictionary:
 			var gained := add_xp(id, summary["xp_each"])
 			if gained > 0:
 				summary["level_ups"].append("%s reached level %d" % [db.units[id].display_name, level_of(id)])
+		deed_event("climb")
 	save()
 	return summary
 
@@ -319,15 +368,160 @@ func buy_scroll(count: int = 1) -> bool:
 	return true
 
 
+# --- lunar season, Deeds, Season Pass (GDD §9.3.1) -------------------------------
+
+func now_unix() -> int:
+	return int(Time.get_unix_time_from_system())
+
+
+## Rolls season/deeds/sanctum state forward to the current moment.
+## Call before reading any of them (screens call it via refresh).
+func tick_time() -> void:
+	var unix := now_unix()
+	var sid := SeasonCalendar.season_id(unix)
+	if season.get("id", "") != sid:
+		season = { "id": sid, "tier_xp": 0, "tier": 0, "paid": false }
+	var day_key := Time.get_date_string_from_unix_time(unix)
+	if deeds.get("day_key", "") != day_key:
+		var day_index := int(floor(unix / 86400.0))
+		var daily: Array = []
+		for i in 3:
+			var def: Dictionary = DAILY_DEED_POOL[(day_index + i) % DAILY_DEED_POOL.size()]
+			daily.append({ "id": def["id"], "desc": def["desc"], "goal": def["goal"],
+				"event": def["event"], "progress": 0, "done": false })
+		deeds["day_key"] = day_key
+		deeds["daily"] = daily
+	var week_key := str(int(floor(unix / (86400.0 * 7.0))))
+	if deeds.get("week_key", "") != week_key:
+		var weekly: Array = []
+		for def: Dictionary in WEEKLY_DEEDS:
+			weekly.append({ "id": def["id"], "desc": def["desc"], "goal": def["goal"],
+				"event": def["event"], "progress": 0, "done": false })
+		deeds["week_key"] = week_key
+		deeds["weekly"] = weekly
+	if sanctum.get("day_key", "") != day_key:
+		sanctum = { "day_key": day_key, "runs": 0 }
+
+
+## Feed a gameplay event into active Deeds. Kinds: win, breath, flawless,
+## climb, refine, codex.
+func deed_event(kind: String, amount: int = 1) -> void:
+	tick_time()
+	for list_name in ["daily", "weekly"]:
+		for d in deeds.get(list_name, []):
+			if d["event"] != kind or d["done"]:
+				continue
+			d["progress"] = mini(d["goal"], int(d["progress"]) + amount)
+			if d["progress"] >= d["goal"]:
+				d["done"] = true
+				if list_name == "daily":
+					marks += DEED_MARKS_DAILY
+					_grant_season_xp(DEED_XP_DAILY)
+				else:
+					seals += DEED_SEALS_WEEKLY
+					_grant_season_xp(DEED_XP_WEEKLY)
+	save()
+
+
+func _grant_season_xp(amount: int) -> void:
+	season["tier_xp"] = int(season.get("tier_xp", 0)) + amount
+	while season["tier"] < SEASON_TIERS and season["tier_xp"] >= TIER_XP * (int(season["tier"]) + 1):
+		season["tier"] = int(season["tier"]) + 1
+		_grant_tier_rewards(int(season["tier"]), false)
+		if season.get("paid", false):
+			_grant_tier_rewards(int(season["tier"]), true)
+
+
+func _grant_tier_rewards(tier: int, paid_track: bool) -> void:
+	var table: Dictionary = PASS_PAID if paid_track else PASS_FREE
+	if not table.has(tier):
+		return
+	var reward: Dictionary = table[tier]
+	marks += int(reward.get("marks", 0))
+	seals += int(reward.get("seals", 0))
+	sigils += int(reward.get("sigils", 0))
+	scrolls += int(reward.get("scrolls", 0))
+
+
+## Prototype pass unlock (real IAP in Phase 3). Retroactive per GDD §9.3.1:
+## buying late grants all paid rewards for tiers already reached.
+func unlock_season_pass() -> void:
+	tick_time()
+	if season.get("paid", false):
+		return
+	season["paid"] = true
+	for t in range(1, int(season["tier"]) + 1):
+		_grant_tier_rewards(t, true)
+	save()
+
+
+# --- daily Sanctum (GDD §7): today's order, Teaching Scrolls as material ----------
+
+func sanctum_unlocked() -> bool:
+	return cleared.has(SANCTUM_UNLOCK_STAGE)
+
+
+func sanctum_runs_left() -> int:
+	tick_time()
+	return SANCTUM_RUNS_PER_DAY - int(sanctum.get("runs", 0))
+
+
+func sanctum_order_today() -> String:
+	return SANCTUM_ORDERS[SeasonCalendar.from_unix(now_unix())["day"] % SANCTUM_ORDERS.size()]
+
+
+func make_sanctum_stage() -> StageData:
+	var s := StageData.new()
+	s.id = &"sanctum"
+	s.display_name = "Sanctum of the %s" % sanctum_order_today()
+	s.valley = 0
+	s.index = 1
+	s.breath_cost = SANCTUM_BREATH_COST
+	s.turn_target = 999999
+	var idx: int = SeasonCalendar.from_unix(now_unix())["day"] % MINARET_SETS.size()
+	s.enemy_ids = MINARET_SETS[idx]
+	# Adaptive: always a real fight, never a freebie — scales with the team.
+	var top_level := 1
+	for id in team:
+		top_level = maxi(top_level, level_of(id))
+	s.enemy_scale = 0.85 * level_mult(top_level)
+	return s
+
+
+func finish_sanctum(victory: bool) -> Dictionary:
+	tick_time()
+	var summary := {
+		"victory": victory, "stage_name": "Sanctum of the %s" % sanctum_order_today(),
+		"xp_each": 0, "marks": 0, "first_clear_seals": 0, "first_clear_sigils": 0,
+		"stars": 0, "new_stars": 0, "star_marks": 0, "star_seals": 0,
+		"scrolls": 0, "level_ups": [],
+	}
+	if victory and sanctum_runs_left() > 0:
+		sanctum["runs"] = int(sanctum.get("runs", 0)) + 1
+		scrolls += 1
+		marks += 40
+		summary["scrolls"] = 1
+		summary["marks"] = 40
+		summary["xp_each"] = 20
+		for id in team:
+			var gained := add_xp(id, 20)
+			if gained > 0:
+				summary["level_ups"].append("%s reached level %d" % [db.units[id].display_name, level_of(id)])
+		deed_event("win")
+	save()
+	return summary
+
+
 # --- save file ------------------------------------------------------------------
 
 func save() -> void:
 	var blob := {
-		"save_version": 3,  # v1 Pearls era; v2 tokens; v3 adds stars/mastery/minaret
+		"save_version": 4,  # v3 stars/mastery/minaret; v4 season/deeds/sanctum
 		"roster": roster, "team": team, "scrolls": scrolls,
 		"marks": marks, "seals": seals, "sigils": sigils,
 		"breath": breath, "breath_ts": breath_ts, "cleared": cleared,
 		"stars": stars, "minaret_floor": minaret_floor,
+		"season": season, "deeds": deeds, "sanctum": sanctum,
 	}
 	var f := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if f:
@@ -353,6 +547,9 @@ func load_save() -> void:
 			cleared = blob.get("cleared", {})
 			stars = blob.get("stars", {})
 			minaret_floor = int(blob.get("minaret_floor", 0))
+			season = blob.get("season", {})
+			deeds = blob.get("deeds", {})
+			sanctum = blob.get("sanctum", {})
 			for id in roster:  # v2 -> v3: mastery field
 				if not roster[id].has("mastery"):
 					roster[id]["mastery"] = 0
@@ -376,6 +573,10 @@ func reset_profile() -> void:
 	cleared = {}
 	stars = {}
 	minaret_floor = 0
+	season = {}
+	deeds = {}
+	sanctum = {}
 	for id in STARTERS:
 		grant_unit(id)
+	tick_time()
 	save()

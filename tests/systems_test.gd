@@ -118,6 +118,63 @@ func _initialize() -> void:
 	assert(game.minaret_floor == 10 and game.sigils == before_sigils + 1, "floor 10 pays a Sigil")
 	print("minaret ok")
 
+	# --- lunar calendar (tabular; known date check) ---
+	var probe: int = int(Time.get_unix_time_from_datetime_string("2026-07-04T12:00:00"))
+	var h: Dictionary = SeasonCalendar.from_unix(probe)
+	assert(h["year"] == 1448 and h["month"] == 1, "2026-07-04 should be month 1, 1448 (got %s)" % str(h))
+	assert(SeasonCalendar.moon_name(probe) == "The Sacred Moon")
+	assert(SeasonCalendar.MOON_NAMES.size() == 12)
+	print("calendar ok: 2026-07-04 -> %s day %d, %d" % [SeasonCalendar.moon_name(probe), h["day"], h["year"]])
+
+	# --- deeds + season pass ---
+	game.reset_profile()
+	game.tick_time()
+	assert(game.deeds["daily"].size() == 3 and game.deeds["weekly"].size() == 3)
+	var marks_before: int = game.marks
+	game.deed_event("win")
+	game.deed_event("win")
+	game.deed_event("win")  # completes win3 if in today's rotation
+	var any_done := false
+	for d in game.deeds["daily"] + game.deeds["weekly"]:
+		if d["done"]:
+			any_done = true
+	# 3 wins always progress the weekly win12 (3/12) — completion depends on
+	# the daily rotation, so just assert progress happened:
+	var weekly_win: Dictionary = game.deeds["weekly"][0]
+	assert(weekly_win["progress"] == 3, "weekly win deed should track progress")
+	game.deed_event("refine")
+	assert(game.deeds["weekly"][1]["done"], "refine weekly should complete")
+	assert(game.seals > 0 or game.marks > marks_before or any_done, "deed rewards should flow")
+	assert(int(game.season.get("tier_xp", 0)) >= game.DEED_XP_WEEKLY, "season xp should accrue")
+
+	# tier + retroactive pass
+	game.season["tier_xp"] = 0
+	game.season["tier"] = 0
+	game.season["paid"] = false
+	var sigils_before: int = game.sigils
+	game._grant_season_xp(game.TIER_XP * 30)  # blast to tier 30
+	assert(int(game.season["tier"]) == 30, "should reach tier 30")
+	var seals_after_free: int = game.seals
+	game.unlock_season_pass()  # retroactive: all paid tiers grant now
+	assert(game.sigils == sigils_before + 1, "paid tier 30 grants the Sigil retroactively")
+	assert(game.seals == seals_after_free + 2, "paid track grants 2 Seals")
+	print("deeds + season pass ok")
+
+	# --- sanctum ---
+	assert(not game.sanctum_unlocked())
+	game.cleared[game.SANCTUM_UNLOCK_STAGE] = true
+	assert(game.sanctum_unlocked() and game.sanctum_runs_left() == 2)
+	var sstage: StageData = game.make_sanctum_stage()
+	assert(sstage.enemy_scale > 0.5 and sstage.enemy_ids.size() >= 2)
+	var scrolls_before: int = game.scrolls
+	var ssum: Dictionary = game.finish_sanctum(true)
+	assert(ssum["scrolls"] == 1 and game.scrolls == scrolls_before + 1)
+	game.finish_sanctum(true)
+	assert(game.sanctum_runs_left() == 0)
+	var blocked: Dictionary = game.finish_sanctum(true)
+	assert(blocked["scrolls"] == 0, "third run must grant nothing")
+	print("sanctum ok")
+
 	# --- save roundtrip ---
 	game.sigils = 4242
 	game.save()

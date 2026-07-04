@@ -31,6 +31,8 @@ func _build() -> void:
 					summary["new_stars"], summary.get("star_marks", 0), summary.get("star_seals", 0)])
 		lines.append("XP gained: %d per companion" % summary.get("xp_each", 0))
 		lines.append("Silver Marks: +%d" % summary.get("marks", 0))
+		if summary.get("scrolls", 0) > 0:
+			lines.append("Teaching Scrolls: +%d" % summary["scrolls"])
 		if summary.get("first_clear_seals", 0) > 0:
 			lines.append("First clear: +%d Violet Seal(s)!" % summary["first_clear_seals"])
 		if summary.get("first_clear_sigils", 0) > 0:

@@ -29,10 +29,16 @@ func music_key() -> String:
 	return "boss" if stage != null and stage.index == 12 else "battle"
 
 
+var is_sanctum := false
+
+
 func _build() -> void:
 	if screens.payload.has("minaret_floor"):
 		minaret_floor = int(screens.payload["minaret_floor"])
 		stage = game.make_minaret_stage(minaret_floor)
+	elif screens.payload.has("sanctum"):
+		is_sanctum = true
+		stage = game.make_sanctum_stage()
 	else:
 		stage = db.stages[screens.payload["stage_id"]]
 
@@ -435,6 +441,8 @@ func _on_battle_ended(victory: bool) -> void:
 	var summary: Dictionary
 	if minaret_floor > 0:
 		summary = game.finish_minaret(minaret_floor, victory)
+	elif is_sanctum:
+		summary = game.finish_sanctum(victory)
 	else:
 		summary = game.finish_stage(stage, victory,
 			{"deaths": player_deaths, "turns": manager.turns_taken})

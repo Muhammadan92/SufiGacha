@@ -43,6 +43,7 @@ func _build() -> void:
 
 func _show_entry(entry: CodexEntry) -> void:
 	sfx("ui_tap")
+	game.deed_event("codex")
 	var text := "[b]%s[/b]\n\n%s" % [entry.title, entry.body]
 	if not entry.links.is_empty():
 		text += "\n\n[color=#dec06b]Learn more:[/color]"

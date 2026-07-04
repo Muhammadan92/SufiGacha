@@ -213,6 +213,27 @@ func _run_career(profile_name: String, profile: Dictionary, stages: Array) -> Di
 		var breath: int = profile["breath"]
 		var fail_streak := 0
 
+		# 0) Daily loop income (policy-modeled, mirrors game_state):
+		# Deeds: 3 dailies (+20 Marks each), 3 weeklies (+1 Seal each);
+		# free season track per ~30d: +100 Marks, 1 Seal, 2 Scrolls.
+		marks += 60
+		if day % 7 == 0:
+			seals += 3
+		if day % 30 == 15:
+			marks += 100
+			seals += 1
+			scrolls += 2
+		# Sanctum: 2 runs/day once unlocked (stage 1-4): 20 Breath ->
+		# 2 Scrolls + 80 Marks + 40 team XP, ~2.5 min.
+		if next_idx >= 4 and breath >= 20:
+			breath -= 20
+			scrolls += 2
+			marks += 80
+			var sres := _grant_xp(level, xp, 40)
+			level = sres[0]
+			xp = sres[1]
+			minutes_today += 2.5
+
 		# 1) Campaign push (frontier gated by the release calendar)
 		while next_idx < stages.size():
 			var target: Dictionary = stages[next_idx]
