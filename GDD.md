@@ -287,6 +287,10 @@ Concept notes (to be designed when Phase 3 planning begins):
 - **Working title: *The Twelve Moons*** — 12 chapters, one per lunar month of
   the journey year; **9 stages per chapter; the final stage is stage 108**,
   where the road ends at **the Fountain of Abundance**.
+- Synergy with live-ops (§9.3.1): the seasonal calendar already walks the
+  Twelve Moons every lunar year — Part 2 turns the calendar players have
+  been living into the campaign they finally travel. The Moon of the
+  Fountain (season 12) foreshadows it annually.
 - Structural numerology as lore seasoning: 12 × 9 = 108; the destination
   shares its number with the 108th chapter of the source tradition — kept as
   discoverable Codex depth, never surfaced as doctrine (§1.1).
@@ -361,10 +365,9 @@ Wayfarer 10 Seals · Luminary 6 Sigils · Teaching Scroll 60 Marks.**
    (and the gambling) disappears. Deterministic choice is *worth* the price:
    players buy exactly the hero they want.
 2. **Monthly Traveler's Pass** ($4.99: daily token drip — baseline revenue)
-3. **Season Pass** ($9.99 per ~30-day chapter-season): free track + paid
-   track of tokens, Scrolls, and an **exclusive outfit** at max tier. All
-   tiers reachable by normal play; no power exclusives; progress carries if
-   you buy late (no FOMO cliff).
+3. **Season Pass** ($9.99 per season) — full spec in §9.3.1. **Seasons are
+   the months of the lunar calendar** (29/30 days): the live-ops year IS the
+   Twelve Moons.
 4. **Cosmetics catalog** — the long-term ceiling (the Fortnite thesis:
    deterministic item shops out-earn gacha at scale). Outfit variants
    ($4.99–7.99), Trance VFX variants ($2.99), lodge decorations
@@ -375,7 +378,45 @@ Wayfarer 10 Seals · Luminary 6 Sigils · Teaching Scroll 60 Marks.**
 5. **Company Chest** mixed bundles (Marks+Seals+Sigils) at deeper discount;
    milestone value packs (one-time, contents shown exactly).
 
-### 9.3.1 Content cadence = revenue cadence
+### 9.3.1 Season Pass spec — the Twelve Moons calendar
+
+**A season is one lunar month** (29/30 days), starting on the 1st of each
+Hijri month. Boundaries use a fixed *tabular* calendar (authored schedule
+shipped via config, Umm al-Qura reference) — deterministic and global, no
+regional sighting differences in-game; flag for §12.6 scholar review.
+
+**The twelve seasons are the Twelve Moons**, presented per §1.1 with
+evocative English names; each Moon's Codex entry carries the real month
+name, its traditional meaning, and source links (draft names, review pass
+pending): the Sacred Moon (1), the Journeying Moon (2), the Moon of the
+Beloved (3), the Moon of Blossoms (4), the Moon of Endurance (5), the
+Enduring Moon (6), the Moon of Ascent (7), the Moon of Preparation (8),
+**the Moon of Light (9 — Ramadan: the flagship generosity season: gift
+events, lightened Deeds for fasting players, no purchase pressure)**, the
+Rejoicing Moon (10), the Resting Moon (11), and **the Moon of the Fountain
+(12 — each year's climax, foreshadowing Part 2 §6.2)**.
+
+**Structure**: 30 tiers earned via **Deeds** (3 daily + 3 weekly objectives —
+clear stages, earn stars, climb the Minaret, refine mastery, read a Codex
+entry). ~1 tier/casual day; tier 30 reachable by ~day 24. Deeds double as
+the daily-purpose loop (ECONOMY_TUNING §7 finding).
+
+| | Free track | Paid track ($9.99) |
+|---|---|---|
+| Tokens | ~100 Marks, 1 Seal | 300 Marks, 2 Seals, 1 Sigil (tier 30) |
+| Scrolls | 2 | 5 |
+| Cosmetics | 1 lodge decoration | Seasonal outfit + Trance VFX + profile flourish |
+
+Perceived paid value ≈ $26 for $9.99 (the healthy ~2.5x pass ratio).
+
+**Ethics rules**: no power on the paid track (the Sigil is freely earnable
+elsewhere); no tier-skips sold; buying late retroactively grants earned
+tiers; seasonal "exclusives" enter the permanent catalog after two Moons at
+a higher standalone price — **scarcity of timing, never scarcity of
+possibility**. Lunar-year note: 12 seasons per 354 days ≈ 12.4 per solar
+year (~3% cadence uplift vs Gregorian; sim approximates 30-day seasons).
+
+### 9.3.2 Content cadence = revenue cadence
 Under deterministic pricing **the catalog is the revenue ceiling**, so the
 business plan is a content plan: target **2 new heroes/month** (~$140/month
 added to the completionist ceiling), **1 season pass/month**, **3–4

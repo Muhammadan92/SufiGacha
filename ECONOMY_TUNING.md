@@ -102,7 +102,7 @@ Checklist per expansion:
   (Fountain of Youth) also shifts min-clear levels — re-baseline difficulty.
 - **Price changes**: never silently; GDD §9 edit + this doc's targets first.
 
-## 6b. REVENUE ROADMAP (GDD §9.3/9.3.1) — the business model, simulated
+## 6b. REVENUE ROADMAP (GDD §9.3, §9.3.1 (season pass), §9.3.2 (cadence)) — the business model, simulated
 
 Deterministic pricing means **the catalog is the ceiling and content cadence
 is the growth curve**. Modeled lines: token packs, Traveler's Pass ($4.99/mo),
