@@ -7,5 +7,5 @@ script = ExtResource("1")
 id = &"moon_06"
 title = "The Moon"
 order_index = 15
-body = "The sixth moon is the second moon of hardened ground, and the travelers teach that the second half of any hardship is where its treasure hides. Provision is buried in dryness the way springs are buried under stone — the whole art is to keep digging. Its number is fifty-four. The midpoint of the year: half the veils behind, half ahead."
+body = "The sixth season carries the calendar's own name: the moon, which rules every month of this world's year. It is the second season of hardened ground, and the wayfarers say the second half of any hardship is where its treasure hides — springs buried under stone, found only by those who keep digging. Its number is fifty-four. The year's midpoint: half the veils behind, half ahead."
 links = ["Teachings of the Sixth Moon | https://nurmuhammad.com/6-jumadal-thani/"]

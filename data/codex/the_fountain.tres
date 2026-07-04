@@ -7,5 +7,5 @@ script = ExtResource("1")
 id = &"the_fountain"
 title = "The Fountain of Abundance"
 order_index = 6
-body = "Travelers of the path speak of a fountain at the end of all roads — an abundance that cannot be exhausted, given to the one who has given everything away. The teachings that inspired this game map the road to it through twelve veils, one for each moon of the year, twelve nines — one hundred and eight — and at the hundred-and-eighth step, the Fountain.\n\nWhere the Seven Valleys end, another road begins. The springs you guard have a source. One day, this game will take you there."
+body = "Travelers in this world speak of a fountain at the end of all roads — an abundance that cannot be exhausted, given to the one who has given everything away. The count that leads there is twelve nines: one hundred and eight steps, and at the last of them, the Fountain. That number was found, not invented — the thread is below. Where the Seven Valleys end, another road begins. One day, this game will take you there."
 links = ["The Mystical Number 108 | https://nurmuhammad.com/mystical-number-108-kawthar-haq-and-reality-of-sacrifice/", "The Twelfth Month | https://nurmuhammad.com/12-dhul_hijjah/"]

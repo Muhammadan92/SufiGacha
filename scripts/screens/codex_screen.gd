@@ -45,8 +45,12 @@ func _show_entry(entry: CodexEntry) -> void:
 	sfx("ui_tap")
 	game.deed_event("codex")
 	var text := "[b]%s[/b]\n\n%s" % [entry.title, entry.body]
+	# STRICT lore caveat (GDD §1.1): every page carries the fantasy framing,
+	# and sources are always "Inspired by" — this game teaches nothing;
+	# it points.
+	text += "\n\n[i][color=#8a8fa3]The Notebook is a work of fantasy, inspired by living teachings. Where a name, number, or image was found rather than invented, the thread is linked — follow it to the source; do not mistake this game for one.[/color][/i]"
 	if not entry.links.is_empty():
-		text += "\n\n[color=#dec06b]Learn more:[/color]"
+		text += "\n\n[color=#dec06b]Inspired by:[/color]"
 		for link in entry.links:
 			var parts: PackedStringArray = str(link).split("|")
 			if parts.size() == 2:

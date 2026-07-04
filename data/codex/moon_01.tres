@@ -7,5 +7,5 @@ script = ExtResource("1")
 id = &"moon_01"
 title = "The Door"
 order_index = 10
-body = "The year begins in restraint. The first moon is one of the sacred months, in which all fighting was forbidden — the travelers open their year not with noise but with stillness, honoring beginnings by guarding them. Its number is nine: the first veil of the year of light. In this game, the Door opens each new season-year of Seven Springs."
+body = "The year of this world opens through a door. The first season is kept sacred: in the oldest truces no fighting was permitted in it, and so the wayfarers begin their year with restraint — honoring beginnings by guarding them. Its number in the old count is nine, the first veil of the year. The Door opens each new season-year of Seven Springs."
 links = ["Teachings of the First Moon | https://nurmuhammad.com/1-muharram/"]

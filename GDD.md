@@ -36,6 +36,15 @@ This game is primarily a **dawah project aimed at a Western audience**: the goal
 - **Arabic as seasoning, by allowlist only**: (1) the seven order names, as proper nouns; (2) select 5★ ultimate names, always with an English subtitle (e.g., *Khalwa — Seclusion*); (3) boss true-names as titles (e.g., *Kibr, Father of Pride*); (4) the Codex.
 - **The Codex is the dawah vehicle**: an optional in-game encyclopedia (working name: *The Traveler's Notebook*), unlocked through play, giving the real history, terminology, poetry, and figures behind each order, valley, and concept. Depth on tap for the curious; invisible to players who just want to play.
 - **Lore research source**: for ALL lore portions of the game (Codex entries, valley/chapter framing, boss true-names, item flavor, Part 2), mine **[nurmuhammad.com](https://nurmuhammad.com)** for interesting, lesser-known tariqah-rooted teachings (the realities of the months, number mysticism, the subtle centers, light-and-veil cosmology) — these make far better lore notes than encyclopedia-level material. Always as *inspiration*: everything passes through this language policy on the way in, and the §12.6 scholar review covers all Codex/lore content before launch.
+- **STRICT lore caveat (decided 2026-07, enforced structurally)**: the game
+  is **never a teaching authority**. All lore is written as in-world
+  *fantasy* — abstract, mythic, attributed to "the wayfarers of this world"
+  and "the old songs," never asserted as doctrine. Every sourced element is
+  framed **"Inspired by" + link** (the Codex renders this caveat and label
+  on every page automatically). The design goal is *curiosity*: world-building
+  interesting enough that players follow the threads to the source and learn
+  there — not here. One bridge entry ("The Orders of the Path") states the
+  inspired-by relationship plainly; everything else stays in costume.
   - Source pages used so far: [the mystical number 108 → the Fountain](https://nurmuhammad.com/mystical-number-108-kawthar-haq-and-reality-of-sacrifice/) and [the twelfth month](https://nurmuhammad.com/12-dhul_hijjah/) (Part 2, §6.2); [Spiritual Dragons Protecting Believers](https://nurmuhammad.com/spiritual-dragons-protecting-believers-sufi-meditation-center/?playlist=17074) and [Thuban & the Fiery Guardian](https://nurmuhammad.com/thuban-and-the-fiery-guardian-sayyidina-malik-as/) (Guardians, §3.6).
   - **Decided (2026-07): the in-game Codex hyperlinks out to source pages** ("Learn more" links) — the strongest dawah funnel. Each Codex entry carries its source URLs in data. The §12.6 scholar/advisor review still covers the linked content before launch.
 - **Show, don't preach**: the story never proselytizes — it dramatizes a universal spiritual struggle. Success metric: players googling Rumi and "Sufism" unprompted.

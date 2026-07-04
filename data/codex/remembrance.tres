@@ -7,5 +7,5 @@ script = ExtResource("1")
 id = &"remembrance"
 title = "Remembrance, Litany, and the Trance"
 order_index = 3
-body = "The abilities in this game borrow their names from real practice. A litany is a set devotion returned to daily, the way a river returns to its bed. Remembrance is the heart of the whole path: the practice of keeping the Divine in mind until forgetting becomes the stranger and remembering becomes home. And what the game calls a Trance points at something the tradition describes carefully — a state that arrives as a gift, not a possession, lifting the traveler briefly beyond their own strength.\n\nFervor, the golden bar that fills as your companions endure, is their aspiration — the will that gathers until it overflows."
+body = "In this world, a litany is a small devotion returned to daily, the way a river returns to its bed. Remembrance is the practice of keeping the Light in mind until forgetting becomes the stranger and remembering becomes home. And a Trance is a state that arrives as a gift, never a possession — lifting a companion briefly beyond their own strength. Fervor, the golden bar, is aspiration gathering until it overflows. These are fantasy mechanics — but their names were borrowed from a real vocabulary of the heart, and the threads below lead to it."
 links = ["The teachings that inspired this game | https://nurmuhammad.com"]
