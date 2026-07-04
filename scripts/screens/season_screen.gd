@@ -7,15 +7,15 @@ func _build() -> void:
 	game.tick_time()
 	var root := make_root()
 	var unix: int = game.now_unix()
-	add_header(root, SeasonCalendar.moon_name(unix), "home")
+	add_header(root, SeasonCalendar.season_name(unix), "home")
 
 	var sub := Label.new()
-	sub.text = "Day %d of the Moon  ·  Season of the Twelve Moons" % SeasonCalendar.season_day(unix)
+	sub.text = "Day %d of the season  ·  The Twelve Moons" % SeasonCalendar.season_day(unix)
 	sub.add_theme_color_override("font_color", Color(1, 1, 1, 0.65))
 	root.add_child(sub)
 
 	var lore := Button.new()
-	lore.text = "Read this Moon's page in the Traveler's Notebook"
+	lore.text = "Read this season's page in the Traveler's Notebook"
 	lore.pressed.connect(func() -> void: screens.goto("codex"))
 	root.add_child(lore)
 	root.add_child(HSeparator.new())

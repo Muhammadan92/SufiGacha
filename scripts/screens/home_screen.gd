@@ -27,7 +27,7 @@ func _build() -> void:
 	_nav_button(v, "Journey", "stages")
 	_nav_button(v, "The Sanctum  (today: %s)" % game.sanctum_order_today(), "sanctum")
 	_nav_button(v, "The Minaret", "minaret")
-	_nav_button(v, "%s  (Deeds & Season)" % SeasonCalendar.moon_name(game.now_unix()), "season")
+	_nav_button(v, "%s  (Deeds & Season)" % SeasonCalendar.season_name(game.now_unix()), "season")
 	_nav_button(v, "The Company", "roster")
 	_nav_button(v, "The Calling", "calling")
 	_nav_button(v, "The Traveler's Notebook", "codex")

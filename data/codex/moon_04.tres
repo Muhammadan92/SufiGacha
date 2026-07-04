@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1")
 id = &"moon_04"
-title = "The Moon of Blossoms"
+title = "The Straight Path"
 order_index = 13
 body = "The fourth moon is the second spring — what was born in the third moon begins to blossom in the fourth. The travelers call it the moon of the heart, when the straight path opens and the heart of all recitation is unveiled. Its number is thirty-six. A moon for tending what has newly begun: young companions, fresh masteries, first steps on the Path."
 links = ["Teachings of the Fourth Moon | https://nurmuhammad.com/4-rabiul-thani/"]

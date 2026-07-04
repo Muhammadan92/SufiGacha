@@ -9,13 +9,15 @@ const EPOCH_OFFSET_DAYS := 492148  # unix epoch JD 2440587.5 - islamic civil epo
 const CYCLE_DAYS := 10631          # 30 lunar years
 const LEAP_YEARS_IN_CYCLE := [2, 5, 7, 10, 13, 16, 18, 21, 24, 26, 29]
 
-## Moon names per GDD §9.3.1 — the game never names the real months; each
-## Moon's Codex entry (moon_01..12) links to the source teachings instead.
-const MOON_NAMES := {
-	1: "The Sacred Moon", 2: "The Journeying Moon", 3: "The Moon of the Beloved",
-	4: "The Moon of Blossoms", 5: "The Moon of Endurance", 6: "The Enduring Moon",
-	7: "The Moon of Ascent", 8: "The Moon of Preparation", 9: "The Moon of Light",
-	10: "The Rejoicing Moon", 11: "The Resting Moon", 12: "The Moon of the Fountain",
+## Season names per GDD §9.3.1 — grounded in the research source's teaching
+## for each month (its entry-way number and associated reality); the game
+## never names the real months; each season's Codex entry (moon_01..12)
+## links to the source teachings instead.
+const SEASON_NAMES := {
+	1: "The Door", 2: "The Cave", 3: "The Kingdom",
+	4: "The Straight Path", 5: "The Kneeling", 6: "The Moon",
+	7: "The Ascent", 8: "The Salvation", 9: "The Light",
+	10: "The City", 11: "The Patience", 12: "The Fountain",
 }
 
 
@@ -52,11 +54,11 @@ static func season_id(unix: int) -> String:
 	return "%d-%02d" % [h["year"], h["month"]]
 
 
-static func moon_name(unix: int) -> String:
-	return MOON_NAMES[from_unix(unix)["month"]]
+static func season_name(unix: int) -> String:
+	return SEASON_NAMES[from_unix(unix)["month"]]
 
 
-static func moon_codex_id(unix: int) -> String:
+static func season_codex_id(unix: int) -> String:
 	return "moon_%02d" % from_unix(unix)["month"]
 
 

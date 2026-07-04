@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1")
 id = &"moon_05"
-title = "The Moon of Endurance"
+title = "The Kneeling"
 order_index = 14
 body = "The fifth moon is named for hardened ground — the dry season, when nothing seems to grow and the traveler walks on anyway. The teachings honor it as a moon of the great teachers: masters of the golden chain of guides are remembered in it, those who endured until endurance itself became sweet. Its number is forty-five."
 links = ["Teachings of the Fifth Moon | https://nurmuhammad.com/5-jummadal-awwal/"]

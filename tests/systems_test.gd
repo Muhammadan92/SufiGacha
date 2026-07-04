@@ -122,9 +122,9 @@ func _initialize() -> void:
 	var probe: int = int(Time.get_unix_time_from_datetime_string("2026-07-04T12:00:00"))
 	var h: Dictionary = SeasonCalendar.from_unix(probe)
 	assert(h["year"] == 1448 and h["month"] == 1, "2026-07-04 should be month 1, 1448 (got %s)" % str(h))
-	assert(SeasonCalendar.moon_name(probe) == "The Sacred Moon")
-	assert(SeasonCalendar.MOON_NAMES.size() == 12)
-	print("calendar ok: 2026-07-04 -> %s day %d, %d" % [SeasonCalendar.moon_name(probe), h["day"], h["year"]])
+	assert(SeasonCalendar.season_name(probe) == "The Door")
+	assert(SeasonCalendar.SEASON_NAMES.size() == 12)
+	print("calendar ok: 2026-07-04 -> %s day %d, %d" % [SeasonCalendar.season_name(probe), h["day"], h["year"]])
 
 	# --- deeds + season pass ---
 	game.reset_profile()
