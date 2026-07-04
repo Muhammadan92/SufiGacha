@@ -178,6 +178,7 @@ func _run_career(profile_name: String, profile: Dictionary, stages: Array) -> Di
 	var sigils := 0
 	var next_idx := 0
 	var stage_stars := {}
+	var diff_frontier := {}  # "hard"/"nm" -> stages cleared in that chain
 	var minaret := 0
 	var owned_desires := 0
 	var total_desires := DESIRES.size()
@@ -285,6 +286,53 @@ func _run_career(profile_name: String, profile: Dictionary, stages: Array) -> Di
 					var fres := _grant_xp(level, xp, int(farm["xp"]))
 					level = fres[0]
 					xp = fres[1]
+
+		# 1c) Difficulty re-clears (GDD §6.1): once the normal campaign is
+		# done, push the hard chain, then nightmare (scale x2.2 / x3.2;
+		# marks x2/x3; +1 Sigil per boss first-clear per tier).
+		if next_idx >= stages.size():
+			for dtier in [["hard", 2.2, 2], ["nm", 3.2, 3]]:
+				var dkey: String = dtier[0]
+				var dfrontier: int = int(diff_frontier.get(dkey, 0))
+				if dkey == "nm" and int(diff_frontier.get("hard", 0)) < stages.size():
+					break
+				var dfails := 0
+				while dfrontier < stages.size() and dfails < 2:
+					var dstage: Dictionary = stages[dfrontier]
+					if day < int(VALLEY_RELEASE_DAY.get(int(dstage["valley"]), 0)):
+						break
+					if breath < int(dstage["breath"]):
+						break
+					breath -= int(dstage["breath"])
+					var dr := _battle("%s_%s" % [dkey, dstage["key"]], dstage["enemy_ids"],
+						float(dstage["scale"]) * float(dtier[1]), level, mastery)
+					minutes_today += (dr["turns"] * SECONDS_PER_TURN + MENU_SECONDS_PER_RUN) / 60.0
+					if dr["win"]:
+						marks += int(dstage["marks"]) * int(dtier[2])
+						seals += int(dstage["fc_seals"]) * int(dtier[2])
+						if dstage["boss"]:
+							sigils += 1
+						var dres := _grant_xp(level, xp, int(dstage["xp"]))
+						level = dres[0]
+						xp = dres[1]
+						dfrontier += 1
+					else:
+						dfails += 1
+				diff_frontier[dkey] = dfrontier
+
+		# 2b) Weekly Vice Trial: attempt tiers 1..5 once per week, stop at
+		# first loss (rewards: marks/seals/scrolls, no Sigils).
+		if day % 7 == 1 and next_idx >= 12:
+			var trial_rewards := [[40, 0, 0], [60, 1, 0], [0, 2, 1], [0, 3, 2], [100, 4, 3]]
+			for tier in 5:
+				var tr := _battle("trial_t%d" % (tier + 1), ["ash_ghoul", "kibr", "ash_ghoul"],
+					[2.0, 2.6, 3.2, 3.8, 4.5][tier], level, mastery)
+				minutes_today += (tr["turns"] * SECONDS_PER_TURN + MENU_SECONDS_PER_RUN) / 60.0
+				if not tr["win"]:
+					break
+				marks += trial_rewards[tier][0]
+				seals += trial_rewards[tier][1]
+				scrolls += trial_rewards[tier][2]
 
 		# 2) The Minaret
 		if next_idx > 5:

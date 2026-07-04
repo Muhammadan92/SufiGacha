@@ -160,6 +160,37 @@ func _initialize() -> void:
 	assert(game.seals == seals_after_free + 2, "paid track grants 2 Seals")
 	print("deeds + season pass ok")
 
+	# --- difficulty re-clears ---
+	assert(not game.diff_unlocked("hard"), "hard locked before valley clear")
+	game.cleared["v1_s12"] = true
+	assert(game.diff_unlocked("hard") and not game.diff_unlocked("nm"))
+	var hard_boss: StageData = game.make_diff_stage(db.stages["v1_s12"], "hard")
+	assert(is_equal_approx(hard_boss.enemy_scale, 1.3 * 2.2), "hard scale = base x2.2")
+	assert(game.is_unlocked(db.stages["v1_s01"], "hard"), "hard 1-1 open once unlocked")
+	assert(not game.is_unlocked(db.stages["v1_s02"], "hard"), "hard chain gates")
+	var m0: int = game.marks
+	var hsum: Dictionary = game.finish_stage(db.stages["v1_s01"], true, {}, "hard")
+	assert(hsum["marks"] == db.stages["v1_s01"].marks_reward * 2, "hard pays x2 marks")
+	assert(hsum["stars"] == 0, "stars are normal-difficulty only")
+	assert(game.cleared.has("hard:v1_s01"))
+	var hboss: Dictionary = game.finish_stage(db.stages["v1_s12"], true, {}, "hard")
+	assert(hboss["first_clear_sigils"] == 1, "hard boss first clear pays +1 Sigil")
+	assert(game.diff_unlocked("nm"), "nightmare unlocks after hard boss")
+	print("difficulty re-clears ok")
+
+	# --- weekly Vice Trial ---
+	assert(game.trial_unlocked())
+	assert(not game.trial_cleared_this_week(3))
+	var t3: StageData = game.make_trial_stage(3)
+	assert(is_equal_approx(t3.enemy_scale, 3.2) and t3.enemy_ids.has("kibr"))
+	var seals0: int = game.seals
+	var tsum: Dictionary = game.finish_trial(3, true)
+	assert(tsum["first_clear_seals"] == 2 and game.seals == seals0 + 2)
+	var trepeat: Dictionary = game.finish_trial(3, true)
+	assert(trepeat["first_clear_seals"] == 0, "trial reward once per week")
+	assert(game.trial_cleared_this_week(3))
+	print("weekly trial ok")
+
 	# --- tutorial flow ---
 	assert(game.tutorial_step == 0, "fresh profile starts the tutorial")
 	game.advance_tutorial(0)

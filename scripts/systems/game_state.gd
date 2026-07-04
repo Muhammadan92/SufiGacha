@@ -66,6 +66,26 @@ const SANCTUM_RUNS_PER_DAY := 2
 const SANCTUM_BREATH_COST := 10
 const SANCTUM_ORDERS := ["Naqshbandi", "Qadiri", "Rifai", "Mevlevi", "Shadhili", "Chishti", "Suhrawardi"]
 
+# --- difficulty re-clears (GDD §6.1: 84 stages -> 252) ---
+const DIFFICULTIES := ["normal", "hard", "nm"]
+const DIFF_NAMES := { "normal": "Normal", "hard": "Hard", "nm": "Nightmare" }
+const DIFF_SCALE := { "normal": 1.0, "hard": 2.2, "nm": 3.2 }
+const DIFF_MARKS := { "normal": 1, "hard": 2, "nm": 3 }
+const DIFF_SEALS := { "normal": 1, "hard": 2, "nm": 3 }
+## Extra Sigils on a valley-boss first clear per difficulty (income guarded:
+## +1 per difficulty tier, spread across months of post-campaign play).
+const DIFF_BOSS_SIGILS := { "normal": 0, "hard": 1, "nm": 1 }
+
+# --- weekly Vice Trial (GDD §6.1) ---
+const TRIAL_SCALES := [2.0, 2.6, 3.2, 3.8, 4.5]
+const TRIAL_REWARDS := [
+	{ "marks": 40 },
+	{ "marks": 60, "seals": 1 },
+	{ "seals": 2, "scrolls": 1 },
+	{ "seals": 3, "scrolls": 2 },
+	{ "marks": 100, "seals": 4, "scrolls": 3 },
+]
+
 var roster := {}   # id (String) -> {"level": int, "xp": int, "dupes": int}
 var team: Array = STARTERS.duplicate()
 var marks := 200   # Silver Marks
@@ -82,6 +102,7 @@ var minaret_floor := 0  # highest Minaret floor cleared
 var season := {}   # {"id", "tier_xp": int, "tier": int, "paid": bool}
 var deeds := {}    # {"day_key", "week_key", "daily": [..], "weekly": [..]}
 var sanctum := {}  # {"day_key", "runs": int}
+var trials := {}   # {"week_key", "cleared": {tier(String): true}}
 
 ## First-session tutorial progress: 0 intro → 1 stage select → 2 first
 ## battle → 3 first results → 4 systems reveal → 5 done.
@@ -214,21 +235,57 @@ func spend_breath(cost: int) -> bool:
 
 # --- stages -------------------------------------------------------------------
 
-func is_unlocked(stage: StageData) -> bool:
+## Save key for a stage clear at a difficulty ("v1_s01", "hard:v1_s01", ...).
+func stage_key(stage_id: String, diff: String) -> String:
+	return stage_id if diff == "normal" else "%s:%s" % [diff, stage_id]
+
+
+func diff_unlocked(diff: String) -> bool:
+	match diff:
+		"hard": return cleared.has("v1_s12")          # valley complete
+		"nm": return cleared.has("hard:v1_s12")       # hard complete
+		_: return true
+
+
+func is_unlocked(stage: StageData, diff: String = "normal") -> bool:
+	if not diff_unlocked(diff):
+		return false
 	var prev: StageData = null
 	for s: StageData in db.stage_order:
 		if s.id == stage.id:
-			return prev == null or cleared.has(String(prev.id))
+			return prev == null or cleared.has(stage_key(String(prev.id), diff))
 		prev = s
 	return false
 
 
+## A scaled copy of an authored stage for hard/nightmare runs.
+func make_diff_stage(base: StageData, diff: String) -> StageData:
+	if diff == "normal":
+		return base
+	var s := StageData.new()
+	s.id = base.id
+	s.display_name = "%s (%s)" % [base.display_name, DIFF_NAMES[diff]]
+	s.valley = base.valley
+	s.index = base.index
+	s.breath_cost = base.breath_cost
+	s.enemy_ids = base.enemy_ids
+	s.enemy_scale = base.enemy_scale * DIFF_SCALE[diff]
+	s.turn_target = base.turn_target
+	s.xp_reward = base.xp_reward
+	s.marks_reward = base.marks_reward
+	s.first_clear_seals = base.first_clear_seals
+	s.first_clear_sigils = base.first_clear_sigils
+	return s
+
+
 ## Applies rewards after a battle; returns a summary for the results screen.
 ## stats: {"deaths": int, "turns": int} from the battle, for star objectives.
-func finish_stage(stage: StageData, victory: bool, stats: Dictionary = {}) -> Dictionary:
+## diff: "normal" | "hard" | "nm" — re-clear tiers pay multiplied rewards
+## (GDD §6.1); stars are a normal-difficulty system only.
+func finish_stage(stage: StageData, victory: bool, stats: Dictionary = {}, diff: String = "normal") -> Dictionary:
 	var summary := {
 		"victory": victory,
-		"stage_name": stage.display_name,
+		"stage_name": stage.display_name if diff == "normal" else "%s (%s)" % [stage.display_name, DIFF_NAMES[diff]],
 		"xp_each": 0, "marks": 0, "first_clear_seals": 0, "first_clear_sigils": 0,
 		"stars": 0, "new_stars": 0, "star_marks": 0, "star_seals": 0,
 		"turn_target": stage.turn_target,
@@ -236,31 +293,33 @@ func finish_stage(stage: StageData, victory: bool, stats: Dictionary = {}) -> Di
 	}
 	if victory:
 		summary["xp_each"] = stage.xp_reward
-		summary["marks"] = stage.marks_reward
-		marks += stage.marks_reward
-		if not cleared.has(String(stage.id)):
-			cleared[String(stage.id)] = true
-			summary["first_clear_seals"] = stage.first_clear_seals
-			summary["first_clear_sigils"] = stage.first_clear_sigils
-			seals += stage.first_clear_seals
-			sigils += stage.first_clear_sigils
-		# Star objectives (GDD §6.1) — deterministic, so a solvable puzzle:
-		# clear / nobody falls / within the turn target.
-		var earned := 1
-		if int(stats.get("deaths", 99)) == 0:
-			earned += 1
-		if int(stats.get("turns", 99999)) <= stage.turn_target:
-			earned += 1
-		summary["stars"] = earned
-		var prev := int(stars.get(String(stage.id), 0))
-		if earned > prev:
-			var delta := earned - prev
-			stars[String(stage.id)] = earned
-			summary["new_stars"] = delta
-			summary["star_marks"] = STAR_REWARD_MARKS * delta
-			summary["star_seals"] = STAR_REWARD_SEALS * delta
-			marks += summary["star_marks"]
-			seals += summary["star_seals"]
+		summary["marks"] = stage.marks_reward * DIFF_MARKS[diff]
+		marks += summary["marks"]
+		var key := stage_key(String(stage.id), diff)
+		if not cleared.has(key):
+			cleared[key] = true
+			summary["first_clear_seals"] = stage.first_clear_seals * DIFF_SEALS[diff]
+			summary["first_clear_sigils"] = stage.first_clear_sigils if diff == "normal" else (DIFF_BOSS_SIGILS[diff] if stage.index == 12 else 0)
+			seals += summary["first_clear_seals"]
+			sigils += summary["first_clear_sigils"]
+		if diff == "normal":
+			# Star objectives (GDD §6.1) — deterministic, so a solvable puzzle:
+			# clear / nobody falls / within the turn target.
+			var earned := 1
+			if int(stats.get("deaths", 99)) == 0:
+				earned += 1
+			if int(stats.get("turns", 99999)) <= stage.turn_target:
+				earned += 1
+			summary["stars"] = earned
+			var prev := int(stars.get(String(stage.id), 0))
+			if earned > prev:
+				var delta := earned - prev
+				stars[String(stage.id)] = earned
+				summary["new_stars"] = delta
+				summary["star_marks"] = STAR_REWARD_MARKS * delta
+				summary["star_seals"] = STAR_REWARD_SEALS * delta
+				marks += summary["star_marks"]
+				seals += summary["star_seals"]
 		for id in team:
 			var gained := add_xp(id, stage.xp_reward)
 			if gained > 0:
@@ -268,6 +327,52 @@ func finish_stage(stage: StageData, victory: bool, stats: Dictionary = {}) -> Di
 		deed_event("win")
 		if int(stats.get("deaths", 99)) == 0:
 			deed_event("flawless")
+	save()
+	return summary
+
+
+# --- weekly Vice Trial (GDD §6.1) --------------------------------------------------
+
+func trial_unlocked() -> bool:
+	return cleared.has("v1_s12")
+
+
+func trial_cleared_this_week(tier: int) -> bool:
+	tick_time()
+	return trials.get("cleared", {}).has(str(tier))
+
+
+func make_trial_stage(tier: int) -> StageData:
+	var s := StageData.new()
+	s.id = StringName("trial_t%d" % tier)
+	s.display_name = "Trial of Pride %s" % ["I", "II", "III", "IV", "V"][tier - 1]
+	s.valley = 0
+	s.index = 12  # boss music + Vice framing
+	s.breath_cost = 0
+	s.turn_target = 999999
+	s.enemy_ids = ["ash_ghoul", "kibr", "ash_ghoul"]
+	s.enemy_scale = TRIAL_SCALES[tier - 1]
+	return s
+
+
+func finish_trial(tier: int, victory: bool) -> Dictionary:
+	tick_time()
+	var summary := {
+		"victory": victory, "stage_name": "Trial of Pride %s" % ["I", "II", "III", "IV", "V"][tier - 1],
+		"xp_each": 0, "marks": 0, "first_clear_seals": 0, "first_clear_sigils": 0,
+		"stars": 0, "new_stars": 0, "star_marks": 0, "star_seals": 0,
+		"scrolls": 0, "level_ups": [],
+	}
+	if victory and not trial_cleared_this_week(tier):
+		trials["cleared"][str(tier)] = true
+		var reward: Dictionary = TRIAL_REWARDS[tier - 1]
+		summary["marks"] = int(reward.get("marks", 0))
+		summary["first_clear_seals"] = int(reward.get("seals", 0))
+		summary["scrolls"] = int(reward.get("scrolls", 0))
+		marks += summary["marks"]
+		seals += summary["first_clear_seals"]
+		scrolls += summary["scrolls"]
+		deed_event("win")
 	save()
 	return summary
 
@@ -416,6 +521,8 @@ func tick_time() -> void:
 		deeds["weekly"] = weekly
 	if sanctum.get("day_key", "") != day_key:
 		sanctum = { "day_key": day_key, "runs": 0 }
+	if trials.get("week_key", "") != week_key:
+		trials = { "week_key": week_key, "cleared": {} }
 
 
 ## Feed a gameplay event into active Deeds. Kinds: win, breath, flawless,
@@ -536,7 +643,7 @@ func save() -> void:
 		"marks": marks, "seals": seals, "sigils": sigils,
 		"breath": breath, "breath_ts": breath_ts, "cleared": cleared,
 		"stars": stars, "minaret_floor": minaret_floor,
-		"season": season, "deeds": deeds, "sanctum": sanctum,
+		"season": season, "deeds": deeds, "sanctum": sanctum, "trials": trials,
 		"tutorial_step": tutorial_step,
 	}
 	var f := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
@@ -566,6 +673,7 @@ func load_save() -> void:
 			season = blob.get("season", {})
 			deeds = blob.get("deeds", {})
 			sanctum = blob.get("sanctum", {})
+			trials = blob.get("trials", {})
 			# migration: pre-tutorial saves with progress skip the tutorial
 			tutorial_step = int(blob.get("tutorial_step",
 				TUTORIAL_DONE if not cleared.is_empty() else 0))
@@ -595,6 +703,7 @@ func reset_profile() -> void:
 	season = {}
 	deeds = {}
 	sanctum = {}
+	trials = {}
 	tutorial_step = 0
 	for id in STARTERS:
 		grant_unit(id)

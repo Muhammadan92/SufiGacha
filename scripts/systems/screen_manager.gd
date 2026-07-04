@@ -15,6 +15,7 @@ const SCREEN_SCRIPTS := {
 	"minaret": preload("res://scripts/screens/minaret_screen.gd"),
 	"season": preload("res://scripts/screens/season_screen.gd"),
 	"sanctum": preload("res://scripts/screens/sanctum_screen.gd"),
+	"trials": preload("res://scripts/screens/trials_screen.gd"),
 }
 
 var current: Control = null

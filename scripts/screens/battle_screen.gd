@@ -30,6 +30,8 @@ func music_key() -> String:
 
 
 var is_sanctum := false
+var trial_tier := 0
+var diff := "normal"
 
 
 func _build() -> void:
@@ -39,8 +41,12 @@ func _build() -> void:
 	elif screens.payload.has("sanctum"):
 		is_sanctum = true
 		stage = game.make_sanctum_stage()
+	elif screens.payload.has("trial_tier"):
+		trial_tier = int(screens.payload["trial_tier"])
+		stage = game.make_trial_stage(trial_tier)
 	else:
-		stage = db.stages[screens.payload["stage_id"]]
+		diff = str(screens.payload.get("diff", "normal"))
+		stage = game.make_diff_stage(db.stages[screens.payload["stage_id"]], diff)
 
 	var art: Texture2D = db.stage_background(stage)
 	if art != null:
@@ -452,9 +458,11 @@ func _on_battle_ended(victory: bool) -> void:
 		summary = game.finish_minaret(minaret_floor, victory)
 	elif is_sanctum:
 		summary = game.finish_sanctum(victory)
+	elif trial_tier > 0:
+		summary = game.finish_trial(trial_tier, victory)
 	else:
-		summary = game.finish_stage(stage, victory,
-			{"deaths": player_deaths, "turns": manager.turns_taken})
+		summary = game.finish_stage(db.stages[String(stage.id)], victory,
+			{"deaths": player_deaths, "turns": manager.turns_taken}, diff)
 	prompt_label.text = "VICTORY — the darkness recedes" if victory else "DEFEAT — try a different approach"
 	var cont := Button.new()
 	cont.text = "Continue"
