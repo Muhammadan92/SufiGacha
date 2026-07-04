@@ -110,9 +110,14 @@ Canonical values: `Enums.RARITY_COLORS`.
 
 ### 3.2 Stats
 
-`HP · ATK · DEF · SPD · Crit Rate · Crit Damage · Effectiveness · Resilience`
+`HP · ATK · DEF · SPD · Precision · Potency · Ward`
 
-Keep it to eight. SPD drives a **turn-meter queue** (see §4.1). Effectiveness/Resilience gate debuff landing — this is what makes Suhrawardi debuffers and Shadhili cleansers matter.
+SPD drives a **turn-meter queue** (see §4.1). All stats are deterministic
+(§4.4): **Precision** is a flat damage bonus (folded from the old crit
+rate × crit damage — same expected value, zero dice); **Potency**
+(effectiveness) strengthens the debuffs you inflict; **Ward** (resilience)
+shrinks the debuffs you receive. Data fields keep their old names
+(crit_rate/crit_damage/effectiveness/resilience) as inputs.
 
 ### 3.3 Kit Structure (every character)
 
@@ -186,8 +191,26 @@ protecting believers*, and of the prophetic staff become a dragon that
 - Auto-battle and 2× speed from day one — non-negotiable for the genre.
 
 ### 4.2 Status Effects (launch set — keep it tight)
-Buffs: ATK↑, DEF↑, SPD↑, Barrier, Regen, Immunity, Evasion, Unseen (untargetable).
-Debuffs: ATK↓, DEF↓, SPD↓, Burn, Silence (no Remembrance), **Whispers** (30% chance to lose turn — the signature themed debuff, used *by enemies on you*, and cleansed by Shadhili).
+Buffs: ATK↑, DEF↑, SPD↑, Barrier, Regen, Immunity, **Veil** (reduces damage taken by its magnitude — the deterministic evolution of evasion), Unseen (untargetable).
+Debuffs: ATK↓, DEF↓, SPD↓, Burn, Silence (no Remembrance), **Whispers** (drains a fixed amount of Fervor every turn — doubt gnawing at resolve; the signature themed debuff, used *by enemies on you*, and cleansed by Shadhili).
+
+### 4.4 Determinism principle — no dice, anywhere
+
+**All combat outcomes are deterministic** (decided 2026-07, extending the §9
+gambling-free ruling): random outcomes exert a subtle pull on the heart —
+hoping instead of planning — and they hide information players deserve.
+Every number is knowable before you act:
+
+- No crit rolls (→ Precision), no damage variance, no dodge rolls (→ Veil),
+  no debuff-landing rolls — debuffs **always land, scaled by potency**
+  (skill potency × attacker Potency − defender Ward) and **stack** with
+  repeated application, so partial debuffs reach full strength through
+  planned, repeated use.
+- Consequence embraced: identical inputs give identical battles. Combat is a
+  **puzzle** — the player's choices are the only variance. Auto-battle
+  becomes a reproducible baseline; manual mastery beats it by planning.
+- Allowed randomness: cosmetic only (VFX jitter, ambient art) — nothing that
+  changes an outcome.
 
 ### 4.3 Win/Lose
 Standard: all enemies down = win (3-star rating by conditions: no deaths, under N turns); team wipe = retry with no stamina refund.
@@ -350,9 +373,11 @@ Wayfarer 10 Seals · Luminary 6 Sigils · Teaching Scroll 60 Marks.**
   Parents, regulators, and recovering gacha players are all the audience.
 - Guardrails retained: optional monthly spend-limit setting, no countdown
   pressure on first-time buyers, all prices visible before purchase.
-- **Scope rule**: combat randomness (crits, debuff chance) involves no money
-  and no stake — gameplay dice, not maysir. The standing charter rule
-  (§12.9): anything money touches must be deterministic, forever.
+- **Scope rule**: superseded 2026-07 — combat is now ALSO fully
+  deterministic (§4.4), not because gameplay dice were maysir (no stake),
+  but to promote strategy and quiet the heart-pull of random outcomes. The
+  whole game is now dice-free: outcomes from choices, everywhere. The
+  standing charter rule (§12.9) covers money; §4.4 covers everything else.
 
 ---
 

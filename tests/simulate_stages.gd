@@ -4,7 +4,8 @@ extends SceneTree
 ## Targets: early stages ~100%, ramping tension, boss stage ~60-70% (auto).
 ## Run:  godot --headless --path . -s res://tests/simulate_stages.gd
 
-const RUNS := 150
+# Deterministic combat (GDD §4.4): one run per stage is exact.
+const RUNS := 1
 const TEAM := ["bram", "echo", "brand", "aria"]
 ## Expected character level when first attempting stage 1..12 (one pass
 ## through the valley, no grinding).

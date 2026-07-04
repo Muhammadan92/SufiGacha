@@ -65,8 +65,10 @@ func _show_detail(id: String) -> void:
 	lines.append("")
 	lines.append("HP %d   ATK %d   DEF %d   SPD %d" % [
 		int(u.max_hp * mult), int(u.atk * mult), int(u.def * mult), u.spd])
-	lines.append("Crit %d%% (x%.1f)   Eff %d%%   Res %d%%" % [
-		int(u.crit_rate * 100), u.crit_damage,
+	# Deterministic stats (GDD §4.4): Precision is a flat damage bonus;
+	# Potency strengthens debuffs inflicted, Ward shrinks debuffs received.
+	lines.append("Precision +%d%% dmg   Potency +%d%%   Ward -%d%%" % [
+		int(u.crit_rate * (u.crit_damage - 1.0) * 100),
 		int(u.effectiveness * 100), int(u.resilience * 100)])
 	lines.append("")
 	for skill: SkillData in u.skills:

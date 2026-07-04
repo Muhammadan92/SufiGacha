@@ -53,7 +53,7 @@ const STATUS_NAMES := {
 	StatusId.SPD_UP: "SPD Up", StatusId.SPD_DOWN: "SPD Down",
 	StatusId.BURN: "Burn", StatusId.REGEN: "Regen",
 	StatusId.BARRIER: "Barrier", StatusId.IMMUNITY: "Immunity",
-	StatusId.EVASION: "Evasion", StatusId.SILENCE: "Silence",
+	StatusId.EVASION: "Veil", StatusId.SILENCE: "Silence",
 	StatusId.WHISPERS: "Whispers", StatusId.TAUNT: "Taunt",
 }
 

@@ -31,6 +31,7 @@ that changes status.** Roadmap definitions live in GDD.md §14.
 - [x] Placeholder audio generator (tools/gen_placeholder_audio.gd): 12 synthesized SFX + 6 seamless loops — game fully audible with zero real tracks; real imports (.ogg/.mp3) auto-outrank placeholder .wav
 - [x] Summon reveal: sequential door-of-light animation on The Calling (rarity-colored, Luminary full-screen flash, tap-to-advance, Skip)
 - [x] Asset audit extended to audio (70 tracked assets total)
+- [x] **Deterministic combat (GDD §4.4)**: full randomness audit; crit→flat Precision, ±5% variance removed, debuffs always land scaled by potency (chance × Potency − Ward) and stack, Evasion→Veil (flat dmg reduction), Whispers→per-turn Fervor drain — all expected-value preserving. Only cosmetic randomness remains. New tuning tools: min_clear_levels (win patterns), boss_scale_sweep
 - [x] **Monetization pivot — GAMBLING-FREE (GDD §9, charter §12.9)**: all %-roll acquisition removed as maysir. Tiered token currencies (Silver Marks / Violet Seals / Emerald Sigils), fixed-price deterministic Calling (player chooses the hero; ceremony kept), Teaching Scrolls sold directly, dupes/pity/rates deleted. Bundle pricing anchored to preserve expected revenue per team comp. Marketing identity: "the gambling-free hero collector"
 
 ### In progress
@@ -61,10 +62,17 @@ that changes status.** Roadmap definitions live in GDD.md §14.
 Backend/server-authoritative pulls, IAP, PvP, Lodges (guilds), Valleys 2–7,
 Talismans, scholar review (pre-launch requirement), localization.
 
-## Balance targets (verified by sims — rerun after any data change)
-- Trash stages: ~100% auto-win at expected level; boss stage: 60–70%
-- Comp ordering on boss: balanced > missing-role comps > no-healer (~0%)
-- Anti-stall: turtle comps must lose long fights (Kibr enrage)
+## Balance targets (DETERMINISTIC combat — GDD §4.4; rerun sims after any data change)
+- Combat has zero dice: identical inputs = identical battles. The balance
+  metric is now the **win pattern by level** (tests/min_clear_levels.gd),
+  not win %. Non-monotonic breakpoints exist — always check the full
+  pattern, never just the first winning level.
+- Trash stages: W from level 1. Boss stages: contiguous W starting one level
+  ABOVE natural arrival (Kibr: arrive L8, auto clears L9+ — grind one level
+  or beat it at 8 with manual play).
+- Follow-up owed: comp-comparison sim (tests/simulate.gd) predates
+  determinism — redesign around per-comp min-clear levels; re-verify comp
+  ordering and turtle anti-stall at actual stage scales.
 
 ## Testing commands
 See README.md "Headless testing & balance sims". Run smoke + systems tests

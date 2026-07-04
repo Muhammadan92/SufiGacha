@@ -66,10 +66,6 @@ func step() -> void:
 	if not actor.is_alive():  # burn can kill at turn start
 		state_refreshed.emit()
 		return
-	if actor.has_status(Enums.StatusId.WHISPERS) and randf() < StatusEffect.WHISPERS_SKIP_CHANCE:
-		log_message.emit("%s is lost in the Whispers and loses their turn!" % actor.data.display_name)
-		state_refreshed.emit()
-		return
 	if actor.is_player_side and not auto_mode:
 		awaiting_player = true
 		awaiting_input.emit(actor)
@@ -135,6 +131,10 @@ func _start_of_turn(actor: BattleUnit) -> void:
 			actor.hp = mini(actor.max_hp, actor.hp + heal)
 			log_message.emit("%s regenerates %d HP." % [actor.data.display_name, heal])
 			unit_healed.emit(actor, heal)
+		elif s.id == Enums.StatusId.WHISPERS and s.magnitude > 0.0:
+			# Deterministic: doubt gnaws at resolve — flat Fervor drain per turn.
+			actor.gain_fervor(-s.magnitude)
+			log_message.emit("%s loses %d Fervor to the Whispers." % [actor.data.display_name, int(s.magnitude)])
 	# Durations tick down once per own turn, in one place only. A 2-turn
 	# status therefore lives through two of this unit's turn starts.
 	actor.expire_statuses()
@@ -253,18 +253,23 @@ func _apply_effect(actor: BattleUnit, eff: EffectBlock, target: BattleUnit) -> v
 			log_message.emit("  %s recovers %d HP." % [target.data.display_name, amount])
 			unit_healed.emit(target, amount)
 		Enums.EffectKind.APPLY_STATUS:
+			# DETERMINISTIC (GDD §4.4): statuses always land, scaled by potency.
+			# `chance` is now a potency multiplier; Effectiveness strengthens
+			# debuffs you inflict, Resilience shrinks debuffs you receive.
+			# Reapplication stacks (EffectBlock.stack_cap), so a scaled-down
+			# debuff reaches full strength through repeated, planned use.
 			var is_debuff := eff.status_id not in Enums.BUFF_IDS
-			var land_chance := eff.chance
+			var potency := eff.chance
 			if is_debuff:
-				land_chance *= 1.0 + actor.data.effectiveness - target.data.resilience
-			if randf() < land_chance:
-				# Barrier magnitude is an absorb pool scaled off the caster's ATK.
-				var magnitude := eff.amount * actor.atk() if eff.status_id == Enums.StatusId.BARRIER else eff.amount
-				target.add_status(eff.status_id, eff.duration, magnitude, eff.stack_cap)
-				log_message.emit("  %s gains %s." % [target.data.display_name, Enums.STATUS_NAMES[eff.status_id]])
-				status_applied.emit(target, eff.status_id)
-			elif is_debuff:
-				log_message.emit("  %s resists %s." % [target.data.display_name, Enums.STATUS_NAMES[eff.status_id]])
+				potency *= 1.0 + actor.data.effectiveness - target.data.resilience
+			potency = clampf(potency, 0.0, 2.0)
+			if potency <= 0.0:
+				log_message.emit("  %s wards off %s." % [target.data.display_name, Enums.STATUS_NAMES[eff.status_id]])
+				return
+			var magnitude := eff.amount * actor.atk() if eff.status_id == Enums.StatusId.BARRIER else eff.amount * potency
+			target.add_status(eff.status_id, eff.duration, magnitude, eff.stack_cap)
+			log_message.emit("  %s gains %s." % [target.data.display_name, Enums.STATUS_NAMES[eff.status_id]])
+			status_applied.emit(target, eff.status_id)
 		Enums.EffectKind.CLEANSE:
 			var removed := target.remove_debuffs()
 			if removed > 0:
@@ -287,16 +292,15 @@ func _deal_damage(actor: BattleUnit, target: BattleUnit, power: float) -> void:
 		log_message.emit("  %s is immune!" % target.data.display_name)
 		unit_evaded.emit(target, "IMMUNE")
 		return
-	if target.has_status(Enums.StatusId.EVASION) and randf() < target.status_magnitude(Enums.StatusId.EVASION):
-		log_message.emit("  %s evades!" % target.data.display_name)
-		unit_evaded.emit(target, "EVADE")
-		return
+	# DETERMINISTIC combat math (GDD §4.4) — no rolls, no variance:
+	# crit chance is folded into a flat Precision multiplier (same expected
+	# value), and Evasion is a Veil that reduces damage by its magnitude.
 	var mult := Affinity.damage_multiplier(actor.data.affinity, target.data.affinity)
 	var base := actor.atk() * power * mult
 	var mitigation := 300.0 / (300.0 + target.def())
-	var crit := randf() < actor.data.crit_rate
-	var crit_mult := actor.data.crit_damage if crit else 1.0
-	var raw := maxi(1, int(base * mitigation * crit_mult * randf_range(0.95, 1.05)))
+	var precision := 1.0 + actor.data.crit_rate * (actor.data.crit_damage - 1.0)
+	var veil := 1.0 - clampf(target.status_magnitude(Enums.StatusId.EVASION), 0.0, 0.9)
+	var raw := maxi(1, int(base * mitigation * precision * veil))
 	var dmg := int(target.absorb_with_barrier(raw))
 	if dmg < raw:
 		log_message.emit("  %s's barrier absorbs %d." % [target.data.display_name, raw - dmg])
@@ -305,10 +309,10 @@ func _deal_damage(actor: BattleUnit, target: BattleUnit, power: float) -> void:
 			return
 	target.hp = maxi(0, target.hp - dmg)
 	target.gain_fervor(BattleUnit.FERVOR_ON_HIT)
-	damage_dealt.emit(target, dmg, crit)
+	damage_dealt.emit(target, dmg, false)
 	var notes: Array = []
-	if crit:
-		notes.append("CRIT")
+	if veil < 1.0:
+		notes.append("veiled")
 	if mult > 1.0:
 		notes.append("advantage")
 	elif mult < 1.0:

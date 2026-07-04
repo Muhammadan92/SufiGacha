@@ -8,9 +8,6 @@ var id: int
 var turns_left: int
 var magnitude: float
 
-## Chance for WHISPERS to steal the afflicted unit's turn (GDD §4.2).
-const WHISPERS_SKIP_CHANCE := 0.3
-
 
 func _init(p_id: int, p_turns: int, p_magnitude: float = 0.0) -> void:
 	id = p_id

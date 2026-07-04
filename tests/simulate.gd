@@ -3,7 +3,9 @@ extends SceneTree
 ## should win the boss fight, bad comps should mostly lose).
 ## Run:  godot --headless --path . -s res://tests/simulate.gd
 
-const RUNS := 300
+# Combat is fully deterministic (GDD §4.4): identical inputs -> identical
+# battles, so one run per cell is exact. Win% cells are now 0/100 thresholds.
+const RUNS := 1
 const STEP_CAP := 2000  # unit-turns before a battle counts as a stalemate loss
 
 const UNIT_IDS := ["bram", "echo", "brand", "aria", "whisperling", "shadow_vermin", "ash_ghoul", "kibr"]
