@@ -24,6 +24,10 @@ var current_actor: BattleUnit = null
 var awaiting_player := false
 var ended := false
 var auto_mode := false
+## Compact record of every action taken — with deterministic combat (GDD
+## §4.4) this log fully reproduces the battle: server-side replay
+## verification (BACKEND.md §0.2) and bug reports both read from it.
+var action_log: Array = []
 
 
 ## player_mults: optional per-unit stat multipliers (character level).
@@ -34,6 +38,7 @@ func setup(player_data: Array, enemy_data: Array, player_mults: Array = [], enem
 	ended = false
 	awaiting_player = false
 	current_actor = null
+	action_log.clear()
 	for i in player_data.size():
 		var mult: float = player_mults[i] if i < player_mults.size() else 1.0
 		players.append(BattleUnit.new(player_data[i], true, mult))
@@ -220,6 +225,11 @@ func _resolve_skill(actor: BattleUnit, skill: SkillData, primary: BattleUnit) ->
 			target_desc = " on %s" % t[0].data.display_name
 	log_message.emit("%s uses [%s] %s%s." % [
 		actor.data.display_name, Enums.SLOT_NAMES[skill.slot], skill.full_name(), target_desc])
+	action_log.append({
+		"actor": String(actor.data.id),
+		"skill": String(skill.id),
+		"target": String(primary.data.id) if primary != null else "",
+	})
 	action_started.emit(actor, skill, primary)
 
 	if skill.slot == Enums.Slot.TRANCE:

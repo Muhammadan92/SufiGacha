@@ -437,9 +437,14 @@ res://
 ```
 
 ### 13.3 Save & backend (the real-money consequence)
-- **Prototype/vertical slice**: local save (JSON, lightly obfuscated). Fine while no money exists.
-- **Before any real-money launch**, the game MUST become server-authoritative for: accounts, gacha pulls (pull RNG happens on the server), currency balances, and IAP receipt validation — otherwise the economy is trivially hackable and Apple/Google refund fraud will eat you. Recommended: **Nakama** (open-source game backend, self-host or cloud) or **Supabase + edge functions**. Design the client from day one so `GachaSystem` and `Wallet` are interfaces that can swap local → remote implementations.
-- Analytics + crash reporting before soft launch (e.g., PostHog/Sentry).
+Full plan: **`BACKEND.md`**. Summary: local save through the vertical slice;
+before any real-money launch the economy (wallet, roster, purchases, IAP
+receipt validation) becomes server-authoritative on **Nakama** (Godot 4 SDK,
+built-in wallet/IAP/leaderboards; ~$30/mo VPS at soft-launch scale). Our
+gambling-free economy removes the need for server-side RNG entirely, and
+deterministic combat (§4.4) gives free anti-cheat via replay verification —
+the server re-simulates any battle with our actual engine and gets the exact
+result. Analytics + crash reporting (PostHog/Sentry) land before soft launch.
 
 ### 13.4 Godot-specific notes
 - GDScript throughout; typed GDScript (`var hp: int`) for sanity.

@@ -59,8 +59,12 @@ that changes status.** Roadmap definitions live in GDD.md §14.
   perma-buff. Full notes: GDD §6.2. Design begins with Phase 3 planning.
 
 ### Deliberately deferred (Phase 3+)
-Backend/server-authoritative pulls, IAP, PvP, Lodges (guilds), Valleys 2–7,
-Talismans, scholar review (pre-launch requirement), localization.
+Backend build-out (fully planned in **BACKEND.md** — Nakama, authoritative
+wallet, IAP validation, replay-verification anti-cheat; build with first
+IAP), PvP, Lodges (guilds), Valleys 2–7, Talismans, scholar review
+(pre-launch requirement), localization.
+Near-term client prep from BACKEND.md §3: EconomyService interface seam,
+save_version field, battle action-log recording.
 
 ## Balance targets (DETERMINISTIC combat — GDD §4.4; rerun sims after any data change)
 - Combat has zero dice: identical inputs = identical battles. The balance

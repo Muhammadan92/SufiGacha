@@ -201,6 +201,7 @@ func buy_scroll(count: int = 1) -> bool:
 
 func save() -> void:
 	var blob := {
+		"save_version": 2,  # v1 = Pearls era; bump on schema change (BACKEND.md §3)
 		"roster": roster, "team": team, "scrolls": scrolls,
 		"marks": marks, "seals": seals, "sigils": sigils,
 		"breath": breath, "breath_ts": breath_ts, "cleared": cleared,
