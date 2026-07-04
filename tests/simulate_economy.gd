@@ -1,14 +1,13 @@
 extends SceneTree
 ## ECONOMY & ENGAGEMENT SIMULATOR — the canonical tuning tool (ECONOMY_TUNING.md).
-## Supersedes simulate_progression.gd: models 90-day player careers against the
-## FULL current game — campaign (v1 authored, v2-7 synthesized), star
-## objectives, the Minaret, mastery spending — plus spender profiles with
-## purchase policies, producing time-spent and revenue per profile.
+## Models 90-day player careers against the FULL current game plus the GDD
+## §9.3 revenue roadmap: token packs, monthly pass, season pass, cosmetics
+## catalog, and content cadence (new heroes). Ends with a BLENDED projection
+## per 1,000 installs under a documented population-mix assumption.
 ##
-## Deterministic combat (GDD §4.4) => battle outcome is a pure function of
-## (stage, team level, mastery); outcomes are cached, so careers run fast.
-## Team is fixed to the starters (conservative floor — bought heroes count
-## for collection/spend modeling, not power).
+## Deterministic combat (GDD §4.4) => battle outcomes cached as a pure
+## function of (stage, level, mastery). Team fixed to starters (conservative
+## power floor; purchases count for collection/revenue, not combat).
 ## Run:  godot --headless --path . -s res://tests/simulate_economy.gd
 
 const DAYS := 90
@@ -20,8 +19,8 @@ const STEP_CAP := 900
 const BOSS_TARGET_LEVELS := [8, 15, 22, 29, 36, 42, 48]
 const XP_VALLEY_BONUS := 0.5
 
-# --- engagement assumptions (documented in ECONOMY_TUNING.md §2) ---
-const SECONDS_PER_TURN := 0.9        # manual-ish pacing incl. thinking
+# --- engagement assumptions (ECONOMY_TUNING.md §2) ---
+const SECONDS_PER_TURN := 0.9
 const MENU_SECONDS_PER_RUN := 25.0
 const DAILY_OVERHEAD_MINUTES := 3.0
 const MAX_MINARET_CLIMBS_PER_DAY := 6  # session-limit model, not a game rule
@@ -31,28 +30,41 @@ const UNIT_PRICES := { 3: ["marks", 300], 4: ["seals", 10], 5: ["sigils", 6] }
 const SCROLL_COST := 60
 const STAR_MARKS := 20
 const STAR_SEALS := 1
-const MARKS_RESERVE := 500  # keep this much before buying scrolls
+const MARKS_RESERVE := 500
 
-# --- real-money packs (GDD §9.3) ---
+# --- revenue roadmap (GDD §9.3) ---
 const PACKS := {
 	"sigils": [[6, 66.0], [3, 33.0], [1, 12.0]],
 	"seals": [[10, 18.0]],
 	"marks": [[1000, 5.0]],
 }
-const PASS_PRICE_MONTHLY := 5.0
+const PASS_PRICE_MONTHLY := 4.99
 const PASS_DAILY := { "marks": 15, "seals": 1 }
 const PASS_SIGIL_EVERY_DAYS := 10
+const SEASON_PASS_PRICE := 9.99
+const SEASON_GRANTS := { "marks": 300, "seals": 2, "sigils": 1, "scrolls": 5 }
+const COSMETIC_AVG_PRICE := 6.0
+const COSMETICS_PER_MONTH := 3     # content cadence (GDD §9.3.1)
+const NEW_HERO_EVERY_DAYS := 15    # 2 heroes/month, Luminary-priced
 
-## Who we model. budget = max real-money $/30 days on packs (pass separate).
+## Profiles. budget = $/30d on TOKEN PACKS (passes/cosmetics are separate,
+## deliberate purchases). cosmetics: items bought per month (-1 = all).
 const PROFILES := {
-	"f2p casual":    { "breath": 80,  "budget": 0.0,     "pass": false },
-	"f2p hardcore":  { "breath": 200, "budget": 0.0,     "pass": false },
-	"pass holder":   { "breath": 110, "budget": 0.0,     "pass": true },
-	"light spender": { "breath": 110, "budget": 15.0,    "pass": true },
-	"completionist": { "breath": 200, "budget": 99999.0, "pass": true },
+	"f2p casual":    { "breath": 80,  "budget": 0.0,     "pass": false, "season": false, "cosmetics": 0 },
+	"f2p hardcore":  { "breath": 200, "budget": 0.0,     "pass": false, "season": false, "cosmetics": 0 },
+	"pass holder":   { "breath": 110, "budget": 0.0,     "pass": true,  "season": false, "cosmetics": 0 },
+	"light spender": { "breath": 110, "budget": 15.0,    "pass": true,  "season": true,  "cosmetics": 1 },
+	"completionist": { "breath": 200, "budget": 99999.0, "pass": true,  "season": true,  "cosmetics": -1 },
 }
 
-## Acquisition desire order (Luminaries, then Wayfarers, then Novices).
+## Population mix per 1,000 installs — PLACEHOLDER conversion assumptions
+## (~4.5% payers, genre-plausible); replace with real analytics at soft
+## launch (ECONOMY_TUNING.md §7).
+const MIX := {
+	"f2p casual": 800, "f2p hardcore": 155,
+	"pass holder": 20, "light spender": 20, "completionist": 5,
+}
+
 const DESIRES := [
 	"sage", "vale", "gale", "isla", "lucia",
 	"seren", "rowan", "ansel",
@@ -71,14 +83,16 @@ func _initialize() -> void:
 		root.add_child(db)
 	db.reload()
 	var stages := _build_campaign()
-	print("ECONOMY & ENGAGEMENT SIM — %d days | %d campaign stages + Minaret | prices: L=6 sigils W=10 seals N=300 marks" % [
-		DAYS, stages.size()])
+	print("ECONOMY SIM w/ REVENUE ROADMAP — %d days | cadence: hero/%dd, %d cosmetics/mo, season pass $%.2f" % [
+		DAYS, NEW_HERO_EVERY_DAYS, COSMETICS_PER_MONTH, SEASON_PASS_PRICE])
+	var results := {}
 	for profile_name in PROFILES:
-		_run_career(profile_name, PROFILES[profile_name], stages)
+		results[profile_name] = _run_career(profile_name, PROFILES[profile_name], stages)
+	_print_blended(results)
 	quit(0)
 
 
-# --- campaign construction (authored v1 + synthesized v2-7) ---------------------
+# --- campaign construction ---------------------------------------------------------
 
 func _level_mult(l: int) -> float:
 	return 1.0 + 0.04 * (l - 1)
@@ -119,7 +133,7 @@ func _build_campaign() -> Array:
 	return out
 
 
-# --- deterministic battle with cache ---------------------------------------------
+# --- deterministic battle with cache -------------------------------------------------
 
 func _battle(stage_key: String, enemy_ids: Array, scale: float, level: int, mastery: int) -> Dictionary:
 	var cache_key := "%s|%d|%d" % [stage_key, level, mastery]
@@ -152,49 +166,58 @@ func _battle(stage_key: String, enemy_ids: Array, scale: float, level: int, mast
 	return result
 
 
-# --- career ------------------------------------------------------------------------
+# --- career -----------------------------------------------------------------------------
 
-func _run_career(profile_name: String, profile: Dictionary, stages: Array) -> void:
+func _run_career(profile_name: String, profile: Dictionary, stages: Array) -> Dictionary:
 	var level := 1
 	var xp := 0
-	var mastery := 0            # uniform team mastery tier (0..5)
+	var mastery := 0
 	var scrolls := 0
 	var marks := 200
 	var seals := 0
 	var sigils := 0
-	var next_idx := 0           # campaign frontier
-	var stage_stars := {}       # idx -> best stars
+	var next_idx := 0
+	var stage_stars := {}
 	var minaret := 0
-	var owned_desires := 0      # units acquired from DESIRES, in order
-	var spent := 0.0
-	var pass_spent := 0.0
+	var owned_desires := 0
+	var total_desires := DESIRES.size()
+	var rev := { "packs": 0.0, "pass": 0.0, "season": 0.0, "cosmetics": 0.0 }
 	var budget_left: float = profile["budget"]
 	var minutes_total := 0.0
-	var dry_days := 0
 	var campaign_day := -1
 	var snapshots := {}
 
 	for day in range(1, DAYS + 1):
+		# --- monthly beats ---
 		if day % 30 == 1:
-			budget_left = profile["budget"]  # monthly budget refresh
+			budget_left = profile["budget"]
 			if profile["pass"]:
-				pass_spent += PASS_PRICE_MONTHLY
+				rev["pass"] += PASS_PRICE_MONTHLY
+			if profile["season"]:
+				rev["season"] += SEASON_PASS_PRICE
+				marks += SEASON_GRANTS["marks"]
+				seals += SEASON_GRANTS["seals"]
+				sigils += SEASON_GRANTS["sigils"]
+				scrolls += SEASON_GRANTS["scrolls"]
+			var n_cosmetics: int = COSMETICS_PER_MONTH if profile["cosmetics"] < 0 else mini(profile["cosmetics"], COSMETICS_PER_MONTH)
+			rev["cosmetics"] += n_cosmetics * COSMETIC_AVG_PRICE
 		if profile["pass"]:
 			marks += PASS_DAILY["marks"]
 			seals += PASS_DAILY["seals"]
 			if day % PASS_SIGIL_EVERY_DAYS == 0:
 				sigils += 1
+		if day % NEW_HERO_EVERY_DAYS == 0:
+			total_desires += 1  # content cadence: a new Luminary ships
 
 		var minutes_today := DAILY_OVERHEAD_MINUTES
-		var progressed := false
 		var breath: int = profile["breath"]
 		var fail_streak := 0
 
-		# 1) Campaign push / farm (frontier gated by the release calendar)
+		# 1) Campaign push (frontier gated by the release calendar)
 		while next_idx < stages.size():
 			var target: Dictionary = stages[next_idx]
 			if day < int(VALLEY_RELEASE_DAY.get(int(target["valley"]), 0)):
-				break  # next valley hasn't shipped yet
+				break
 			var farm_mode := fail_streak >= 2
 			var stage: Dictionary = stages[maxi(0, next_idx - 1)] if farm_mode and next_idx > 0 else target
 			if breath < int(stage["breath"]):
@@ -204,14 +227,12 @@ func _run_career(profile_name: String, profile: Dictionary, stages: Array) -> vo
 			minutes_today += (r["turns"] * SECONDS_PER_TURN + MENU_SECONDS_PER_RUN) / 60.0
 			if r["win"]:
 				marks += int(stage["marks"])
-				var gained_xp: int = int(stage["xp"])
-				var res := _grant_xp(level, xp, gained_xp)
+				var res := _grant_xp(level, xp, int(stage["xp"]))
 				if res[0] > level:
 					fail_streak = 0
 				level = res[0]
 				xp = res[1]
 				if not farm_mode:
-					# stars (deterministic — computed exactly)
 					var earned := 1
 					if r["deaths"] == 0:
 						earned += 1
@@ -225,15 +246,13 @@ func _run_career(profile_name: String, profile: Dictionary, stages: Array) -> vo
 					seals += int(stage["fc_seals"])
 					sigils += int(stage["fc_sigils"])
 					next_idx += 1
-					progressed = true
 					fail_streak = 0
 					if next_idx >= stages.size():
 						campaign_day = day
-			else:
-				if not farm_mode:
-					fail_streak += 1
+			elif not farm_mode:
+				fail_streak += 1
 
-		# 1b) Leftover Breath: farm the best cleared stage (marks + xp)
+		# 1b) Leftover Breath: farm best cleared stage
 		if next_idx > 0:
 			var farm: Dictionary = stages[next_idx - 1]
 			while breath >= int(farm["breath"]):
@@ -246,7 +265,7 @@ func _run_career(profile_name: String, profile: Dictionary, stages: Array) -> vo
 					level = fres[0]
 					xp = fres[1]
 
-		# 2) The Minaret (free, unlocked after 1-6): climb until first loss
+		# 2) The Minaret
 		if next_idx > 5:
 			for climb in MAX_MINARET_CLIMBS_PER_DAY:
 				var floor: int = minaret + 1
@@ -268,12 +287,14 @@ func _run_career(profile_name: String, profile: Dictionary, stages: Array) -> vo
 				var res2 := _grant_xp(level, xp, 10 + 2 * floor)
 				level = res2[0]
 				xp = res2[1]
-				progressed = true
 
-		# 3) Spend tokens on desires (all profiles), then real money (spenders)
-		while owned_desires < DESIRES.size():
-			var want: UnitData = db.units[DESIRES[owned_desires]]
-			var price: Array = UNIT_PRICES[want.rarity]
+		# 3) Spend tokens on desires; buy at most one pack/day if blocked
+		while owned_desires < total_desires:
+			var price: Array
+			if owned_desires < DESIRES.size():
+				price = UNIT_PRICES[db.units[DESIRES[owned_desires]].rarity]
+			else:
+				price = UNIT_PRICES[5]  # cadence heroes are Luminaries
 			var have: int = marks if price[0] == "marks" else (seals if price[0] == "seals" else sigils)
 			if have >= int(price[1]):
 				match price[0]:
@@ -281,15 +302,13 @@ func _run_career(profile_name: String, profile: Dictionary, stages: Array) -> vo
 					"seals": seals -= int(price[1])
 					"sigils": sigils -= int(price[1])
 				owned_desires += 1
-				progressed = true
 				continue
-			# short — consider buying ONE pack today if budget allows
 			var bought := false
 			if budget_left > 0.0:
 				for pack in PACKS[price[0]]:
 					if pack[1] <= budget_left:
 						budget_left -= pack[1]
-						spent += pack[1]
+						rev["packs"] += pack[1]
 						match price[0]:
 							"marks": marks += int(pack[0])
 							"seals": seals += int(pack[0])
@@ -299,35 +318,49 @@ func _run_career(profile_name: String, profile: Dictionary, stages: Array) -> vo
 			if not bought:
 				break
 
-		# 4) Mastery: convert excess marks to scrolls, scrolls to team mastery
+		# 4) Mastery from surplus Marks
 		while marks - MARKS_RESERVE >= SCROLL_COST:
 			marks -= SCROLL_COST
 			scrolls += 1
-		while mastery < 5 and scrolls >= (mastery + 1) * 4:  # whole team per tier
+		while mastery < 5 and scrolls >= (mastery + 1) * 4:
 			scrolls -= (mastery + 1) * 4
 			mastery += 1
-			progressed = true
 
 		minutes_total += minutes_today
-		if not progressed:
-			dry_days += 1
 		if day == 30 or day == 60 or day == 90:
 			snapshots[day] = {
 				"level": level, "campaign": next_idx, "minaret": minaret,
-				"mastery": mastery, "desires": owned_desires,
-				"spent": spent + pass_spent, "min_per_day": minutes_total / day,
-				"sigils": sigils,
+				"desires": owned_desires, "total_desires": total_desires,
+				"revenue": rev["packs"] + rev["pass"] + rev["season"] + rev["cosmetics"],
+				"min_per_day": minutes_total / day,
 			}
 
-	print("\n=== %s (%d Breath/day, budget $%.0f/mo%s) ===" % [
-		profile_name, profile["breath"], profile["budget"], ", pass" if profile["pass"] else ""])
-	print("  campaign clear: %s | dry days (no progression): %d/%d" % [
-		"day %d" % campaign_day if campaign_day > 0 else "NOT in %d days" % DAYS, dry_days, DAYS])
+	print("\n=== %s (%d Breath/day%s%s%s) ===" % [
+		profile_name, profile["breath"],
+		", pass" if profile["pass"] else "",
+		", season" if profile["season"] else "",
+		", $%.0f/mo packs" % profile["budget"] if profile["budget"] > 0.0 and profile["budget"] < 9999.0 else ""])
+	print("  campaign clear: %s" % ("day %d" % campaign_day if campaign_day > 0 else "in progress at day %d (staggered)" % DAYS))
 	for d in [30, 60, 90]:
 		var s: Dictionary = snapshots[d]
-		print("  day %-3d Lv%-3d camp %d/84  minaret %-3d mastery %d  heroes bought %d/%d  %5.1f min/day  revenue $%.2f" % [
-			d, s["level"], s["campaign"], s["minaret"], s["mastery"],
-			s["desires"], DESIRES.size(), s["min_per_day"], s["spent"]])
+		print("  day %-3d Lv%-3d camp %2d/84 minaret %-3d heroes %2d/%-2d  %5.1f min/day  revenue $%7.2f" % [
+			d, s["level"], s["campaign"], s["minaret"], s["desires"], s["total_desires"],
+			s["min_per_day"], s["revenue"]])
+	print("  lines: packs $%.2f | monthly pass $%.2f | season pass $%.2f | cosmetics $%.2f" % [
+		rev["packs"], rev["pass"], rev["season"], rev["cosmetics"]])
+	return snapshots
+
+
+func _print_blended(results: Dictionary) -> void:
+	print("\n=== BLENDED PROJECTION per 1,000 installs (mix is a placeholder — replace with soft-launch analytics) ===")
+	print("  mix: %s" % str(MIX))
+	for d in [30, 60, 90]:
+		var total := 0.0
+		for profile_name in MIX:
+			total += results[profile_name][d]["revenue"] * MIX[profile_name]
+		print("  day %-3d  revenue/1k installs: $%8.2f   (ARPU $%.3f/player, $%.3f/player/month)" % [
+			d, total, total / 1000.0, total / 1000.0 / (d / 30.0)])
+	print("  NOTE: no churn modeled — treat as revenue per 1k RETAINED players; real blended revenue = this x retention curve.")
 
 
 func _grant_xp(level: int, xp: int, amount: int) -> Array:

@@ -31,6 +31,7 @@ that changes status.** Roadmap definitions live in GDD.md §14.
 - [x] Placeholder audio generator (tools/gen_placeholder_audio.gd): 12 synthesized SFX + 6 seamless loops — game fully audible with zero real tracks; real imports (.ogg/.mp3) auto-outrank placeholder .wav
 - [x] Summon reveal: sequential door-of-light animation on The Calling (rarity-colored, Luminary full-screen flash, tap-to-advance, Skip)
 - [x] Asset audit extended to audio (70 tracked assets total)
+- [x] **Revenue roadmap** (GDD §9.3/9.3.1 + ECONOMY_TUNING.md §6b): season pass, permanent cosmetics catalog, content cadence as the growth curve — all deterministic. Simulated: light spender $99/90d, completionist $495 + ~$150/mo cadence growth, blended ≈ $1.58 ARPU/mo retained (~$1.35 net); break-even ≈ 370 retained actives at solo cost base
 - [x] **Economy & Engagement simulator** (tests/simulate_economy.gd, supersedes the progression sim) + **ECONOMY_TUNING.md playbook** (KPI targets, tuning levers, expansion protocol). Baseline recorded; first tuning pass applied (Minaret XP/curve). Verdict: minutes/day and revenue in band under staggered release; daily sanctums are the missing recurring loop
 - [x] Teaching Scrolls spend: mastery system (5 ranks, +6% dmg/heal each, escalating scroll costs, roster UI)
 - [x] 3-star stage objectives (clear / no falls / within turn target) with token rewards, per-stage best persisted, stage-select + results display

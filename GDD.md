@@ -353,17 +353,36 @@ Three token currencies, keyed to the rarity signal colors (§3.1):
 Draft fixed prices (tune via the progression sim): **Novice 300 Marks ·
 Wayfarer 10 Seals · Luminary 6 Sigils · Teaching Scroll 60 Marks.**
 
-### 9.3 Packs, bundles & revenue lines
+### 9.3 Revenue lines (all fixed-price, zero randomness — §12.9)
 1. **Token packs** — singles at anchor price, bundles discounted (e.g.
    Sigils 1/$12 · 3/$33 · 6/$66). Bundle pricing puts a chosen Luminary at
    ≈ $66–72 — deliberately matched to the old expected pity cost ($70–90),
    so **expected revenue per team composition is preserved** while variance
    (and the gambling) disappears. Deterministic choice is *worth* the price:
    players buy exactly the hero they want.
-2. **Monthly Traveler's Pass** (~$5: daily token drip — baseline revenue)
-3. **Battle pass** per chapter-season (cosmetics, materials, tokens — no exclusive power)
-4. **Cosmetics**: outfit variants, lodge decorations
-5. **Company Chest** mixed bundles (Marks+Seals+Sigils) at deeper discount
+2. **Monthly Traveler's Pass** ($4.99: daily token drip — baseline revenue)
+3. **Season Pass** ($9.99 per ~30-day chapter-season): free track + paid
+   track of tokens, Scrolls, and an **exclusive outfit** at max tier. All
+   tiers reachable by normal play; no power exclusives; progress carries if
+   you buy late (no FOMO cliff).
+4. **Cosmetics catalog** — the long-term ceiling (the Fortnite thesis:
+   deterministic item shops out-earn gacha at scale). Outfit variants
+   ($4.99–7.99), Trance VFX variants ($2.99), lodge decorations
+   ($1.99–4.99), Guardian skins ($9.99). **Permanent catalog** — a weekly
+   *featured* slot rotates visibility, but items never expire (guardrail:
+   rotation without expiry pressure). The LoRA-per-character art pipeline
+   makes outfit production genuinely cheap.
+5. **Company Chest** mixed bundles (Marks+Seals+Sigils) at deeper discount;
+   milestone value packs (one-time, contents shown exactly).
+
+### 9.3.1 Content cadence = revenue cadence
+Under deterministic pricing **the catalog is the revenue ceiling**, so the
+business plan is a content plan: target **2 new heroes/month** (~$140/month
+added to the completionist ceiling), **1 season pass/month**, **3–4
+cosmetics/month**. Every release's revenue contribution is verified in the
+economy sim before shipping (ECONOMY_TUNING.md §6). Year-one completionist
+ceiling at this cadence: ≈ $2,000+ cumulative — genre-competitive without a
+single dice roll.
 
 ### 9.4 Compliance & positioning
 - **No loot boxes** → no odds-disclosure requirements, no Belgium/Netherlands

@@ -50,9 +50,10 @@ convert surplus Marks into Scrolls into team Mastery.
 | F2P chosen-Luminary rate | 1 per 2–4 weeks steady-state | >1/week (over-generous) |
 | Dry days (no progression) in 90 | < 15, none before day 30 | any before day 21 |
 | Pass holder value feel | visibly ahead of f2p casual | indistinguishable |
-| Light spender 90-day revenue | $40–60 (pass + ~$15/mo packs) | budget unspent (nothing worth buying) |
-| Completionist ceiling | $250–350 to own every current hero | <$150 (roster too cheap) |
+| Light spender 90-day revenue | $80–110 (passes + packs + ~1 cosmetic/mo) | budget unspent (nothing worth buying) |
+| Completionist 90-day revenue | $450–550, growing with content cadence | <$300 (catalog/cadence too thin) |
 | Cost per chosen Luminary | $66–72 effective (bundle) | drifts from the $70–90 anchor |
+| Blended ARPU (placeholder mix, retained) | ≥ $1.50/player/month | < $1.00 |
 
 **The revenue invariant** (GDD §9.3): expected spend to assemble a chosen
 team composition stays anchored to the old genre expectation (~$70–90 per
@@ -100,6 +101,46 @@ Checklist per expansion:
 - **Part 2 (The Twelve Moons)**: rerun everything; the perma-buff reward
   (Fountain of Youth) also shifts min-clear levels — re-baseline difficulty.
 - **Price changes**: never silently; GDD §9 edit + this doc's targets first.
+
+## 6b. REVENUE ROADMAP (GDD §9.3/9.3.1) — the business model, simulated
+
+Deterministic pricing means **the catalog is the ceiling and content cadence
+is the growth curve**. Modeled lines: token packs, Traveler's Pass ($4.99/mo),
+Season Pass ($9.99/season, exclusive outfit, no power), cosmetics catalog
+(3–4/mo at ~$6 avg, permanent catalog, no expiry FOMO), and hero cadence
+(2 Luminaries/month at the $66–72 anchor).
+
+**90-day projection (sim, 2026-07-04):**
+
+| Profile | 90-day revenue | Lines |
+|---|---|---|
+| pass holder | $15 | monthly pass |
+| light spender | **$99** | packs $36 + passes $45 + cosmetics $18 |
+| completionist | **$495** (grows ~$150/mo with cadence) | packs $396 + passes $45 + cosmetics $54 |
+| **Blended, per 1,000 retained installs** | **$4,753 / 90d** (ARPU ≈ **$1.58/player/mo**) | placeholder mix: 4.5% payers |
+
+Reality adjustments to apply on top:
+- **Store fee**: −15% (Apple/Google small-business tier under $1M/yr) → net
+  ≈ **$1.35/player/mo retained**.
+- **Retention**: no churn is modeled. Rule of thumb: effective revenue per
+  *install* ≈ 25–40% of the retained figure. Real curves arrive at soft
+  launch; this is why analytics land before IAP (BACKEND.md).
+
+**Break-even (solo-dev cost base ≈ $300–600/mo: AI tools, infra <$50,
+subscriptions; one-time: scholar review + calligrapher + composer ≈ $2–3k):**
+
+| Monthly cost scenario | Retained actives needed (net $1.35/mo) |
+|---|---|
+| $500 (current solo) | ~370 |
+| $2,000 (modest contractor help) | ~1,500 |
+| $5,000 (small team) | ~3,700 |
+
+Conclusion: **profitability is a retention problem, not a monetization
+problem** — the deterministic model clears a solo/small studio's cost base at
+hobbyist-scale audiences, and scales with content shipped. The ethics are not
+a revenue sacrifice; they are the differentiator that earns the audience.
+Ethics invariants in every line: fixed prices, permanent catalog, no expiry
+countdowns, no power exclusives in passes, §12.9 forever.
 
 ## 7. Baseline — 2026-07-04 (grey-box, staggered release modeled)
 
