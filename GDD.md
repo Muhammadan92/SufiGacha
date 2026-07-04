@@ -397,7 +397,9 @@ the heart-chapter month), **The Kneeling** (5, chapter 45), **The Moon**
 (6, chapter 54), **The Ascent** (7, the Month of God), **The Beloved**
 (8, the Beloved's own month), **The Light** (9 — the flagship generosity
 season: gift events, lightened Deeds for fasting players, no purchase
-pressure), **The Binary Code** (10), **The Shaking** (11, chapter 99),
+pressure), **The Binary Code** (10 — ten as the one and
+the dot, the code beneath all things), **The Shaking** (11 — chapter 99:
+what is hidden comes out only when shaken),
 and **The Fountain** (12 — 108, each year's climax, foreshadowing
 Part 2 §6.2).
 
