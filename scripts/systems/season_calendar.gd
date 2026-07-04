@@ -16,8 +16,8 @@ const LEAP_YEARS_IN_CYCLE := [2, 5, 7, 10, 13, 16, 18, 21, 24, 26, 29]
 const SEASON_NAMES := {
 	1: "The Door", 2: "The Cave", 3: "The Kingdom",
 	4: "The Straight Path", 5: "The Kneeling", 6: "The Moon",
-	7: "The Ascent", 8: "The Salvation", 9: "The Light",
-	10: "The City", 11: "The Patience", 12: "The Fountain",
+	7: "The Ascent", 8: "The Beloved", 9: "The Light",
+	10: "The Binary Code", 11: "The Shaking", 12: "The Fountain",
 }
 
 

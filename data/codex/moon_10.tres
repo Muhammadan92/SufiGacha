@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1")
 id = &"moon_10"
-title = "The City"
+title = "The Binary Code"
 order_index = 19
 body = "The tenth moon opens with festival — the fast is broken, and the travelers teach that rejoicing after discipline is itself a form of thanks. Its number is ninety. A moon of return: to the table, to companionship, to the ordinary world now seen with washed eyes. The teachings say the strongest practice of this moon is simple gratitude, kept daily."
 links = ["Teachings of the Tenth Moon | https://nurmuhammad.com/10-shawwal/"]

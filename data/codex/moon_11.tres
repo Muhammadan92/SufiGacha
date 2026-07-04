@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1")
 id = &"moon_11"
-title = "The Patience"
+title = "The Shaking"
 order_index = 20
 body = "The eleventh moon is named for sitting still. One of the sacred months of truce, it teaches that rest is not the absence of the Path but a station on it — the bow drawn back before release. Its number is ninety-nine, which the teachings tie to patience itself, the Patient One being the last of the ninety-nine beautiful names. Rest, deliberately."
 links = ["Teachings of the Eleventh Moon | https://nurmuhammad.com/category/resources-and-practices/realities-of-12-months-of-hijri/"]

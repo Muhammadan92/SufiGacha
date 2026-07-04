@@ -394,11 +394,11 @@ that month plus a Learn-more link — the link carries the depth (entries in
 `SeasonCalendar.SEASON_NAMES`): **The Door** (1), **The Cave** (2, the cave
 month), **The Kingdom** (3, the Beloved's birth), **The Straight Path** (4,
 the heart-chapter month), **The Kneeling** (5, chapter 45), **The Moon**
-(6, chapter 54), **The Ascent** (7, the Month of God), **The Salvation**
-(8, the night of salvation), **The Light** (9 — the flagship generosity
+(6, chapter 54), **The Ascent** (7, the Month of God), **The Beloved**
+(8, the Beloved's own month), **The Light** (9 — the flagship generosity
 season: gift events, lightened Deeds for fasting players, no purchase
-pressure), **The City** (10, chapter 90), **The Patience** (11, the 99th
-name), and **The Fountain** (12 — 108, each year's climax, foreshadowing
+pressure), **The Binary Code** (10), **The Shaking** (11, chapter 99),
+and **The Fountain** (12 — 108, each year's climax, foreshadowing
 Part 2 §6.2).
 
 **Structure**: 30 tiers earned via **Deeds** (3 daily + 3 weekly objectives —
