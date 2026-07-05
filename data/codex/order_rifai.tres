@@ -1,0 +1,11 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/codex_entry.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"order_rifai"
+title = "The Unshakeable Way"
+order_index = 32
+body = "The red company was inspired by accounts of devotion so complete the body itself seemed to stop arguing — travelers famed for walking unharmed through what should have harmed them. In our fantasy they are the shields: taunting the darkness onto themselves, burning what dares to strike them, refusing to fall. What inspired the image is linked below."
+links = ["The teachings that inspired this game | https://nurmuhammad.com"]

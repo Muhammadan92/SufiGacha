@@ -1,0 +1,86 @@
+[gd_resource type="Resource" load_steps=12 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/unit_data.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/data/skill_data.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/data/effect_block.gd" id="3"]
+
+[sub_resource type="Resource" id="e1"]
+script = ExtResource("3")
+kind = 0
+power = 0.9
+
+[sub_resource type="Resource" id="e2"]
+script = ExtResource("3")
+kind = 0
+power = 1.0
+
+[sub_resource type="Resource" id="e3"]
+script = ExtResource("3")
+kind = 2
+status_id = 3
+chance = 0.9
+duration = 2
+amount = 0.3
+
+[sub_resource type="Resource" id="e4"]
+script = ExtResource("3")
+kind = 0
+power = 1.3
+
+[sub_resource type="Resource" id="e5"]
+script = ExtResource("3")
+kind = 2
+status_id = 3
+chance = 0.8
+duration = 2
+amount = 0.2
+
+[sub_resource type="Resource" id="s1"]
+script = ExtResource("2")
+id = &"rae_lit"
+display_name = "Pinpoint"
+slot = 0
+cooldown = 0
+target_type = 0
+fervor_gain = 20
+effects = [SubResource("e1")]
+
+[sub_resource type="Resource" id="s2"]
+script = ExtResource("2")
+id = &"rae_rem"
+display_name = "Expose the Seam"
+slot = 1
+cooldown = 2
+target_type = 0
+fervor_gain = 15
+effects = [SubResource("e2"), SubResource("e3")]
+
+[sub_resource type="Resource" id="s3"]
+script = ExtResource("2")
+id = &"rae_trance"
+display_name = "Nothing Hidden"
+slot = 2
+cooldown = 0
+target_type = 1
+fervor_gain = 0
+effects = [SubResource("e4"), SubResource("e5")]
+
+[resource]
+script = ExtResource("1")
+id = &"rae"
+display_name = "Rae"
+epithet = ""
+art_notes = "precise woman, pale gold Suhrawardi hijab, thin rod of light held like a stylus"
+order_name = "Suhrawardi"
+affinity = 6
+rarity = 4
+is_enemy = false
+max_hp = 860
+atk = 98
+def = 60
+spd = 104
+crit_rate = 0.2
+crit_damage = 1.5
+effectiveness = 0.25
+resilience = 0.0
+skills = [SubResource("s1"), SubResource("s2"), SubResource("s3")]

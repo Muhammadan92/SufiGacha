@@ -1,0 +1,78 @@
+[gd_resource type="Resource" load_steps=11 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/unit_data.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/data/skill_data.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/data/effect_block.gd" id="3"]
+
+[sub_resource type="Resource" id="e1"]
+script = ExtResource("3")
+kind = 0
+power = 0.8
+
+[sub_resource type="Resource" id="e2"]
+script = ExtResource("3")
+kind = 3
+amount = 12.0
+
+[sub_resource type="Resource" id="e3"]
+script = ExtResource("3")
+kind = 1
+power = 0.8
+
+[sub_resource type="Resource" id="e4"]
+script = ExtResource("3")
+kind = 2
+status_id = 0
+chance = 1.0
+duration = 2
+amount = 0.2
+
+[sub_resource type="Resource" id="s1"]
+script = ExtResource("2")
+id = &"hale_lit"
+display_name = "Hearty Welcome"
+slot = 0
+cooldown = 0
+target_type = 0
+fervor_gain = 20
+effects = [SubResource("e1")]
+
+[sub_resource type="Resource" id="s2"]
+script = ExtResource("2")
+id = &"hale_rem"
+display_name = "Pass the Bowl"
+slot = 1
+cooldown = 3
+target_type = 3
+fervor_gain = 15
+effects = [SubResource("e2")]
+
+[sub_resource type="Resource" id="s3"]
+script = ExtResource("2")
+id = &"hale_trance"
+display_name = "Table for All"
+slot = 2
+cooldown = 0
+target_type = 3
+fervor_gain = 0
+effects = [SubResource("e3"), SubResource("e4")]
+
+[resource]
+script = ExtResource("1")
+id = &"hale"
+display_name = "Hale"
+epithet = ""
+art_notes = "broad smiling man, rose and ochre Chishti robes, ladle and serving bowl at his belt"
+order_name = "Chishti"
+affinity = 5
+rarity = 4
+is_enemy = false
+max_hp = 980
+atk = 84
+def = 80
+spd = 100
+crit_rate = 0.1
+crit_damage = 1.5
+effectiveness = 0.0
+resilience = 0.1
+skills = [SubResource("s1"), SubResource("s2"), SubResource("s3")]

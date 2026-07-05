@@ -1,0 +1,81 @@
+[gd_resource type="Resource" load_steps=11 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/unit_data.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/data/skill_data.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/data/effect_block.gd" id="3"]
+
+[sub_resource type="Resource" id="e1"]
+script = ExtResource("3")
+kind = 0
+power = 0.8
+
+[sub_resource type="Resource" id="e2"]
+script = ExtResource("3")
+kind = 2
+status_id = 8
+chance = 1.0
+duration = 2
+amount = 1.5
+
+[sub_resource type="Resource" id="e3"]
+script = ExtResource("3")
+kind = 1
+power = 0.5
+
+[sub_resource type="Resource" id="e4"]
+script = ExtResource("3")
+kind = 2
+status_id = 8
+chance = 1.0
+duration = 2
+amount = 1.4
+
+[sub_resource type="Resource" id="s1"]
+script = ExtResource("2")
+id = &"marin_lit"
+display_name = "Undertow"
+slot = 0
+cooldown = 0
+target_type = 0
+fervor_gain = 20
+effects = [SubResource("e1")]
+
+[sub_resource type="Resource" id="s2"]
+script = ExtResource("2")
+id = &"marin_rem"
+display_name = "Harbor Wall"
+slot = 1
+cooldown = 3
+target_type = 2
+fervor_gain = 15
+effects = [SubResource("e2"), SubResource("e3")]
+
+[sub_resource type="Resource" id="s3"]
+script = ExtResource("2")
+id = &"marin_trance"
+display_name = "The Sheltering Sea"
+slot = 2
+cooldown = 0
+target_type = 3
+fervor_gain = 0
+effects = [SubResource("e4")]
+
+[resource]
+script = ExtResource("1")
+id = &"marin"
+display_name = "Marin"
+epithet = ""
+art_notes = "weathered sailor of the litany roads, deep royal-blue Shadhili robes, rope-scarred hands"
+order_name = "Shadhili"
+affinity = 4
+rarity = 4
+is_enemy = false
+max_hp = 1000
+atk = 88
+def = 88
+spd = 96
+crit_rate = 0.1
+crit_damage = 1.5
+effectiveness = 0.0
+resilience = 0.15
+skills = [SubResource("s1"), SubResource("s2"), SubResource("s3")]

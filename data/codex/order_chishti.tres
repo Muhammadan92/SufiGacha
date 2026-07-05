@@ -1,0 +1,11 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/codex_entry.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"order_chishti"
+title = "The Way of the Open Table"
+order_index = 35
+body = "The rose company was inspired by a path that made hospitality a devotion — feed every guest, turn no one away, let music soften what argument cannot. In our fantasy they are the healers and hosts: mending, reviving, sharing strength the way a table shares bread. The real way that inspired them shaped the spiritual history of an entire subcontinent. The thread is below."
+links = ["The teachings that inspired this game | https://nurmuhammad.com"]

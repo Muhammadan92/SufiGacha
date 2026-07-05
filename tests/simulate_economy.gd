@@ -90,8 +90,8 @@ static func _survival(day: int, curve: Dictionary) -> float:
 
 const DESIRES := [
 	"sage", "vale", "gale", "isla", "lucia",
-	"seren", "rowan", "ansel",
-	"flint", "dylan", "sol",
+	"seren", "rowan", "ansel", "wren", "torrin", "ember_r", "lark", "marin", "hale", "rae",
+	"flint", "dylan", "sol", "peal", "cole", "reed", "brooke", "june", "dawn",
 ]
 
 var db: Node

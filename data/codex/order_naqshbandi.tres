@@ -1,0 +1,11 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/codex_entry.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"order_naqshbandi"
+title = "The Silent Way"
+order_index = 30
+body = "The emerald company of Seven Springs was modeled on a path famed for silence: remembrance carried inwardly, unseen, in the crowd yet apart from it. In our fantasy they are the tempo-keepers — masters of stillness who bend the pace of battle itself, never loud, never hurried, never absent. Their color is deep emerald, and the strongest walk among them. The real way that inspired them is old, alive, and linked below."
+links = ["The teachings that inspired this game | https://nurmuhammad.com"]

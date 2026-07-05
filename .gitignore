@@ -12,3 +12,4 @@ android/
 # records which shipped assets are real art vs. placeholders.
 art_workbench/*
 !art_workbench/real_art.json
+build/

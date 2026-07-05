@@ -31,6 +31,9 @@ that changes status.** Roadmap definitions live in GDD.md §14.
 - [x] Placeholder audio generator (tools/gen_placeholder_audio.gd): 12 synthesized SFX + 6 seamless loops — game fully audible with zero real tracks; real imports (.ogg/.mp3) auto-outrank placeholder .wav
 - [x] Summon reveal: sequential door-of-light animation on The Calling (rarity-colored, Luminary full-screen flash, tap-to-advance, Skip)
 - [x] Asset audit extended to audio (70 tracked assets total)
+- [x] **Launch roster COMPLETE: 28 playable heroes** (GDD §3.4) — 13 new (every order gets a full bench; first turn-meter tempo kit on Wren); Calling shop/sims/briefs updated; expansion protocol verified: completionist ceiling $495→$536, baseline LTV $0.96→$1.03/install net
+- [x] **Web export working**: `build/web/` (43MB, browser-playable) — export preset + project icon committed; serve with `python3 -m http.server -d build/web`
+- [x] Codex: 7 per-order entries ("The Silent Way" ... "The Way of Light"), inspired-by framing
 - [x] Waymarks: 15 lifetime milestones w/ 5 lifetime Sigils — GDD §9.2's achievements income + the deliberate week-2 retention beat (15 stars → Sigil at ~day 10); Season screen tracking, results fanfare, sim-mirrored
 - [x] CI: GitHub Actions runs systems + smoke + replay tests on every push (pinned headless Godot, cached)
 - [x] Replay verification proven in-repo: a 96-turn battle reproduced exactly from its action log (BACKEND.md §0.2's anti-cheat, tested before any server exists)

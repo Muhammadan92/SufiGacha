@@ -1,0 +1,11 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/codex_entry.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"order_shadhili"
+title = "The Way of the Litany"
+order_index = 34
+body = "The blue company was inspired by a path of travelers famed for litanies of protection — words carried like provisions, recited on the road and at sea. In our fantasy they are the calm in the storm: cleansing afflictions, raising tide-walls, keeping the company whole across long journeys. The most famous of their inspirations was recited by sailors. The thread is below."
+links = ["The teachings that inspired this game | https://nurmuhammad.com"]

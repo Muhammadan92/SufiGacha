@@ -1,0 +1,11 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/codex_entry.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"order_qadiri"
+title = "The Thunderous Way"
+order_index = 31
+body = "The turquoise company was inspired by a path whose remembrance fills the night with sound — voices raised together until the room itself seems to ring. In our fantasy they wield thunder and resonance: the loudest strikes, the armor-shattering shouts, the storm that answers sincerity. Their inspiration is famed for reach and generosity, its founder called a helper of the helpless. The thread is below."
+links = ["The teachings that inspired this game | https://nurmuhammad.com"]

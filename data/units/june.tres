@@ -1,0 +1,81 @@
+[gd_resource type="Resource" load_steps=11 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/unit_data.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/data/skill_data.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/data/effect_block.gd" id="3"]
+
+[sub_resource type="Resource" id="e1"]
+script = ExtResource("3")
+kind = 0
+power = 0.8
+
+[sub_resource type="Resource" id="e2"]
+script = ExtResource("3")
+kind = 1
+power = 1.0
+
+[sub_resource type="Resource" id="e3"]
+script = ExtResource("3")
+kind = 2
+status_id = 7
+chance = 1.0
+duration = 2
+amount = 0.06
+
+[sub_resource type="Resource" id="e4"]
+script = ExtResource("3")
+kind = 2
+status_id = 7
+chance = 1.0
+duration = 2
+amount = 0.08
+
+[sub_resource type="Resource" id="s1"]
+script = ExtResource("2")
+id = &"june_lit"
+display_name = "Kind Word"
+slot = 0
+cooldown = 0
+target_type = 0
+fervor_gain = 20
+effects = [SubResource("e1")]
+
+[sub_resource type="Resource" id="s2"]
+script = ExtResource("2")
+id = &"june_rem"
+display_name = "Tend the Weary"
+slot = 1
+cooldown = 2
+target_type = 2
+fervor_gain = 15
+effects = [SubResource("e2"), SubResource("e3")]
+
+[sub_resource type="Resource" id="s3"]
+script = ExtResource("2")
+id = &"june_trance"
+display_name = "Long Comfort"
+slot = 2
+cooldown = 0
+target_type = 3
+fervor_gain = 0
+effects = [SubResource("e4")]
+
+[resource]
+script = ExtResource("1")
+id = &"june"
+display_name = "June"
+epithet = ""
+art_notes = "warm young woman, rose Chishti headwrap, sleeves rolled for work, small daf at her hip"
+order_name = "Chishti"
+affinity = 5
+rarity = 3
+is_enemy = false
+max_hp = 800
+atk = 78
+def = 62
+spd = 100
+crit_rate = 0.1
+crit_damage = 1.5
+effectiveness = 0.0
+resilience = 0.1
+skills = [SubResource("s1"), SubResource("s2"), SubResource("s3")]

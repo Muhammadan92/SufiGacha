@@ -1,0 +1,11 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/codex_entry.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"order_suhrawardi"
+title = "The Way of Light"
+order_index = 36
+body = "The golden company was inspired by teachers who spoke of all knowing as a kind of light — understanding as illumination, ignorance as shadow, the teacher as a lamp passed hand to hand. In our fantasy they are the revealers: exposing what hides, marking what must fall, striking precisely where the light lands. The thread is below."
+links = ["The teachings that inspired this game | https://nurmuhammad.com"]

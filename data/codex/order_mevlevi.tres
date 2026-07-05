@@ -1,0 +1,11 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/codex_entry.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"order_mevlevi"
+title = "The Turning Way"
+order_index = 33
+body = "The white company was inspired by the most famous image the path ever gave the world: the whirling turn — a moving meditation, the body become a spinning prayer. In our fantasy they are motion itself: never still, hard to strike, striking everywhere at once. Their poet-founder's words fill bookshelves in every language. The thread is below."
+links = ["The teachings that inspired this game | https://nurmuhammad.com"]
