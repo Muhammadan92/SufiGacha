@@ -39,6 +39,12 @@ func _build() -> void:
 			lines.append("First clear: +%d Emerald Sigil(s)!" % summary["first_clear_sigils"])
 		for msg in summary.get("level_ups", []):
 			lines.append(str(msg))
+		for wm in summary.get("waymarks", []):
+			var bits: Array = []
+			for k in ["marks", "seals", "sigils"]:
+				if wm.get(k, 0) > 0:
+					bits.append("+%d %s" % [wm[k], k])
+			lines.append("WAYMARK REACHED — %s  (%s)" % [wm["desc"], ", ".join(bits)])
 	else:
 		lines.append("")
 		lines.append("The darkness holds this ground... for now.")

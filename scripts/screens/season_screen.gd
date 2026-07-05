@@ -59,6 +59,25 @@ func _build() -> void:
 	_deed_section(list, "This Week's Deeds  (+%d Seal, +%d season XP each)" % [
 		game.DEED_SEALS_WEEKLY, game.DEED_XP_WEEKLY], game.deeds.get("weekly", []))
 
+	# --- Waymarks: lifetime milestones (Sigil income + goals) ---
+	var wm_header := Label.new()
+	wm_header.text = "Waymarks of the Road"
+	wm_header.add_theme_color_override("font_color", ACCENT)
+	list.add_child(wm_header)
+	for def in game.WAYMARKS:
+		var row := Label.new()
+		var have: int = game.waymark_metric(def["metric"])
+		var bits: Array = []
+		for k in ["marks", "seals", "sigils"]:
+			if def.get(k, 0) > 0:
+				bits.append("+%d %s" % [def[k], k])
+		if game.waymarks_claimed.has(def["id"]):
+			row.text = "   %s  —  [reached]" % def["desc"]
+			row.add_theme_color_override("font_color", Enums.RARITY_COLORS[5])
+		else:
+			row.text = "   %s  —  %d/%d  (%s)" % [def["desc"], mini(have, int(def["at"])), int(def["at"]), ", ".join(bits)]
+		list.add_child(row)
+
 
 func _deed_section(list: VBoxContainer, title: String, deed_list: Array) -> void:
 	var header := Label.new()

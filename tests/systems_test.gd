@@ -191,6 +191,17 @@ func _initialize() -> void:
 	assert(game.trial_cleared_this_week(3))
 	print("weekly trial ok")
 
+	# --- waymarks ---
+	game.reset_profile()
+	assert(game.waymark_metric("roster") == 4)
+	var sig0: int = game.sigils
+	game.stars = {"a": 3, "b": 3, "c": 3, "d": 3, "e": 3}  # 15 stars
+	var wms: Array = game.check_waymarks()
+	assert(game.waymarks_claimed.has("stars_15"), "15-star waymark should claim")
+	assert(game.sigils == sig0 + 1, "15-star waymark pays the week-2 Sigil")
+	assert(game.check_waymarks().is_empty(), "waymarks claim once")
+	print("waymarks ok (%d claimed on blast)" % wms.size())
+
 	# --- tutorial flow ---
 	assert(game.tutorial_step == 0, "fresh profile starts the tutorial")
 	game.advance_tutorial(0)

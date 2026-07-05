@@ -1,0 +1,48 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  headless-suite:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Godot
+        id: cache-godot
+        uses: actions/cache@v4
+        with:
+          path: ~/godot
+          key: godot-4.5-stable-linux
+
+      - name: Download Godot (headless-capable Linux build)
+        if: steps.cache-godot.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p ~/godot
+          curl -sSL -o ~/godot/godot.zip \
+            https://github.com/godotengine/godot-builds/releases/download/4.5-stable/Godot_v4.5-stable_linux.x86_64.zip
+          unzip -q ~/godot/godot.zip -d ~/godot
+          mv ~/godot/Godot_v4.5-stable_linux.x86_64 ~/godot/godot
+          chmod +x ~/godot/godot
+
+      - name: Import project (builds class cache)
+        run: ~/godot/godot --headless --path . --import 2>&1 | tail -5
+
+      - name: Systems tests
+        run: |
+          timeout 300 ~/godot/godot --headless --path . -s res://tests/systems_test.gd 2>&1 | tee /tmp/systems.log
+          grep -q "ALL SYSTEMS TESTS PASSED" /tmp/systems.log
+
+      - name: Engine smoke test
+        run: |
+          timeout 300 ~/godot/godot --headless --path . -s res://tests/smoke.gd 2>&1 | tee /tmp/smoke.log
+          grep -q "RESULT: finished" /tmp/smoke.log
+
+      - name: Replay verification
+        run: |
+          timeout 300 ~/godot/godot --headless --path . -s res://tests/replay_test.gd 2>&1 | tee /tmp/replay.log
+          grep -q "REPLAY VERIFICATION PASSED" /tmp/replay.log

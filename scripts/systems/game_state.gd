@@ -76,6 +76,26 @@ const DIFF_SEALS := { "normal": 1, "hard": 2, "nm": 3 }
 ## +1 per difficulty tier, spread across months of post-campaign play).
 const DIFF_BOSS_SIGILS := { "normal": 0, "hard": 1, "nm": 1 }
 
+# --- Waymarks (achievements — GDD §9.2's promised Sigil income; the 15-star
+# waymark is the deliberate week-2 retention beat per ECONOMY_TUNING §6c) ---
+const WAYMARKS := [
+	{ "id": "stars_5", "desc": "Earn 5 stars on the Journey", "metric": "stars", "at": 5, "marks": 50 },
+	{ "id": "stars_15", "desc": "Earn 15 stars on the Journey", "metric": "stars", "at": 15, "sigils": 1 },
+	{ "id": "stars_30", "desc": "Earn 30 stars on the Journey", "metric": "stars", "at": 30, "seals": 2 },
+	{ "id": "stars_60", "desc": "Earn 60 stars on the Journey", "metric": "stars", "at": 60, "seals": 3 },
+	{ "id": "stars_100", "desc": "Earn 100 stars on the Journey", "metric": "stars", "at": 100, "sigils": 1 },
+	{ "id": "stages_6", "desc": "Clear 6 stages", "metric": "cleared", "at": 6, "marks": 50 },
+	{ "id": "stages_24", "desc": "Clear 24 stages", "metric": "cleared", "at": 24, "seals": 2 },
+	{ "id": "stages_48", "desc": "Clear 48 stages", "metric": "cleared", "at": 48, "seals": 2 },
+	{ "id": "stages_84", "desc": "Walk the whole road (84 stages)", "metric": "cleared", "at": 84, "sigils": 1 },
+	{ "id": "minaret_10", "desc": "Reach Minaret floor 10", "metric": "minaret", "at": 10, "seals": 1 },
+	{ "id": "minaret_30", "desc": "Reach Minaret floor 30", "metric": "minaret", "at": 30, "sigils": 1 },
+	{ "id": "mastery_6", "desc": "Refine 6 techniques", "metric": "mastery", "at": 6, "marks": 80 },
+	{ "id": "mastery_15", "desc": "Refine 15 techniques", "metric": "mastery", "at": 15, "seals": 3 },
+	{ "id": "company_8", "desc": "Gather a company of 8", "metric": "roster", "at": 8, "seals": 2 },
+	{ "id": "company_12", "desc": "Gather a company of 12", "metric": "roster", "at": 12, "sigils": 1 },
+]
+
 # --- weekly Vice Trial (GDD §6.1) ---
 const TRIAL_SCALES := [2.0, 2.6, 3.2, 3.8, 4.5]
 const TRIAL_REWARDS := [
@@ -103,6 +123,7 @@ var season := {}   # {"id", "tier_xp": int, "tier": int, "paid": bool}
 var deeds := {}    # {"day_key", "week_key", "daily": [..], "weekly": [..]}
 var sanctum := {}  # {"day_key", "runs": int}
 var trials := {}   # {"week_key", "cleared": {tier(String): true}}
+var waymarks_claimed := {}  # waymark id -> true
 
 ## First-session tutorial progress: 0 intro → 1 stage select → 2 first
 ## battle → 3 first results → 4 systems reveal → 5 done.
@@ -204,6 +225,7 @@ func upgrade_mastery(id: String) -> bool:
 	scrolls -= cost
 	roster[id]["mastery"] = current + 1
 	deed_event("refine")
+	check_waymarks()
 	save()
 	return true
 
@@ -331,6 +353,51 @@ func finish_stage(stage: StageData, victory: bool, stats: Dictionary = {}, diff:
 	return summary
 
 
+# --- Waymarks -----------------------------------------------------------------------
+
+func waymark_metric(name: String) -> int:
+	match name:
+		"stars":
+			var total := 0
+			for v in stars.values():
+				total += int(v)
+			return total
+		"cleared":
+			var n := 0
+			for key in cleared:
+				if not str(key).contains(":"):  # normal difficulty only
+					n += 1
+			return n
+		"minaret":
+			return minaret_floor
+		"mastery":
+			var m := 0
+			for id in roster:
+				m += int(roster[id].get("mastery", 0))
+			return m
+		"roster":
+			return roster.size()
+		_:
+			return 0
+
+
+## Grants any newly reached waymarks; returns their defs (for the UI).
+func check_waymarks() -> Array:
+	var newly: Array = []
+	for def: Dictionary in WAYMARKS:
+		if waymarks_claimed.has(def["id"]):
+			continue
+		if waymark_metric(def["metric"]) >= int(def["at"]):
+			waymarks_claimed[def["id"]] = true
+			marks += int(def.get("marks", 0))
+			seals += int(def.get("seals", 0))
+			sigils += int(def.get("sigils", 0))
+			newly.append(def)
+	if not newly.is_empty():
+		save()
+	return newly
+
+
 # --- weekly Vice Trial (GDD §6.1) --------------------------------------------------
 
 func trial_unlocked() -> bool:
@@ -438,6 +505,7 @@ func finish_minaret(floor: int, victory: bool) -> Dictionary:
 			if gained > 0:
 				summary["level_ups"].append("%s reached level %d" % [db.units[id].display_name, level_of(id)])
 		deed_event("climb")
+		summary["waymarks"] = check_waymarks()
 	save()
 	return summary
 
@@ -474,6 +542,7 @@ func buy_unit(id: String) -> String:
 		"seals": seals -= cost["amount"]
 		"sigils": sigils -= cost["amount"]
 	grant_unit(id)
+	check_waymarks()
 	save()
 	return "ok"
 
@@ -644,6 +713,7 @@ func save() -> void:
 		"breath": breath, "breath_ts": breath_ts, "cleared": cleared,
 		"stars": stars, "minaret_floor": minaret_floor,
 		"season": season, "deeds": deeds, "sanctum": sanctum, "trials": trials,
+		"waymarks_claimed": waymarks_claimed,
 		"tutorial_step": tutorial_step,
 	}
 	var f := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
@@ -674,6 +744,7 @@ func load_save() -> void:
 			deeds = blob.get("deeds", {})
 			sanctum = blob.get("sanctum", {})
 			trials = blob.get("trials", {})
+			waymarks_claimed = blob.get("waymarks_claimed", {})
 			# migration: pre-tutorial saves with progress skip the tutorial
 			tutorial_step = int(blob.get("tutorial_step",
 				TUTORIAL_DONE if not cleared.is_empty() else 0))
@@ -704,6 +775,7 @@ func reset_profile() -> void:
 	deeds = {}
 	sanctum = {}
 	trials = {}
+	waymarks_claimed = {}
 	tutorial_step = 0
 	for id in STARTERS:
 		grant_unit(id)

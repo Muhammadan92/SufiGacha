@@ -182,6 +182,7 @@ func _run_career(profile_name: String, profile: Dictionary, stages: Array) -> Di
 	var next_idx := 0
 	var stage_stars := {}
 	var diff_frontier := {}  # "hard"/"nm" -> stages cleared in that chain
+	var waymarks_done := {}
 	var minaret := 0
 	var owned_desires := 0
 	var total_desires := DESIRES.size()
@@ -406,6 +407,30 @@ func _run_career(profile_name: String, profile: Dictionary, stages: Array) -> Di
 		while mastery < 5 and scrolls >= (mastery + 1) * 4:
 			scrolls -= (mastery + 1) * 4
 			mastery += 1
+
+		# 5) Waymarks (mirrors game_state.WAYMARKS — keep in sync)
+		var star_total := 0
+		for v_ in stage_stars.values():
+			star_total += int(v_)
+		var wm_metrics := {
+			"stars": star_total, "cleared": next_idx, "minaret": minaret,
+			"mastery": mastery * 4, "roster": 4 + owned_desires,
+		}
+		for wm in [["stars_5", "stars", 5, 50, 0, 0], ["stars_15", "stars", 15, 0, 0, 1],
+			["stars_30", "stars", 30, 0, 2, 0], ["stars_60", "stars", 60, 0, 3, 0],
+			["stars_100", "stars", 100, 0, 0, 1], ["stages_6", "cleared", 6, 50, 0, 0],
+			["stages_24", "cleared", 24, 0, 2, 0], ["stages_48", "cleared", 48, 0, 2, 0],
+			["stages_84", "cleared", 84, 0, 0, 1], ["minaret_10", "minaret", 10, 0, 1, 0],
+			["minaret_30", "minaret", 30, 0, 0, 1], ["mastery_6", "mastery", 6, 80, 0, 0],
+			["mastery_15", "mastery", 15, 0, 3, 0], ["company_8", "roster", 8, 0, 2, 0],
+			["company_12", "roster", 12, 0, 0, 1]]:
+			if waymarks_done.has(wm[0]):
+				continue
+			if int(wm_metrics[wm[1]]) >= int(wm[2]):
+				waymarks_done[wm[0]] = true
+				marks += int(wm[3])
+				seals += int(wm[4])
+				sigils += int(wm[5])
 
 		minutes_total += minutes_today
 		daily_rev.append(rev["packs"] + rev["pass"] + rev["season"] + rev["cosmetics"] - rev_before)
