@@ -5,8 +5,17 @@ A Sufi-inspired collectible turn-based RPG for mobile, built in Godot 4.
 fixed-price purchase (GDD §9).
 
 - **[GDD.md](GDD.md)** — the full game design document (start here)
-- **[AI_ART_PIPELINE.md](AI_ART_PIPELINE.md)** — how art assets are produced (§10: the automated pipeline)
 - **[PROGRESS.md](PROGRESS.md)** — live project status; updated every commit
+- **[AI_ART_PIPELINE.md](AI_ART_PIPELINE.md)** — how art & audio assets are produced
+- **[ECONOMY_TUNING.md](ECONOMY_TUNING.md)** — KPI targets, revenue model, tuning playbook
+- **[BACKEND.md](BACKEND.md)** / **[BACKEND_IMPLEMENTATION.md](BACKEND_IMPLEMENTATION.md)** — server plan + build order
+
+**Manual step-by-step guides (Kareem's lanes):**
+- **[CREATIVE_CHECKLIST.md](CREATIVE_CHECKLIST.md)** — style bible → character art → backgrounds → BGM/SFX
+- **[MOBILE_TESTING.md](MOBILE_TESTING.md)** — Android/iOS device testing setup (+ instant web fallback)
+- **[PLAYTEST_GUIDE.md](PLAYTEST_GUIDE.md)** — the fresh-Seeker protocol, what to watch, how to report
+- **[SCHOLAR_REVIEW.md](SCHOLAR_REVIEW.md)** — the §12.6 review: who, the packet, the process
+- **[BACKEND_IMPLEMENTATION.md](BACKEND_IMPLEMENTATION.md)** — accounts/VPS/IAP manual steps (⚑ tagged)
 
 ## Art pipeline quick reference
 
