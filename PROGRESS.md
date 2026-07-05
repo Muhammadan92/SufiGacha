@@ -31,6 +31,9 @@ that changes status.** Roadmap definitions live in GDD.md §14.
 - [x] Placeholder audio generator (tools/gen_placeholder_audio.gd): 12 synthesized SFX + 6 seamless loops — game fully audible with zero real tracks; real imports (.ogg/.mp3) auto-outrank placeholder .wav
 - [x] Summon reveal: sequential door-of-light animation on The Calling (rarity-colored, Luminary full-screen flash, tap-to-advance, Skip)
 - [x] Asset audit extended to audio (70 tracked assets total)
+- [x] Waymarks: 15 lifetime milestones w/ 5 lifetime Sigils — GDD §9.2's achievements income + the deliberate week-2 retention beat (15 stars → Sigil at ~day 10); Season screen tracking, results fanfare, sim-mirrored
+- [x] CI: GitHub Actions runs systems + smoke + replay tests on every push (pinned headless Godot, cached)
+- [x] Replay verification proven in-repo: a 96-turn battle reproduced exactly from its action log (BACKEND.md §0.2's anti-cheat, tested before any server exists)
 - [x] **PHASE 3 CONTENT: all 7 valleys authored** — 72 new stages (v2-7) on the sim-calibrated curves; 6 new Vice bosses with vice-embodying kits (Hasad dispels blessings — new DISPEL effect; Ghadab's burning enrage; Hirs's Fervor-hoarding; Kasal's heal-race; Zeenah's gilded escorts; Ya's silence/despair) + 3 new trash enemies; all boss walls validated to E±1 contiguous via win-pattern sweeps (4 tuning passes); economy re-run on authored data: KPIs hold, minutes into band
 - [x] Content lifecycle complete (GDD §6.1): Hard/Nightmare valley re-clears (x2.2/x3.2 scale, x2/x3 rewards, +1 Sigil per boss tier, chain-gated) + weekly Vice Trial (5 tiers vs Pride, weekly-claimable, no Sigils). Economy sim re-run: KPIs hold
 - [x] Tutorial/first-session flow: 5-step guided intro (framing → Breath/stars → battle abilities & enemy-Trance warning → tokens/Calling → systems reveal) in the §1.1 register; per-screen overlay panels; save migration skips it for existing progress
