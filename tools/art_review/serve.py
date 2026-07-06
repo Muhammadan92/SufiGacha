@@ -167,6 +167,15 @@ class Handler(BaseHTTPRequestHandler):
             IMPORTED.mkdir(exist_ok=True)
             shutil.move(str(src), IMPORTED / src.name)
             self._json({"ok": True, "detail": r.stdout.strip()})
+        elif path == "/api/reference":
+            src_f = INBOX / pathlib.Path(req["file"]).name
+            if not src_f.exists():
+                return self._json({"error": "file gone"}, 400)
+            dest = WB / "refs" / req["id"]
+            dest.mkdir(parents=True, exist_ok=True)
+            shutil.move(str(src_f), dest / src_f.name)
+            n = len(list(dest.glob("*")))
+            self._json({"ok": True, "detail": "reference saved (%s now has %d refs; ~15-30 makes a LoRA set)" % (req["id"], n)})
         elif path == "/api/reject":
             src = INBOX / pathlib.Path(req["file"]).name
             if src.exists():

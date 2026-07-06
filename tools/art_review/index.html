@@ -131,6 +131,7 @@ function render() {
       </div>
       <div class="row" style="margin-top:8px">
         <button class="act ok" onclick="approve('${f}')">Approve → import</button>
+        <button class="act" onclick="reference('${f}')">Save as reference</button>
         <button class="act no" onclick="reject('${f}')">Reject</button>
       </div></div>`;
     if (guess) setTimeout(() => { const el = $("id-"+f); if (el) el.value = guess.id; });
@@ -157,6 +158,12 @@ function renderTargets(f) {
 async function approve(f) {
   const body = { file:f, target:$("tgt-"+f).value, id:$("id-"+f).value, kind:$("kind-"+f).value };
   const res = await (await fetch("/api/approve", {method:"POST", body:JSON.stringify(body)})).json();
+  toast(res.ok ? res.detail : "ERROR: " + res.error);
+  load();
+}
+async function reference(f) {
+  const res = await (await fetch("/api/reference", {method:"POST",
+    body:JSON.stringify({file:f, id:$("id-"+f).value})})).json();
   toast(res.ok ? res.detail : "ERROR: " + res.error);
   load();
 }
