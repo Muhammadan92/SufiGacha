@@ -85,12 +85,7 @@ function render() {
     <b>art_workbench/inbox/</b> → they appear in Review. Tip: for character consistency,
     after approving a portrait add <b>--cref &lt;MJ image URL&gt; --cw 100</b> to that
     character's chibi/icon prompts.</p>`;
-  const showF = localStorage.getItem("showFemales") === "1";
-  q += `<label class="muted" style="display:block;margin-bottom:10px">
-    <input type="checkbox" ${showF?"checked":""} onchange="localStorage.setItem('showFemales', this.checked?'1':'0'); render()">
-    include female characters (male-first art pass is on)</label>`;
-  const vis = u => !u.enemy && (showF || u.gender !== "f");
-  const sections = [["Companions", S.units.filter(vis)], ["Enemies & Vices", S.units.filter(u=>u.enemy)]];
+  const sections = [["Companions", S.units.filter(u=>!u.enemy)], ["Enemies & Vices", S.units.filter(u=>u.enemy)]];
   for (const [title, units] of sections) {
     q += `<h3 class="name">${title}</h3>`;
     for (const u of units) {
