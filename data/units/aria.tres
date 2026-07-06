@@ -60,9 +60,9 @@ effects = [SubResource("eff_trance_heal"), SubResource("eff_trance_regen")]
 [resource]
 script = ExtResource("1")
 id = &"aria"
-display_name = "Aria"
+display_name = "Ari"
 epithet = ""
-art_notes = "warm-faced woman in rose-and-cream Chishti robes with modest headwrap, holding a small daf frame drum, musical geometry halo, South Asian heritage, deep brown eyes"
+art_notes = "warm-faced man in rose-and-cream Chishti robes with traditional Sufi turban, holding a small daf frame drum, musical geometry halo, South Asian heritage, deep brown eyes"
 order_name = "Chishti"
 affinity = 5
 rarity = 5

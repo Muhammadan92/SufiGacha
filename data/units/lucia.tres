@@ -68,9 +68,9 @@ effects = [SubResource("eff_trance_dmg"), SubResource("eff_trance_defdown")]
 [resource]
 script = ExtResource("1")
 id = &"lucia"
-display_name = "Lucia"
+display_name = "Lucian"
 epithet = ""
-art_notes = "sharp-eyed woman, pale gold Suhrawardi hijab and sun-ray patterned robes, holding a lens of focused light, Mediterranean European heritage, olive skin, dark curls"
+art_notes = "sharp-eyed man, pale gold Suhrawardi turban and sun-ray patterned robes, holding a lens of focused light, Mediterranean European heritage, olive skin, dark curls"
 order_name = "Suhrawardi"
 affinity = 6
 rarity = 5

@@ -80,7 +80,7 @@ Everything below is spelled out in AI_ART_PIPELINE.md §3; short version:
 
 ## Phase 3 — The rest of the roster (repeat Phase 2 × 18)
 
-- Priority order: **starters first** (Bram, Echo, Brand, Aria — they're on
+- Priority order: **starters first** (Bram, Echo, Brand, Ari — they're on
   screen from minute one), then Kibr + the 3 demons (every battle shows
   them), then Sage and the remaining Luminaries, then the rest.
 - Each unit's brief is already waiting in `art_workbench/tasks/<id>.md`.

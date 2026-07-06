@@ -66,9 +66,9 @@ effects = [SubResource("eff_trance_barrier"), SubResource("eff_trance_defup")]
 [resource]
 script = ExtResource("1")
 id = &"seren"
-display_name = "Seren"
+display_name = "Soren"
 epithet = ""
-art_notes = "serene young woman, deep emerald hijab with silver star embroidery, Naqshbandi plainness, hands cupped holding a small sphere of calm light, Central Asian heritage, almond eyes"
+art_notes = "serene young man, deep emerald turban with silver star embroidery, Naqshbandi plainness, hands cupped holding a small sphere of calm light, Central Asian heritage, almond eyes"
 order_name = "Naqshbandi"
 affinity = 0
 rarity = 4

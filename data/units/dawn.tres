@@ -52,9 +52,9 @@ effects = [SubResource("e3")]
 [resource]
 script = ExtResource("1")
 id = &"dawn"
-display_name = "Dawn"
+display_name = "Orin"
 epithet = ""
-art_notes = "young woman at first light, yellow-white Suhrawardi robes, bow of light half-drawn, mixed East Asian and European heritage, light skin, dark gold hair"
+art_notes = "young man at first light, yellow-white Suhrawardi robes, bow of light half-drawn, mixed East Asian and European heritage, light skin, dark gold hair, wearing a dignified traditional Sufi turban"
 order_name = "Suhrawardi"
 affinity = 6
 rarity = 3

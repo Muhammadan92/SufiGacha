@@ -32,7 +32,7 @@ This game is primarily a **dawah project aimed at a Western audience**: the goal
 
 - **English-first everywhere players read**: UI, tutorials, system terms, item names, dialogue. The mystical register comes from the established English translations of Sufi literature — *the Path, Remembrance, the Beloved, Stations, unveiling, polishing the heart* — vocabulary that is both authentic and already familiar to Western readers from Rumi translations.
 - **Dialogue rule**: characters speak natural, contemporary English. No transliterated greetings or sprinkled loanwords (no "salaam alaykum," "shukran," etc. in text). Warmth, courtesy, and piety are shown through *behavior* — hospitality, humility, patience — not vocabulary.
-- **Character naming rule**: playable names are neutral, Western-leaning, and mystical-sounding (short nature/light/sound-derived names — Vale, Echo, Isla); epithets carry the flavor ("the Silent," "the Unburnt"). Explicitly Islamic given names are avoided for the playable cast.
+- **Character naming rule**: playable names are neutral, Western-leaning, and mystical-sounding (short nature/light/sound-derived names — Vale, Echo, Ilias); epithets carry the flavor ("the Silent," "the Unburnt"). Explicitly Islamic given names are avoided for the playable cast.
 - **Arabic as seasoning, by allowlist only**: (1) the seven order names, as proper nouns; (2) select 5★ ultimate names, always with an English subtitle (e.g., *Khalwa — Seclusion*); (3) boss true-names as titles (e.g., *Kibr, Father of Pride*); (4) the Codex.
 - **The Codex is the dawah vehicle**: an optional in-game encyclopedia (working name: *The Traveler's Notebook*), unlocked through play, giving the real history, terminology, poetry, and figures behind each order, valley, and concept. Depth on tap for the curious; invisible to players who just want to play.
 - **Lore research source**: for ALL lore portions of the game (Codex entries, valley/chapter framing, boss true-names, item flavor, Part 2), mine **[nurmuhammad.com](https://nurmuhammad.com)** for interesting, lesser-known tariqah-rooted teachings (the realities of the months, number mysticism, the subtle centers, light-and-veil cosmology) — these make far better lore notes than encyclopedia-level material. Always as *inspiration*: everything passes through this language policy on the way in, and the §12.6 scholar review covers all Codex/lore content before launch.
@@ -146,18 +146,18 @@ Two examples per order; full launch roster target: **28 characters** (7 orders �
 | Character | Order | ★ | Role | Kit hook |
 |---|---|---|---|---|
 | **Vale, the Silent** | Naqshbandi | 5 | Buffer | Trance *Khalwa — Seclusion*: team untargetable 1 turn, +40% ATK after |
-| **Seren** (f) | Naqshbandi | 4 | Shielder | Barriers that convert absorbed damage into Fervor |
+| **Soren** (m) | Naqshbandi | 4 | Shielder | Barriers that convert absorbed damage into Fervor |
 | **Bram, Voice of Thunder** | Qadiri | 5 | ST nuker | Trance: colossal single hit, ignores 50% DEF |
-| **Echo** (f) | Qadiri | 4 | Breaker | Sound-wave attacks that reduce DEF and echo (second hit at 40%) |
+| **Echo** (m) | Qadiri | 4 | Breaker | Sound-wave attacks that reduce DEF and echo (second hit at 40%) |
 | **Brand, the Unburnt** | Rifai | 5 | Tank | Trance: 2-turn team damage immunity, attackers burn |
 | **Flint** | Rifai | 3 | Bruiser | Counterattacks while above 50% HP |
-| **Gale, the Turning Sky** (f) | Mevlevi | 5 | AoE DPS | Gains *Spin* stacks each turn; Trance damage scales with stacks |
+| **Gale, the Turning Sky** (m) | Mevlevi | 5 | AoE DPS | Gains *Spin* stacks each turn; Trance damage scales with stacks |
 | **Rowan** | Mevlevi | 4 | Evader | Dodge chance aura; extra turn on dodge |
-| **Isla, the Returning Tide** (f) | Shadhili | 5 | Cleanser | Removes debuffs team-wide; each removed debuff heals |
+| **Ilias, the Returning Tide** (m) | Shadhili | 5 | Cleanser | Removes debuffs team-wide; each removed debuff heals |
 | **Dylan** | Shadhili | 3 | Sustain | Small regen litany, stacks over turns |
-| **Aria** (f) | Chishti | 5 | Healer | Trance revives one ally at 50% HP with 50 Fervor |
+| **Ari** (m) | Chishti | 5 | Healer | Trance revives one ally at 50% HP with 50 Fervor |
 | **Ansel, the Open Door** | Chishti | 4 | Binder | Links two allies to share damage and healing |
-| **Lucia** (f) | Suhrawardi | 5 | Debuffer | *Illuminate*: marked enemy takes +25% from all sources |
+| **Lucian** (m) | Suhrawardi | 5 | Debuffer | *Illuminate*: marked enemy takes +25% from all sources |
 | **Sol** | Suhrawardi | 3 | Sniper | High crit vs debuffed enemies |
 
 ### 3.5 Visual Guidelines
