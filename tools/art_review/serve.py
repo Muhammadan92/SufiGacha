@@ -26,6 +26,20 @@ IMPORTED = WB / "imported"
 REJECTED = WB / "rejected"
 STYLE_PATH = WB / "style.json"
 MANIFEST = WB / "real_art.json"
+CREFS_PATH = WB / "crefs.json"  # unit_id -> approved anchor's MJ image URL
+
+## Reference-pack poses: everything varies EXCEPT the character (--cref).
+REF_POSES = [
+    "standing full body, front view, arms relaxed",
+    "full body, side profile view",
+    "full body, three-quarter back view, looking over shoulder",
+    "seated in quiet contemplation",
+    "mid-stride, walking forward, low camera angle",
+    "casting their power, dramatic action pose",
+    "close-up face, serene expression",
+    "close-up face, determined expression",
+    "character turnaround reference sheet, front side and back views, same outfit",
+]
 PORT = 8787
 
 DEFAULT_STYLE = {
@@ -107,6 +121,13 @@ def state():
             "real": bool(real.get("valley_%d/background" % v)),
             "prompt": build_prompt(style, theme, "background"),
         })
+    crefs = load_json(CREFS_PATH, {})
+    for u in units:
+        u["cref"] = crefs.get(u["id"], "")
+        if u["cref"]:
+            base = build_prompt(style, u["notes"], "portrait")
+            u["ref_pack"] = ["%s, %s --cref %s --cw 100" % (base.split(" --ar ")[0], pose, u["cref"])
+                + " --ar 2:3 " + style.get("flags", "") for pose in REF_POSES]
     inbox = sorted(p.name for p in INBOX.glob("*")
                    if p.suffix.lower() in [".png", ".jpg", ".jpeg", ".webp"])
     return {"style": style, "units": units, "valleys": valleys, "inbox": inbox}
@@ -167,6 +188,11 @@ class Handler(BaseHTTPRequestHandler):
             IMPORTED.mkdir(exist_ok=True)
             shutil.move(str(src), IMPORTED / src.name)
             self._json({"ok": True, "detail": r.stdout.strip()})
+        elif path == "/api/cref":
+            crefs = load_json(CREFS_PATH, {})
+            crefs[req["id"]] = req["url"].strip()
+            CREFS_PATH.write_text(json.dumps(crefs, indent=1))
+            self._json({"ok": True})
         elif path == "/api/reference":
             src_f = INBOX / pathlib.Path(req["file"]).name
             if not src_f.exists():
