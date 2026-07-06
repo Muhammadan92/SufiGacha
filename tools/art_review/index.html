@@ -66,8 +66,12 @@ function tab(name) {
   }
 }
 async function load() {
-  S = await (await fetch("/api/state")).json();
-  render();
+  try {
+    S = await (await fetch("/api/state")).json();
+    render();
+  } catch (e) {
+    toast("Server offline — run: python3 tools/art_review/serve.py");
+  }
 }
 function copy(text) { navigator.clipboard.writeText(text); toast("Prompt copied — paste into Midjourney"); }
 
