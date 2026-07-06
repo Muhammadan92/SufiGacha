@@ -6,6 +6,33 @@ read the linked section before each phase, they're short).
 
 ---
 
+## Phase 0 — The Art Review site (DECIDED: Midjourney; start here)
+
+Midjourney has no public API (Enterprise-only, and third-party "MJ APIs"
+bot the platform against ToS — account-ban risk, so we don't use them).
+Instead, the repo now has a local site that removes every manual step
+except pasting prompts:
+
+```
+python3 tools/art_review/serve.py     ->  http://localhost:8787
+```
+
+- **Queue tab**: every missing asset (41 characters x portrait/chibi/icon
+  + 7 valley backgrounds) with a ready-built prompt — click Copy, paste
+  into Midjourney. Prompts are assembled from each unit's `art_notes` +
+  the shared style fragments.
+- Download keepers into **art_workbench/inbox/** (set it as the browser
+  download folder while working, or drag files in).
+- **Review tab**: every inbox image with assignment dropdowns
+  (pre-guessed from the filename) — **Approve** resizes + imports it into
+  the game and records it as real art; **Reject** moves it aside. Click
+  **Godot reimport** when done.
+- **Style tab**: the shared prompt fragments (style bible in executable
+  form — saved to art_workbench/style.json, tracked in git). Lock your
+  Phase 1 decisions here and every prompt updates.
+- Consistency tip: approve a character's portrait first, then add
+  `--cref <MJ image URL> --cw 100` to that character's chibi/icon prompts.
+
 ## Phase 1 — Style bible (one evening; blocks everything visual)
 
 1. **Pick your tool** (AI_ART_PIPELINE.md §1): fastest on-ramp is a

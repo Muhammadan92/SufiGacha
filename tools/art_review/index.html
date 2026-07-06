@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Seven Springs — Art Review</title>
+<style>
+  :root { --bg:#0d1220; --card:#161d30; --line:#2a3350; --gold:#dec06b; --green:#3fd98a; --dim:#8a90a8; --red:#e06a6a; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:#e8e6df; font:15px/1.5 Georgia,serif; }
+  header { padding:14px 22px; border-bottom:1px solid var(--line); display:flex; align-items:center; gap:18px; }
+  header h1 { font-size:17px; letter-spacing:2px; color:var(--gold); margin:0; font-weight:normal; }
+  nav button { background:none; border:1px solid var(--line); color:#e8e6df; padding:6px 16px; cursor:pointer; font:inherit; border-radius:4px; }
+  nav button.active { border-color:var(--gold); color:var(--gold); }
+  main { padding:20px 22px; max-width:1200px; margin:0 auto; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:12px 16px; margin-bottom:10px; }
+  .row { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+  .grow { flex:1; min-width:200px; }
+  .tag { font-size:11px; padding:1px 8px; border-radius:8px; border:1px solid var(--line); color:var(--dim); }
+  .tag.real { color:var(--green); border-color:var(--green); }
+  .name { color:var(--gold); }
+  button.act { background:#20294a; border:1px solid var(--line); color:#e8e6df; padding:4px 12px; cursor:pointer; font:inherit; font-size:13px; border-radius:4px; }
+  button.act:hover { border-color:var(--gold); }
+  button.ok { border-color:var(--green); color:var(--green); }
+  button.no { border-color:var(--red); color:var(--red); }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; }
+  .grid img { width:100%; border-radius:6px; border:1px solid var(--line); background:#000; }
+  select, textarea, input { background:#0f1526; color:#e8e6df; border:1px solid var(--line); border-radius:4px; font:inherit; padding:4px 8px; }
+  textarea { width:100%; min-height:60px; font-size:13px; }
+  .muted { color:var(--dim); font-size:13px; }
+  .prompt { font-size:12px; color:var(--dim); font-family:Menlo,monospace; margin-top:6px; word-break:break-word; }
+  #toast { position:fixed; bottom:18px; right:18px; background:#20294a; border:1px solid var(--gold); padding:10px 18px; border-radius:6px; display:none; }
+  progress { width:220px; accent-color:var(--green); }
+</style>
+</head>
+<body>
+<header>
+  <h1>SEVEN SPRINGS — ART REVIEW</h1>
+  <nav>
+    <button id="t-queue" class="active" onclick="tab('queue')">Queue</button>
+    <button id="t-review" onclick="tab('review')">Review <span id="inbox-n"></span></button>
+    <button id="t-style" onclick="tab('style')">Style</button>
+  </nav>
+  <span class="grow"></span>
+  <span class="muted" id="progress-label"></span>
+  <progress id="progress-bar" max="1" value="0"></progress>
+  <button class="act" onclick="reimport()">Godot reimport</button>
+</header>
+<main>
+  <div id="pane-queue"></div>
+  <div id="pane-review" style="display:none"></div>
+  <div id="pane-style" style="display:none"></div>
+</main>
+<div id="toast"></div>
+<script>
+let S = null;
+const $ = id => document.getElementById(id);
+
+function toast(msg) {
+  const t = $("toast"); t.textContent = msg; t.style.display = "block";
+  clearTimeout(t._h); t._h = setTimeout(() => t.style.display = "none", 2600);
+}
+function tab(name) {
+  for (const p of ["queue","review","style"]) {
+    $("pane-"+p).style.display = p === name ? "" : "none";
+    $("t-"+p).classList.toggle("active", p === name);
+  }
+}
+async function load() {
+  S = await (await fetch("/api/state")).json();
+  render();
+}
+function copy(text) { navigator.clipboard.writeText(text); toast("Prompt copied — paste into Midjourney"); }
+
+function render() {
+  // progress
+  let done = 0, total = 0;
+  for (const u of S.units) for (const k in u.kinds) { total++; if (u.kinds[k].real) done++; }
+  for (const v of S.valleys) { total++; if (v.real) done++; }
+  $("progress-label").textContent = `real art ${done}/${total}`;
+  $("progress-bar").max = total; $("progress-bar").value = done;
+  $("inbox-n").textContent = S.inbox.length ? `(${S.inbox.length})` : "";
+
+  // QUEUE — heroes first, then enemies, then valleys; missing art only
+  let q = `<p class="muted">Copy a prompt → generate in Midjourney → download keepers into
+    <b>art_workbench/inbox/</b> → they appear in Review. Tip: for character consistency,
+    after approving a portrait add <b>--cref &lt;MJ image URL&gt; --cw 100</b> to that
+    character's chibi/icon prompts.</p>`;
+  const sections = [["Companions", S.units.filter(u=>!u.enemy)], ["Enemies & Vices", S.units.filter(u=>u.enemy)]];
+  for (const [title, units] of sections) {
+    q += `<h3 class="name">${title}</h3>`;
+    for (const u of units) {
+      const missing = Object.entries(u.kinds).filter(([k,v]) => !v.real);
+      const tags = Object.entries(u.kinds).map(([k,v]) =>
+        `<span class="tag ${v.real?'real':''}">${k}${v.real?' ✓':''}</span>`).join(" ");
+      const buttons = missing.map(([k,v]) =>
+        `<button class="act" onclick='copy(${JSON.stringify(v.prompt)})'>Copy ${k}</button>`).join(" ");
+      q += `<div class="card"><div class="row">
+        <span class="name">${u.name}</span><span class="muted">${u.epithet||u.order||""} · ${"★".repeat(u.rarity)}</span>
+        ${tags}<span class="grow"></span>${buttons || '<span class="tag real">complete ✓</span>'}
+      </div>${missing.length?`<div class="prompt">${missing[0][1].prompt}</div>`:""}</div>`;
+    }
+  }
+  q += `<h3 class="name">Valley Backgrounds</h3>`;
+  for (const v of S.valleys) {
+    q += `<div class="card"><div class="row">
+      <span class="name">Valley ${v.valley}</span>
+      <span class="tag ${v.real?'real':''}">background${v.real?' ✓':''}</span>
+      <span class="grow"></span>
+      ${v.real?"":`<button class="act" onclick='copy(${JSON.stringify(v.prompt)})'>Copy prompt</button>`}
+    </div>${v.real?"":`<div class="prompt">${v.prompt}</div>`}</div>`;
+  }
+  $("pane-queue").innerHTML = q;
+
+  // REVIEW — inbox grid with assignment
+  let r = "";
+  if (!S.inbox.length) r = `<p class="muted">Inbox is empty. Download Midjourney keepers into <b>art_workbench/inbox/</b> and refresh.</p>`;
+  const unitOpts = S.units.map(u => `<option value="${u.id}">${u.name} (${u.id})</option>`).join("");
+  const valleyOpts = S.valleys.map(v => `<option value="${v.valley}">Valley ${v.valley}</option>`).join("");
+  r += `<div class="grid">`;
+  for (const f of S.inbox) {
+    const guess = S.units.find(u => f.toLowerCase().includes(u.id) || f.toLowerCase().includes(u.name.toLowerCase()));
+    r += `<div class="card" id="card-${btoa(f).replace(/=/g,'')}">
+      <img src="/inbox/${encodeURIComponent(f)}" loading="lazy">
+      <div class="muted" style="word-break:break-all;font-size:11px">${f}</div>
+      <div class="row" style="margin-top:8px">
+        <select id="tgt-${f}" onchange="renderTargets('${f}')">
+          <option value="unit">Character</option><option value="valley">Valley BG</option>
+        </select>
+        <select id="id-${f}">${unitOpts}</select>
+        <select id="kind-${f}"><option>portrait</option><option>chibi</option><option>icon</option></select>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <button class="act ok" onclick="approve('${f}')">Approve → import</button>
+        <button class="act no" onclick="reject('${f}')">Reject</button>
+      </div></div>`;
+    if (guess) setTimeout(() => { const el = $("id-"+f); if (el) el.value = guess.id; });
+  }
+  r += `</div>`;
+  $("pane-review").innerHTML = r;
+
+  // STYLE — editable style.json
+  $("pane-style").innerHTML = `
+    <p class="muted">These fragments build every prompt. Edit + Save, then Queue prompts update instantly.
+    Record your locked style-bible decisions here (this saves to art_workbench/style.json).</p>
+    ${Object.entries(S.style).map(([k,v]) => `
+      <div class="card"><b class="name">${k}</b><textarea id="st-${k}">${v}</textarea></div>`).join("")}
+    <button class="act ok" onclick="saveStyle()">Save style</button>`;
+}
+
+function renderTargets(f) {
+  const isValley = $("tgt-"+f).value === "valley";
+  $("id-"+f).innerHTML = isValley
+    ? S.valleys.map(v => `<option value="${v.valley}">Valley ${v.valley}</option>`).join("")
+    : S.units.map(u => `<option value="${u.id}">${u.name} (${u.id})</option>`).join("");
+  $("kind-"+f).style.display = isValley ? "none" : "";
+}
+async function approve(f) {
+  const body = { file:f, target:$("tgt-"+f).value, id:$("id-"+f).value, kind:$("kind-"+f).value };
+  const res = await (await fetch("/api/approve", {method:"POST", body:JSON.stringify(body)})).json();
+  toast(res.ok ? res.detail : "ERROR: " + res.error);
+  load();
+}
+async function reject(f) {
+  await fetch("/api/reject", {method:"POST", body:JSON.stringify({file:f})});
+  load();
+}
+async function saveStyle() {
+  const style = {};
+  for (const k in S.style) style[k] = $("st-"+k).value;
+  await fetch("/api/style", {method:"POST", body:JSON.stringify(style)});
+  toast("Style saved — prompts rebuilt");
+  load();
+}
+async function reimport() {
+  const res = await (await fetch("/api/reimport", {method:"POST", body:"{}"})).json();
+  toast(res.detail);
+}
+load();
+setInterval(load, 8000);
+</script>
+</body>
+</html>
