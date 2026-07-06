@@ -12,24 +12,12 @@ func _initialize() -> void:
 		db.name = "Db"
 		root.add_child(db)
 	db.reload()
-	var team_data: Array = []
-	for id in TEAM:
-		team_data.append(db.units[id])
-	var enemy_data: Array = [db.units["whisperling"], db.units["kibr"], db.units["whisperling"]]
+	var enemy_ids: Array = ["whisperling", "kibr", "whisperling"]
 	for scale in SCALES:
 		var pattern := ""
 		for level in range(1, 15):
 			var mult := 1.0 + 0.04 * (level - 1)
-			var mgr := BattleManager.new()
-			mgr.auto_mode = true
-			var out := {}
-			mgr.battle_ended.connect(func(v: bool) -> void: out["v"] = v)
-			mgr.setup(team_data, enemy_data, [mult, mult, mult, mult], scale)
-			var steps := 0
-			while not mgr.ended and steps < 1200:
-				mgr.step()
-				steps += 1
-			mgr.free()
-			pattern += "W" if out.get("v", false) else "."
+			var r := BattleSim.run(db, TEAM, enemy_ids, mult, scale, 1.0, 1200)
+			pattern += "W" if r["win"] else "."
 		print("scale %.2f   %s" % [scale, pattern])
 	quit(0)

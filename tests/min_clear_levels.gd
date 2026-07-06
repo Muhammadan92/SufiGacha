@@ -19,10 +19,6 @@ func _initialize() -> void:
 		root.add_child(db)
 	db.reload()
 
-	var team_data: Array = []
-	for id in TEAM:
-		team_data.append(db.units[id])
-
 	print("win pattern around expected level (E-4 .. E+4) | . = loss, W = win, E marks expected")
 	print("NOTE: deterministic combat is NOT monotonic — check the whole window.")
 	for stage: StageData in db.stage_order:
@@ -33,20 +29,8 @@ func _initialize() -> void:
 		for offset in range(-WINDOW, WINDOW + 1):
 			var level := clampi(expected + offset, 1, 60)
 			var mult := 1.0 + 0.04 * (level - 1)
-			var enemy_data: Array = []
-			for eid in stage.enemy_ids:
-				enemy_data.append(db.units[eid])
-			var mgr := BattleManager.new()
-			mgr.auto_mode = true
-			var out := {}
-			mgr.battle_ended.connect(func(v: bool) -> void: out["v"] = v)
-			mgr.setup(team_data, enemy_data, [mult, mult, mult, mult], stage.enemy_scale)
-			var steps := 0
-			while not mgr.ended and steps < 1500:
-				mgr.step()
-				steps += 1
-			mgr.free()
-			pattern += "W" if out.get("v", false) else "."
+			var r := BattleSim.run(db, TEAM, stage.enemy_ids, mult, stage.enemy_scale)
+			pattern += "W" if r["win"] else "."
 		print("  %d-%02d %-28s E=Lv%-3d  [%s]" % [
 			stage.valley, stage.index, stage.display_name, expected, pattern])
 	quit(0)

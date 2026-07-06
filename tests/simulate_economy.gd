@@ -143,29 +143,10 @@ func _battle(stage_key: String, enemy_ids: Array, scale: float, level: int, mast
 	var cache_key := "%s|%d|%d" % [stage_key, level, mastery]
 	if battle_cache.has(cache_key):
 		return battle_cache[cache_key]
-	var mult := _level_mult(level)
-	var smult := 1.0 + 0.06 * mastery
-	var team_data: Array = []
-	for id in TEAM:
-		team_data.append(db.units[id])
-	var enemy_data: Array = []
-	for eid in enemy_ids:
-		enemy_data.append(db.units[eid])
-	var mgr := BattleManager.new()
-	mgr.auto_mode = true
-	var out := {}
-	mgr.battle_ended.connect(func(v: bool) -> void: out["v"] = v)
-	var deaths := 0
-	mgr.unit_died.connect(func(u: BattleUnit) -> void:
-		if u.is_player_side:
-			deaths += 1)
-	mgr.setup(team_data, enemy_data, [mult, mult, mult, mult], scale, [smult, smult, smult, smult])
-	var steps := 0
-	while not mgr.ended and steps < STEP_CAP:
-		mgr.step()
-		steps += 1
-	mgr.free()
-	var result := { "win": out.get("v", false), "turns": steps, "deaths": deaths }
+	var r := BattleSim.run(db, TEAM, enemy_ids, _level_mult(level), scale,
+		1.0 + 0.06 * mastery, STEP_CAP)
+	# "turns" here stays the legacy steps count — it drives minutes estimates.
+	var result := { "win": r["win"], "turns": r["steps"], "deaths": r["deaths"] }
 	battle_cache[cache_key] = result
 	return result
 

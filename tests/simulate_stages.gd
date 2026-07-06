@@ -25,35 +25,18 @@ func _initialize() -> void:
 		root.add_child(db)
 	db.reload()
 
-	var team_data: Array = []
-	for id in TEAM:
-		team_data.append(db.units[id])
-
 	print("%d runs per stage | starter company at expected level" % RUNS)
 	for i in db.stage_order.size():
 		var stage: StageData = db.stage_order[i]
 		var level: int = _expected_level(stage.valley, stage.index - 1)
 		var mult := 1.0 + 0.04 * (level - 1)
-		var mults := [mult, mult, mult, mult]
-		var enemy_data: Array = []
-		for eid in stage.enemy_ids:
-			enemy_data.append(db.units[eid])
 		var wins := 0
 		var turn_sum := 0
 		for r in RUNS:
-			var mgr := BattleManager.new()
-			mgr.auto_mode = true
-			var out := {}
-			mgr.battle_ended.connect(func(v: bool) -> void: out["v"] = v)
-			mgr.setup(team_data, enemy_data, mults, stage.enemy_scale)
-			var steps := 0
-			while not mgr.ended and steps < 2000:
-				mgr.step()
-				steps += 1
-			if out.get("v", false):
+			var res := BattleSim.run(db, TEAM, stage.enemy_ids, mult, stage.enemy_scale, 1.0, 2000)
+			if res["win"]:
 				wins += 1
-			turn_sum += steps
-			mgr.free()
+			turn_sum += int(res["steps"])
 		print("  %d-%02d %-24s Lv%-2d scale %.2f   win %5.1f%%  turns %5.1f" % [
 			stage.valley, stage.index, stage.display_name, level, stage.enemy_scale,
 			100.0 * wins / RUNS, float(turn_sum) / RUNS])

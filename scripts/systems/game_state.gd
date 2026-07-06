@@ -110,6 +110,15 @@ const WAYMARKS := [
 	{ "id": "company_12", "desc": "Gather a company of 12", "metric": "roster", "at": 12, "sigils": 1 },
 ]
 
+# --- battle summary contract -------------------------------------------------
+# Every finish_* returns a Dictionary consumed by results_screen. Shared keys:
+#   victory: bool           kind: "stage"|"minaret"|"sanctum"|"trial"
+#   marks/xp_each: int      first_clear_seals/first_clear_sigils: int (opt)
+#   scrolls: int (opt)      level_ups: Array[String] (opt)
+#   stars/new_stars: int (stage only)   waymarks: Array[Dictionary] (opt)
+#   return_to: String       (set by battle_screen -- Continue destination)
+# Add keys here FIRST, then to producers, then to results_screen.
+
 # --- weekly Vice Trial (GDD §6.1) ---
 const TRIAL_SCALES := [2.0, 2.6, 3.2, 3.8, 4.5]
 const TRIAL_REWARDS := [
