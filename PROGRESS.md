@@ -31,6 +31,7 @@ that changes status.** Roadmap definitions live in GDD.md §14.
 - [x] Placeholder audio generator (tools/gen_placeholder_audio.gd): 12 synthesized SFX + 6 seamless loops — game fully audible with zero real tracks; real imports (.ogg/.mp3) auto-outrank placeholder .wav
 - [x] Summon reveal: sequential door-of-light animation on The Calling (rarity-colored, Luminary full-screen flash, tap-to-advance, Skip)
 - [x] Asset audit extended to audio (70 tracked assets total)
+- [x] **Code review (rf+rq) fixes**: season tier 30 was mathematically unreachable (TIER_XP 40→30; sim now models real XP/tier progression + warns if the track can't complete); uncompletable "climb" daily no longer dealt pre-Minaret; corrupt saves backed up to save.json.corrupt.bak before any overwrite; results Continue returns to origin screen; Journey difficulty survives rebuilds; economy sim reads game constants directly (hand-copied tables removed — they hid the tier bug); 3 regression tests added
 - [x] **Launch roster COMPLETE: 28 playable heroes** (GDD §3.4) — 13 new (every order gets a full bench; first turn-meter tempo kit on Wren); Calling shop/sims/briefs updated; expansion protocol verified: completionist ceiling $495→$536, baseline LTV $0.96→$1.03/install net
 - [x] **Web export working**: `build/web/` (43MB, browser-playable) — export preset + project icon committed; serve with `python3 -m http.server -d build/web`
 - [x] Codex: 7 per-order entries ("The Silent Way" ... "The Way of Light"), inspired-by framing
