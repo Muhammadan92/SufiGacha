@@ -29,12 +29,12 @@ MANIFEST = WB / "real_art.json"
 PORT = 8787
 
 DEFAULT_STYLE = {
-    "base": "clean 2D anime game art, cel shading, painterly glow, mystical fantasy, high detail",
-    "character_extra": "single character, three-quarter view, centered, dark cavern background lit by soft mystical light",
-    "chibi_extra": "chibi proportions, full body, simple standing pose, clean silhouette, plain neutral background",
-    "icon_extra": "portrait emblem, head and shoulders close-up, centered, simple dark background",
-    "bg_extra": "wide establishing environment, atmospheric depth, no characters, game background art",
-    "flags": "--niji 6 --s 180",
+    "base": "2D anime video game splash art, cel shaded, clean bold lineart, flat vivid colors, stylized illustration, official game art",
+    "character_extra": "single character, three-quarter view, centered, dignified traditional Sufi dress, dark cavern background lit by soft mystical light, hand-drawn game character design, not photorealistic",
+    "chibi_extra": "chibi proportions, full body, simple standing pose, clean silhouette, plain neutral background, game sprite sheet style",
+    "icon_extra": "portrait emblem, head and shoulders close-up, centered, simple dark background, game avatar icon",
+    "bg_extra": "wide establishing environment, atmospheric depth, no characters, painted game background art, stylized not photoreal",
+    "flags": "--niji 6 --s 180 --no photo, photorealism, realistic skin texture"
 }
 AR = {"portrait": "2:3", "chibi": "1:1", "icon": "1:1", "background": "16:9"}
 
@@ -74,6 +74,8 @@ def parse_units():
             "notes": field("art_notes"),
             "rarity": int(m_rar.group(1)) if m_rar else 3,
             "enemy": "is_enemy = true" in text,
+            "gender": "f" if "woman" in field("art_notes").lower() else
+                ("m" if re.search(r"\bman\b|\bsailor\b", field("art_notes").lower()) else "n"),
         })
     return units
 
