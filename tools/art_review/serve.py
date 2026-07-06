@@ -76,8 +76,11 @@ def parse_units():
         text = f.read_text()
 
         def field(name, default=""):
-            m = re.search(r'^%s = "(.*)"$' % name, text, re.M)
-            return m.group(1) if m else default
+            # LAST match: the unit's own properties live in [resource], which
+            # comes AFTER skill sub-resources (whose display_name would
+            # otherwise shadow the unit's — the "Grace Note bug").
+            matches = re.findall(r'^%s = "(.*)"$' % name, text, re.M)
+            return matches[-1] if matches else default
 
         m_rar = re.search(r"^rarity = (\d+)", text, re.M)
         units.append({
