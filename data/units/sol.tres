@@ -52,7 +52,7 @@ effects = [SubResource("eff_trance")]
 [resource]
 script = ExtResource("1")
 id = &"sol"
-display_name = "Sol"
+display_name = "Ziya"
 epithet = ""
 art_notes = "keen young archer-like man, yellow-white Suhrawardi robes, drawing back a beam of light like a bowstring, wearing a dignified traditional Sufi turban, Persian heritage, light olive skin"
 order_name = "Suhrawardi"

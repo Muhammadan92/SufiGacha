@@ -1,0 +1,76 @@
+[gd_resource type="Resource" load_steps=11 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/unit_data.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/data/skill_data.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/data/effect_block.gd" id="3"]
+
+[sub_resource type="Resource" id="e1"]
+script = ExtResource("3")
+kind = 0
+power = 1.0
+
+[sub_resource type="Resource" id="e2"]
+script = ExtResource("3")
+kind = 3
+amount = 12.0
+target_override = 4
+
+[sub_resource type="Resource" id="e3"]
+script = ExtResource("3")
+kind = 0
+power = 1.4
+
+[sub_resource type="Resource" id="e4"]
+script = ExtResource("3")
+kind = 0
+power = 2.1
+
+[sub_resource type="Resource" id="s1"]
+script = ExtResource("2")
+id = &"hatif_lit"
+display_name = "Calling Strike"
+slot = 0
+cooldown = 0
+target_type = 0
+fervor_gain = 20
+effects = [SubResource("e1"), SubResource("e2")]
+
+[sub_resource type="Resource" id="s2"]
+script = ExtResource("2")
+id = &"hatif_rem"
+display_name = "The Voice Returns"
+slot = 1
+cooldown = 2
+target_type = 0
+fervor_gain = 15
+effects = [SubResource("e3")]
+
+[sub_resource type="Resource" id="s3"]
+script = ExtResource("2")
+id = &"hatif_trance"
+display_name = "Answered"
+slot = 2
+cooldown = 0
+target_type = 0
+fervor_gain = 0
+effects = [SubResource("e4")]
+
+[resource]
+script = ExtResource("1")
+id = &"hatif"
+display_name = "Hatif"
+epithet = ""
+art_notes = "lean mysterious man, a calling voice made half-visible around him, turquoise Qadiri robes and dignified traditional Sufi turban, white European convert heritage, light hair"
+order_name = "Qadiri"
+affinity = 1
+rarity = 3
+is_enemy = false
+max_hp = 800
+atk = 85
+def = 60
+spd = 100
+crit_rate = 0.15
+crit_damage = 1.5
+effectiveness = 0.0
+resilience = 0.0
+skills = [SubResource("s1"), SubResource("s2"), SubResource("s3")]

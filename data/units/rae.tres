@@ -68,7 +68,7 @@ effects = [SubResource("e4"), SubResource("e5")]
 [resource]
 script = ExtResource("1")
 id = &"rae"
-display_name = "Ray"
+display_name = "Shua"
 epithet = ""
 art_notes = "precise man, pale gold Suhrawardi turban, thin rod of light held like a stylus, Persian heritage, sharp elegant features"
 order_name = "Suhrawardi"

@@ -63,7 +63,7 @@ effects = [SubResource("eff_trance")]
 [resource]
 script = ExtResource("1")
 id = &"rowan"
-display_name = "Rowan"
+display_name = "Dawran"
 epithet = ""
 art_notes = "lean young man mid-sidestep, Mevlevi sikke and white skirts, light on his feet, motion-blur wind trails, Turkish heritage, warm tan skin"
 order_name = "Mevlevi"

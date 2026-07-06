@@ -67,9 +67,9 @@ effects = [SubResource("eff_trance_evasion"), SubResource("eff_trance_atkup")]
 [resource]
 script = ExtResource("1")
 id = &"vale"
-display_name = "Vale"
+display_name = "Fana"
 epithet = "the Silent"
-art_notes = "slender contemplative man, plain deep emerald Naqshbandi robes and small understated turban, trimmed beard, eyes closed, concentric circles of light around the heart, Central Asian heritage, bronze skin"
+art_notes = "slender contemplative man in flowing BLACK robes — unique among all orders — with a single emerald thread at the collar, small black turban, trimmed beard, eyes closed, concentric rings of pale light dissolving around him as if he is fading into radiance, Central Asian heritage, bronze skin"
 order_name = "Naqshbandi"
 affinity = 0
 rarity = 5

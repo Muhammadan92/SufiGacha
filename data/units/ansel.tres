@@ -65,7 +65,7 @@ effects = [SubResource("eff_trance_heal"), SubResource("eff_trance_fervor")]
 [resource]
 script = ExtResource("1")
 id = &"ansel"
-display_name = "Ansel"
+display_name = "Mehr"
 epithet = "the Open Door"
 art_notes = "welcoming heavyset man, rose and warm ochre Chishti robes, generous smile behind a full beard, open doorway of light behind him, wearing a dignified traditional Sufi turban, Indian heritage, deep brown skin, black hair"
 order_name = "Chishti"

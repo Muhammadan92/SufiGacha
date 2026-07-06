@@ -1,0 +1,92 @@
+[gd_resource type="Resource" load_steps=12 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/unit_data.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/data/skill_data.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/data/effect_block.gd" id="3"]
+
+[sub_resource type="Resource" id="e1"]
+script = ExtResource("3")
+kind = 0
+power = 1.0
+
+[sub_resource type="Resource" id="e2"]
+script = ExtResource("3")
+kind = 2
+status_id = 7
+chance = 1.0
+duration = 3
+amount = 0.05
+target_override = 4
+
+[sub_resource type="Resource" id="e3"]
+script = ExtResource("3")
+kind = 2
+status_id = 2
+chance = 1.0
+duration = 3
+amount = 0.25
+target_override = 4
+
+[sub_resource type="Resource" id="e4"]
+script = ExtResource("3")
+kind = 1
+power = 1.2
+target_override = 4
+
+[sub_resource type="Resource" id="e5"]
+script = ExtResource("3")
+kind = 2
+status_id = 13
+chance = 1.0
+duration = 1
+target_override = 4
+
+[sub_resource type="Resource" id="s1"]
+script = ExtResource("2")
+id = &"sabr_lit"
+display_name = "Weathering Blow"
+slot = 0
+cooldown = 0
+target_type = 0
+fervor_gain = 20
+effects = [SubResource("e1")]
+
+[sub_resource type="Resource" id="s2"]
+script = ExtResource("2")
+id = &"sabr_rem"
+display_name = "Patience of Stone"
+slot = 1
+cooldown = 3
+target_type = 4
+fervor_gain = 15
+effects = [SubResource("e2"), SubResource("e3")]
+
+[sub_resource type="Resource" id="s3"]
+script = ExtResource("2")
+id = &"sabr_trance"
+display_name = "Still Standing"
+slot = 2
+cooldown = 0
+target_type = 4
+fervor_gain = 0
+effects = [SubResource("e4"), SubResource("e5")]
+
+[resource]
+script = ExtResource("1")
+id = &"sabr"
+display_name = "Sabr"
+epithet = ""
+art_notes = "scarred patient man, arms crossed, embers bouncing off him harmlessly, iron-red Rifai robes and dignified traditional Sufi turban, mixed Black and European heritage, medium brown skin"
+order_name = "Rifai"
+affinity = 2
+rarity = 4
+is_enemy = false
+max_hp = 1250
+atk = 78
+def = 105
+spd = 88
+crit_rate = 0.15
+crit_damage = 1.5
+effectiveness = 0.0
+resilience = 0.0
+skills = [SubResource("s1"), SubResource("s2"), SubResource("s3")]

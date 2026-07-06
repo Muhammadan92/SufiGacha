@@ -62,7 +62,7 @@ effects = [SubResource("eff_trance")]
 [resource]
 script = ExtResource("1")
 id = &"flint"
-display_name = "Flint"
+display_name = "Jamr"
 epithet = ""
 art_notes = "wiry young man, dark red Rifai wraps with iron chain accents, sparks striking from flint in his hands, wearing a dignified traditional Sufi turban, white European heritage, fair freckled skin, copper-red hair"
 order_name = "Rifai"

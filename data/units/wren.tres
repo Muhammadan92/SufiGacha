@@ -60,7 +60,7 @@ effects = [SubResource("e3"), SubResource("e4")]
 [resource]
 script = ExtResource("1")
 id = &"wren"
-display_name = "Wren"
+display_name = "Khafi"
 epithet = ""
 art_notes = "calm young man, deep emerald Naqshbandi turban, hands folded in stillness, faint clock-like rings of light turning around his, Chinese Hui Muslim heritage, East Asian features"
 order_name = "Naqshbandi"

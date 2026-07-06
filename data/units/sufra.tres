@@ -1,0 +1,70 @@
+[gd_resource type="Resource" load_steps=10 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/unit_data.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/data/skill_data.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/data/effect_block.gd" id="3"]
+
+[sub_resource type="Resource" id="e1"]
+script = ExtResource("3")
+kind = 0
+power = 0.8
+
+[sub_resource type="Resource" id="e2"]
+script = ExtResource("3")
+kind = 3
+amount = 12.0
+
+[sub_resource type="Resource" id="e3"]
+script = ExtResource("3")
+kind = 3
+amount = 18.0
+
+[sub_resource type="Resource" id="s1"]
+script = ExtResource("2")
+id = &"sufra_lit"
+display_name = "Small Gift"
+slot = 0
+cooldown = 0
+target_type = 0
+fervor_gain = 20
+effects = [SubResource("e1")]
+
+[sub_resource type="Resource" id="s2"]
+script = ExtResource("2")
+id = &"sufra_rem"
+display_name = "Share the Portion"
+slot = 1
+cooldown = 3
+target_type = 2
+fervor_gain = 15
+effects = [SubResource("e2")]
+
+[sub_resource type="Resource" id="s3"]
+script = ExtResource("2")
+id = &"sufra_trance"
+display_name = "Abundance"
+slot = 2
+cooldown = 0
+target_type = 3
+fervor_gain = 0
+effects = [SubResource("e3")]
+
+[resource]
+script = ExtResource("1")
+id = &"sufra"
+display_name = "Sufra"
+epithet = ""
+art_notes = "smiling man laying out a cloth that shimmers with abundance, rose and ochre Chishti robes and dignified traditional Sufi turban, Bosnian European heritage, fair skin"
+order_name = "Chishti"
+affinity = 5
+rarity = 3
+is_enemy = false
+max_hp = 800
+atk = 85
+def = 60
+spd = 100
+crit_rate = 0.15
+crit_damage = 1.5
+effectiveness = 0.0
+resilience = 0.0
+skills = [SubResource("s1"), SubResource("s2"), SubResource("s3")]

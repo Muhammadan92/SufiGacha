@@ -63,7 +63,7 @@ effects = [SubResource("e4")]
 [resource]
 script = ExtResource("1")
 id = &"marin"
-display_name = "Marin"
+display_name = "Mawj"
 epithet = ""
 art_notes = "weathered sailor of the litany roads, deep royal-blue Shadhili robes, rope-scarred hands, wearing a dignified traditional Sufi turban, mixed Black and European heritage, medium brown skin, sea-grey eyes"
 order_name = "Shadhili"
