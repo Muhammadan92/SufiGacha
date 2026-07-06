@@ -463,6 +463,15 @@ func _on_battle_ended(victory: bool) -> void:
 	else:
 		summary = game.finish_stage(db.stages[String(stage.id)], victory,
 			{"deaths": player_deaths, "turns": manager.turns_taken}, diff)
+	# Route Continue back to where the player came from (rf UX fix #4).
+	if minaret_floor > 0:
+		summary["return_to"] = "minaret"
+	elif is_sanctum:
+		summary["return_to"] = "sanctum"
+	elif trial_tier > 0:
+		summary["return_to"] = "trials"
+	else:
+		summary["return_to"] = "stages"
 	prompt_label.text = "VICTORY — the darkness recedes" if victory else "DEFEAT — try a different approach"
 	var cont := Button.new()
 	cont.text = "Continue"

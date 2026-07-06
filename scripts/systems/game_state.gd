@@ -31,7 +31,7 @@ const SANCTUM_UNLOCK_STAGE := "v1_s04"
 
 # --- Season Pass (GDD §9.3.1): 30 tiers, 40 season-XP each ---
 const SEASON_TIERS := 30
-const TIER_XP := 40
+const TIER_XP := 30
 const DEED_XP_DAILY := 10
 const DEED_XP_WEEKLY := 25
 const DEED_MARKS_DAILY := 20
@@ -64,6 +64,20 @@ const WEEKLY_DEEDS := [
 
 const SANCTUM_RUNS_PER_DAY := 2
 const SANCTUM_BREATH_COST := 10
+const SANCTUM_REWARD_SCROLLS := 1
+const SANCTUM_REWARD_MARKS := 40
+const SANCTUM_REWARD_XP := 20
+
+# Minaret formulas (single source — sims read these too)
+const MINARET_SCALE_BASE := 0.6
+const MINARET_SCALE_PER_FLOOR := 0.07
+const MINARET_MARKS_BASE := 30
+const MINARET_MARKS_PER_FLOOR := 5
+const MINARET_XP_BASE := 10
+const MINARET_XP_PER_FLOOR := 2
+const MINARET_SEALS_EVERY := 5
+const MINARET_SEALS_AMOUNT := 2
+const MINARET_SIGIL_EVERY := 10
 const SANCTUM_ORDERS := ["Naqshbandi", "Qadiri", "Rifai", "Mevlevi", "Shadhili", "Chishti", "Suhrawardi"]
 
 # --- difficulty re-clears (GDD §6.1: 84 stages -> 252) ---
@@ -129,6 +143,10 @@ var waymarks_claimed := {}  # waymark id -> true
 ## battle → 3 first results → 4 systems reveal → 5 done.
 var tutorial_step := 0
 const TUTORIAL_DONE := 5
+
+## Journey screen's selected difficulty — session-scoped (survives screen
+## rebuilds between battles; deliberately not saved).
+var journey_diff := "normal"
 
 
 func tutorial_at(step: int) -> bool:
@@ -474,7 +492,7 @@ func make_minaret_stage(floor: int) -> StageData:
 	else:
 		s.enemy_ids = MINARET_SETS[(floor - 1) % MINARET_SETS.size()]
 		s.index = 1
-	s.enemy_scale = 0.6 + 0.07 * floor  # steeper than campaign: the tower should wall
+	s.enemy_scale = MINARET_SCALE_BASE + MINARET_SCALE_PER_FLOOR * floor  # steeper than campaign: the tower should wall
 	return s
 
 
@@ -490,16 +508,16 @@ func finish_minaret(floor: int, victory: bool) -> Dictionary:
 	}
 	if victory and floor == minaret_floor + 1:
 		minaret_floor = floor
-		summary["marks"] = 30 + 5 * floor
+		summary["marks"] = MINARET_MARKS_BASE + MINARET_MARKS_PER_FLOOR * floor
 		marks += summary["marks"]
-		if floor % 5 == 0:
-			summary["first_clear_seals"] = 2
-			seals += 2
-		if floor % 10 == 0:
+		if floor % MINARET_SEALS_EVERY == 0:
+			summary["first_clear_seals"] = MINARET_SEALS_AMOUNT
+			seals += MINARET_SEALS_AMOUNT
+		if floor % MINARET_SIGIL_EVERY == 0:
 			summary["first_clear_sigils"] = 1
 			sigils += 1
 		# Modest XP — economy sim showed rich tower XP collapses campaign pacing
-		summary["xp_each"] = 10 + 2 * floor
+		summary["xp_each"] = MINARET_XP_BASE + MINARET_XP_PER_FLOOR * floor
 		for id in team:
 			var gained := add_xp(id, summary["xp_each"])
 			if gained > 0:
@@ -573,9 +591,16 @@ func tick_time() -> void:
 	var day_key := Time.get_date_string_from_unix_time(unix)
 	if deeds.get("day_key", "") != day_key:
 		var day_index := int(floor(unix / 86400.0))
+		# Only deal deeds the player can actually complete (rf finding #2):
+		# the Minaret deed is meaningless before the tower unlocks.
+		var pool: Array = []
+		for def: Dictionary in DAILY_DEED_POOL:
+			if def["event"] == "climb" and not minaret_unlocked():
+				continue
+			pool.append(def)
 		var daily: Array = []
 		for i in 3:
-			var def: Dictionary = DAILY_DEED_POOL[(day_index + i) % DAILY_DEED_POOL.size()]
+			var def: Dictionary = pool[(day_index + i) % pool.size()]
 			daily.append({ "id": def["id"], "desc": def["desc"], "goal": def["goal"],
 				"event": def["event"], "progress": 0, "done": false })
 		deeds["day_key"] = day_key
@@ -689,13 +714,13 @@ func finish_sanctum(victory: bool) -> Dictionary:
 	}
 	if victory and sanctum_runs_left() > 0:
 		sanctum["runs"] = int(sanctum.get("runs", 0)) + 1
-		scrolls += 1
-		marks += 40
-		summary["scrolls"] = 1
-		summary["marks"] = 40
-		summary["xp_each"] = 20
+		scrolls += SANCTUM_REWARD_SCROLLS
+		marks += SANCTUM_REWARD_MARKS
+		summary["scrolls"] = SANCTUM_REWARD_SCROLLS
+		summary["marks"] = SANCTUM_REWARD_MARKS
+		summary["xp_each"] = SANCTUM_REWARD_XP
 		for id in team:
-			var gained := add_xp(id, 20)
+			var gained := add_xp(id, SANCTUM_REWARD_XP)
 			if gained > 0:
 				summary["level_ups"].append("%s reached level %d" % [db.units[id].display_name, level_of(id)])
 		deed_event("win")
@@ -719,12 +744,21 @@ func save() -> void:
 	var f := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if f:
 		f.store_string(JSON.stringify(blob))
+	else:
+		push_error("Could not write save file: %s" % FileAccess.get_open_error())
 
 
 func load_save() -> void:
 	if FileAccess.file_exists(SAVE_PATH):
 		var f := FileAccess.open(SAVE_PATH, FileAccess.READ)
-		var blob = JSON.parse_string(f.get_as_text())
+		var text := f.get_as_text()
+		var blob = JSON.parse_string(text)
+		if not (blob is Dictionary) and text.strip_edges() != "":
+			# Corrupt save: preserve it for recovery BEFORE any autosave can
+			# overwrite it, then start fresh (rf review finding #3).
+			var gpath := ProjectSettings.globalize_path(SAVE_PATH)
+			DirAccess.copy_absolute(gpath, gpath + ".corrupt.bak")
+			push_error("Save file unreadable — backed up to save.json.corrupt.bak; starting a fresh profile")
 		if blob is Dictionary:
 			roster = blob.get("roster", {})
 			team = blob.get("team", STARTERS.duplicate())

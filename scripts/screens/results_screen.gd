@@ -54,7 +54,8 @@ func _build() -> void:
 	var cont := Button.new()
 	cont.text = "Continue"
 	cont.custom_minimum_size = Vector2(280, 48)
-	cont.pressed.connect(func() -> void: screens.goto("stages"))
+	cont.pressed.connect(func() -> void:
+		screens.goto(str(summary.get("return_to", "stages"))))
 	v.add_child(cont)
 
 	if game.tutorial_at(3) and summary.get("victory", false):

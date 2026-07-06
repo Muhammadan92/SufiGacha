@@ -130,6 +130,14 @@ func _initialize() -> void:
 	game.reset_profile()
 	game.tick_time()
 	assert(game.deeds["daily"].size() == 3 and game.deeds["weekly"].size() == 3)
+	# rf fix #2: never deal an uncompletable deed (Minaret locked on fresh save)
+	assert(not game.minaret_unlocked(), "fresh save should have Minaret locked")
+	for d in game.deeds["daily"]:
+		assert(d["event"] != "climb", "climb deed dealt before Minaret unlocks")
+	# rf fix #1: the season track must be completable in a month — dailies
+	# alone should cover it (weeklies are the buffer for missed days)
+	assert(30 * 3 * game.DEED_XP_DAILY >= game.TIER_XP * game.SEASON_TIERS,
+		"season tier 30 must be reachable")
 	var marks_before: int = game.marks
 	game.deed_event("win")
 	game.deed_event("win")
@@ -201,6 +209,20 @@ func _initialize() -> void:
 	assert(game.sigils == sig0 + 1, "15-star waymark pays the week-2 Sigil")
 	assert(game.check_waymarks().is_empty(), "waymarks claim once")
 	print("waymarks ok (%d claimed on blast)" % wms.size())
+
+	# --- corrupt save handling (rf fix #3) ---
+	var gpath: String = ProjectSettings.globalize_path(game.SAVE_PATH)
+	DirAccess.remove_absolute(gpath + ".corrupt.bak")
+	var f_bad := FileAccess.open(game.SAVE_PATH, FileAccess.WRITE)
+	f_bad.store_string("{not json at all")
+	f_bad = null
+	game.load_save()
+	assert(FileAccess.file_exists(game.SAVE_PATH + ".corrupt.bak"),
+		"corrupt save must be backed up before any overwrite")
+	assert(game.owns("bram"), "fresh profile after corrupt save")
+	DirAccess.remove_absolute(gpath + ".corrupt.bak")
+	game.reset_profile()
+	print("corrupt save ok")
 
 	# --- tutorial flow ---
 	assert(game.tutorial_step == 0, "fresh profile starts the tutorial")

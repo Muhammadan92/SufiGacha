@@ -26,10 +26,10 @@ const DAILY_OVERHEAD_MINUTES := 3.0
 const MAX_MINARET_CLIMBS_PER_DAY := 6  # session-limit model, not a game rule
 
 # --- economy constants (mirror game_state.gd / GDD §9) ---
-const UNIT_PRICES := { 3: ["marks", 300], 4: ["seals", 10], 5: ["sigils", 6] }
-const SCROLL_COST := 60
-const STAR_MARKS := 20
-const STAR_SEALS := 1
+## Game constants read straight from the source (never copy them here —
+## a hand-copied table hid the tier-30 bug the rf review found).
+const GS := preload("res://scripts/systems/game_state.gd")
+const SCROLL_COST := GS.SCROLL_COST_MARKS
 const MARKS_RESERVE := 500
 
 # --- revenue roadmap (GDD §9.3) ---
@@ -42,7 +42,8 @@ const PASS_PRICE_MONTHLY := 4.99
 const PASS_DAILY := { "marks": 15, "seals": 1 }
 const PASS_SIGIL_EVERY_DAYS := 10
 const SEASON_PASS_PRICE := 9.99
-const SEASON_GRANTS := { "marks": 300, "seals": 2, "sigils": 1, "scrolls": 5 }
+# Season pass rewards come from GS.PASS_FREE / GS.PASS_PAID via simulated
+# tier progression — no more lump-sum grants (they hid tier-reachability bugs).
 const COSMETIC_AVG_PRICE := 6.0
 const COSMETICS_PER_MONTH := 3     # content cadence (GDD §9.3.1)
 const NEW_HERO_EVERY_DAYS := 15    # 2 heroes/month, Luminary-priced
@@ -183,6 +184,8 @@ func _run_career(profile_name: String, profile: Dictionary, stages: Array) -> Di
 	var stage_stars := {}
 	var diff_frontier := {}  # "hard"/"nm" -> stages cleared in that chain
 	var waymarks_done := {}
+	var season_xp := 0
+	var season_tier := 0
 	var minaret := 0
 	var owned_desires := 0
 	var total_desires := DESIRES.size()
@@ -209,10 +212,8 @@ func _run_career(profile_name: String, profile: Dictionary, stages: Array) -> Di
 				rev["pass"] += PASS_PRICE_MONTHLY
 			if profile["season"]:
 				rev["season"] += SEASON_PASS_PRICE
-				marks += SEASON_GRANTS["marks"]
-				seals += SEASON_GRANTS["seals"]
-				sigils += SEASON_GRANTS["sigils"]
-				scrolls += SEASON_GRANTS["scrolls"]
+			season_xp = 0
+			season_tier = 0
 			var n_cosmetics: int = COSMETICS_PER_MONTH if profile["cosmetics"] < 0 else mini(profile["cosmetics"], COSMETICS_PER_MONTH)
 			rev["cosmetics"] += n_cosmetics * COSMETIC_AVG_PRICE
 		if profile["pass"]:
@@ -227,23 +228,31 @@ func _run_career(profile_name: String, profile: Dictionary, stages: Array) -> Di
 		var breath: int = profile["breath"]
 		var fail_streak := 0
 
-		# 0) Daily loop income (policy-modeled, mirrors game_state):
-		# Deeds: 3 dailies (+20 Marks each), 3 weeklies (+1 Seal each);
-		# free season track per ~30d: +100 Marks, 1 Seal, 2 Scrolls.
-		marks += 60
+		# 0) Daily loop income, driven by the game's own constants.
+		# Deeds (assumes full completion — optimistic-consistent):
+		marks += 3 * GS.DEED_MARKS_DAILY
+		season_xp += 3 * GS.DEED_XP_DAILY
 		if day % 7 == 0:
-			seals += 3
-		if day % 30 == 15:
-			marks += 100
-			seals += 1
-			scrolls += 2
-		# Sanctum: 2 runs/day once unlocked (stage 1-4): 20 Breath ->
-		# 2 Scrolls + 80 Marks + 40 team XP, ~2.5 min.
-		if next_idx >= 4 and breath >= 20:
-			breath -= 20
-			scrolls += 2
-			marks += 80
-			var sres := _grant_xp(level, xp, 40)
+			seals += 3 * GS.DEED_SEALS_WEEKLY
+			season_xp += 3 * GS.DEED_XP_WEEKLY
+		# Season tier progression: the REAL XP thresholds and reward tables.
+		while season_tier < GS.SEASON_TIERS and season_xp >= GS.TIER_XP * (season_tier + 1):
+			season_tier += 1
+			for tbl in ([GS.PASS_FREE, GS.PASS_PAID] if profile["season"] else [GS.PASS_FREE]):
+				var g: Dictionary = tbl.get(season_tier, {})
+				marks += g.get("marks", 0)
+				seals += g.get("seals", 0)
+				sigils += g.get("sigils", 0)
+				scrolls += g.get("scrolls", 0)
+		if day == 30 and season_tier < GS.SEASON_TIERS:
+			print("  !! season tier only %d/%d by day 30 — pass top unreachable" % [season_tier, GS.SEASON_TIERS])
+		# Sanctum: runs/day once unlocked (stage 1-4).
+		var sanctum_cost: int = GS.SANCTUM_RUNS_PER_DAY * GS.SANCTUM_BREATH_COST
+		if next_idx >= 4 and breath >= sanctum_cost:
+			breath -= sanctum_cost
+			scrolls += GS.SANCTUM_RUNS_PER_DAY * GS.SANCTUM_REWARD_SCROLLS
+			marks += GS.SANCTUM_RUNS_PER_DAY * GS.SANCTUM_REWARD_MARKS
+			var sres := _grant_xp(level, xp, GS.SANCTUM_RUNS_PER_DAY * GS.SANCTUM_REWARD_XP)
 			level = sres[0]
 			xp = sres[1]
 			minutes_today += 2.5
@@ -276,8 +285,8 @@ func _run_career(profile_name: String, profile: Dictionary, stages: Array) -> Di
 					var prev: int = int(stage_stars.get(next_idx, 0))
 					if earned > prev:
 						stage_stars[next_idx] = earned
-						marks += STAR_MARKS * (earned - prev)
-						seals += STAR_SEALS * (earned - prev)
+						marks += GS.STAR_REWARD_MARKS * (earned - prev)
+						seals += GS.STAR_REWARD_SEALS * (earned - prev)
 					seals += int(stage["fc_seals"])
 					sigils += int(stage["fc_sigils"])
 					next_idx += 1
@@ -356,17 +365,18 @@ func _run_career(profile_name: String, profile: Dictionary, stages: Array) -> Di
 					["whisperling", "whisperling", "ash_ghoul"],
 					["ash_ghoul", "ash_ghoul", "shadow_vermin"],
 					["whisperling", "ash_ghoul", "shadow_vermin", "whisperling"]][(floor - 1) % 5]
-				var mr := _battle("minaret_f%d" % floor, m_ids, 0.6 + 0.07 * floor, level, mastery)
+				var mr := _battle("minaret_f%d" % floor, m_ids,
+					GS.MINARET_SCALE_BASE + GS.MINARET_SCALE_PER_FLOOR * floor, level, mastery)
 				minutes_today += (mr["turns"] * SECONDS_PER_TURN + MENU_SECONDS_PER_RUN) / 60.0
 				if not mr["win"]:
 					break
 				minaret = floor
-				marks += 30 + 5 * floor
-				if floor % 5 == 0:
+				marks += GS.MINARET_MARKS_BASE + GS.MINARET_MARKS_PER_FLOOR * floor
+				if floor % GS.MINARET_SEALS_EVERY == 0:
 					seals += 2
-				if floor % 10 == 0:
+				if floor % GS.MINARET_SIGIL_EVERY == 0:
 					sigils += 1
-				var res2 := _grant_xp(level, xp, 10 + 2 * floor)
+				var res2 := _grant_xp(level, xp, GS.MINARET_XP_BASE + GS.MINARET_XP_PER_FLOOR * floor)
 				level = res2[0]
 				xp = res2[1]
 
@@ -374,9 +384,10 @@ func _run_career(profile_name: String, profile: Dictionary, stages: Array) -> Di
 		while owned_desires < total_desires:
 			var price: Array
 			if owned_desires < DESIRES.size():
-				price = UNIT_PRICES[db.units[DESIRES[owned_desires]].rarity]
+				var rar: int = db.units[DESIRES[owned_desires]].rarity
+				price = [GS.UNIT_COSTS[rar]["currency"], GS.UNIT_COSTS[rar]["amount"]]
 			else:
-				price = UNIT_PRICES[5]  # cadence heroes are Luminaries
+				price = [GS.UNIT_COSTS[5]["currency"], GS.UNIT_COSTS[5]["amount"]]  # cadence heroes are Luminaries
 			var have: int = marks if price[0] == "marks" else (seals if price[0] == "seals" else sigils)
 			if have >= int(price[1]):
 				match price[0]:
@@ -416,21 +427,14 @@ func _run_career(profile_name: String, profile: Dictionary, stages: Array) -> Di
 			"stars": star_total, "cleared": next_idx, "minaret": minaret,
 			"mastery": mastery * 4, "roster": 4 + owned_desires,
 		}
-		for wm in [["stars_5", "stars", 5, 50, 0, 0], ["stars_15", "stars", 15, 0, 0, 1],
-			["stars_30", "stars", 30, 0, 2, 0], ["stars_60", "stars", 60, 0, 3, 0],
-			["stars_100", "stars", 100, 0, 0, 1], ["stages_6", "cleared", 6, 50, 0, 0],
-			["stages_24", "cleared", 24, 0, 2, 0], ["stages_48", "cleared", 48, 0, 2, 0],
-			["stages_84", "cleared", 84, 0, 0, 1], ["minaret_10", "minaret", 10, 0, 1, 0],
-			["minaret_30", "minaret", 30, 0, 0, 1], ["mastery_6", "mastery", 6, 80, 0, 0],
-			["mastery_15", "mastery", 15, 0, 3, 0], ["company_8", "roster", 8, 0, 2, 0],
-			["company_12", "roster", 12, 0, 0, 1]]:
-			if waymarks_done.has(wm[0]):
+		for wm: Dictionary in GS.WAYMARKS:
+			if waymarks_done.has(wm["id"]):
 				continue
-			if int(wm_metrics[wm[1]]) >= int(wm[2]):
-				waymarks_done[wm[0]] = true
-				marks += int(wm[3])
-				seals += int(wm[4])
-				sigils += int(wm[5])
+			if int(wm_metrics[wm["metric"]]) >= int(wm["at"]):
+				waymarks_done[wm["id"]] = true
+				marks += int(wm.get("marks", 0))
+				seals += int(wm.get("seals", 0))
+				sigils += int(wm.get("sigils", 0))
 
 		minutes_total += minutes_today
 		daily_rev.append(rev["packs"] + rev["pass"] + rev["season"] + rev["cosmetics"] - rev_before)

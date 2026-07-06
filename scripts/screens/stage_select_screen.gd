@@ -3,7 +3,11 @@ extends ScreenBase
 
 var notice: Label
 var list: VBoxContainer
-var current_diff := "normal"
+# Selected difficulty lives on Game (session-scoped) so it survives the
+# screen being rebuilt after every battle (rf UX fix #5).
+var current_diff: String:
+	get: return game.journey_diff
+	set(v): game.journey_diff = v
 
 
 func music_key() -> String:
