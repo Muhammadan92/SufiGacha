@@ -32,7 +32,7 @@ This game is primarily a **dawah project aimed at a Western audience**: the goal
 
 - **English-first everywhere players read**: UI, tutorials, system terms, item names, dialogue. The mystical register comes from the established English translations of Sufi literature — *the Path, Remembrance, the Beloved, Stations, unveiling, polishing the heart* — vocabulary that is both authentic and already familiar to Western readers from Rumi translations.
 - **Dialogue rule**: characters speak natural, contemporary English. No transliterated greetings or sprinkled loanwords (no "salaam alaykum," "shukran," etc. in text). Warmth, courtesy, and piety are shown through *behavior* — hospitality, humility, patience — not vocabulary.
-- **Character naming rule (revised 2026-07-06)**: playable names are **tariqah-inspired mystical fantasy** — short words drawn from the path's own vocabulary (Fana, Sirr, Sama, Ishraq, Bahr, Barq) that read as pure fantasy names to Western players and as depth to the curious. Sacred names, Divine Names, and honored titles are NEVER used as character names. Epithets carry additional flavor.
+- **Character naming rule**: playable names are neutral, Western-leaning, and mystical-sounding (short nature/light/sound-derived words — Vale, Echo, Flint, Haven, Dusk); epithets carry the flavor. Explicitly Islamic given names are avoided for the playable cast. **One deliberate exception: Fana**, the pinnacle character, carries a path-vocabulary name — the single loudest invitation to curiosity in the roster.
 - **Roster structure**: 9 companions per order — one 5-star shaykh (the order's "boss character") + 3 Wayfarers + 5 Novices (63 playable + Sage). **Fana**, the Naqshbandi shaykh, is the game's pinnacle character and uniquely wears **black robes** (the annihilated one — no color remains) with a single emerald thread.
 - **Female companions**: 1-2 per order, always healer/support archetypes, always modest dress.
 - **Arabic as seasoning, by allowlist only**: (1) the seven order names, as proper nouns; (2) select 5★ ultimate names, always with an English subtitle (e.g., *Khalwa — Seclusion*); (3) boss true-names as titles (e.g., *Kibr, Father of Pride*); (4) the Codex.
@@ -148,19 +148,19 @@ Two examples per order; full launch roster target: **28 characters** (7 orders �
 | Character | Order | ★ | Role | Kit hook |
 |---|---|---|---|---|
 | **Fana, the Silent** | Naqshbandi | 5 | Buffer | Trance *Khalwa — Seclusion*: team untargetable 1 turn, +40% ATK after |
-| **Sirr** (m) | Naqshbandi | 4 | Shielder | Barriers that convert absorbed damage into Fervor |
-| **Rad, Voice of Thunder** | Qadiri | 5 | ST nuker | Trance: colossal single hit, ignores 50% DEF |
-| **Sada** (m) | Qadiri | 4 | Breaker | Sound-wave attacks that reduce DEF and echo (second hit at 40%) |
-| **Thabit, the Unburnt** | Rifai | 5 | Tank | Trance: 2-turn team damage immunity, attackers burn |
-| **Jamr** | Rifai | 3 | Bruiser | Counterattacks while above 50% HP |
-| **Sama, the Turning Sky** (m) | Mevlevi | 5 | AoE DPS | Gains *Spin* stacks each turn; Trance damage scales with stacks |
-| **Dawran** | Mevlevi | 4 | Evader | Dodge chance aura; extra turn on dodge |
-| **Bahr, the Returning Tide** (m) | Shadhili | 5 | Cleanser | Removes debuffs team-wide; each removed debuff heals |
-| **Sahil** | Shadhili | 3 | Sustain | Small regen litany, stacks over turns |
-| **Karam** (m) | Chishti | 5 | Healer | Trance revives one ally at 50% HP with 50 Fervor |
+| **Soren** (m) | Naqshbandi | 4 | Shielder | Barriers that convert absorbed damage into Fervor |
+| **Bram, Voice of Thunder** | Qadiri | 5 | ST nuker | Trance: colossal single hit, ignores 50% DEF |
+| **Echo** (m) | Qadiri | 4 | Breaker | Sound-wave attacks that reduce DEF and echo (second hit at 40%) |
+| **Brand, the Unburnt** | Rifai | 5 | Tank | Trance: 2-turn team damage immunity, attackers burn |
+| **Flint** | Rifai | 3 | Bruiser | Counterattacks while above 50% HP |
+| **Gale, the Turning Sky** (m) | Mevlevi | 5 | AoE DPS | Gains *Spin* stacks each turn; Trance damage scales with stacks |
+| **Rowan** | Mevlevi | 4 | Evader | Dodge chance aura; extra turn on dodge |
+| **Ilias, the Returning Tide** (m) | Shadhili | 5 | Cleanser | Removes debuffs team-wide; each removed debuff heals |
+| **Dylan** | Shadhili | 3 | Sustain | Small regen litany, stacks over turns |
+| **Ari** (m) | Chishti | 5 | Healer | Trance revives one ally at 50% HP with 50 Fervor |
 | **Ansel, the Open Door** | Chishti | 4 | Binder | Links two allies to share damage and healing |
-| **Ishraq** (m) | Suhrawardi | 5 | Debuffer | *Illuminate*: marked enemy takes +25% from all sources |
-| **Ziya** | Suhrawardi | 3 | Sniper | High crit vs debuffed enemies |
+| **Lucian** (m) | Suhrawardi | 5 | Debuffer | *Illuminate*: marked enemy takes +25% from all sources |
+| **Sol** | Suhrawardi | 3 | Sniper | High crit vs debuffed enemies |
 
 ### 3.5 Visual Guidelines
 

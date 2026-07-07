@@ -52,7 +52,7 @@ effects = [SubResource("e3")]
 [resource]
 script = ExtResource("1")
 id = &"jahr"
-display_name = "Jahr"
+display_name = "Roark"
 epithet = ""
 art_notes = "barrel-chested man mid-shout, visible rings of thunder, turquoise Qadiri robes and dignified traditional Sufi turban, Indian heritage, deep brown skin"
 order_name = "Qadiri"

@@ -57,7 +57,7 @@ effects = [SubResource("e3"), SubResource("e4")]
 [resource]
 script = ExtResource("1")
 id = &"nahr"
-display_name = "Nahr"
+display_name = "Ford"
 epithet = ""
 art_notes = "calm man with a river of light flowing around his feet, royal-blue Shadhili robes and dignified traditional Sufi turban, Central Asian heritage, bronze skin"
 order_name = "Shadhili"

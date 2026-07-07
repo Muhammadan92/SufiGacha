@@ -56,7 +56,7 @@ effects = [SubResource("e3")]
 [resource]
 script = ExtResource("1")
 id = &"raqs"
-display_name = "Raqs"
+display_name = "Reel"
 epithet = ""
 art_notes = "dancer mid-leap, impossibly light on his feet, white Mevlevi robes and dignified traditional Sufi turban, Turkish heritage, warm tan skin"
 order_name = "Mevlevi"

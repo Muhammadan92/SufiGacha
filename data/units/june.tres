@@ -63,7 +63,7 @@ effects = [SubResource("e4")]
 [resource]
 script = ExtResource("1")
 id = &"june"
-display_name = "Nawa"
+display_name = "Jun"
 epithet = ""
 art_notes = "warm young man, rose Chishti turban, sleeves rolled for work, small daf at his hip, Southeast Asian Malay heritage, warm golden skin"
 order_name = "Chishti"

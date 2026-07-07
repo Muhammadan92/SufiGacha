@@ -52,7 +52,7 @@ effects = [SubResource("e3")]
 [resource]
 script = ExtResource("1")
 id = &"munir"
-display_name = "Munir"
+display_name = "Beam"
 epithet = ""
 art_notes = "radiant archer of light, arrows like threads of sunrise, pale gold Suhrawardi robes and dignified traditional Sufi turban, Persian heritage, light olive skin"
 order_name = "Suhrawardi"

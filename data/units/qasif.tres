@@ -52,7 +52,7 @@ effects = [SubResource("e3")]
 [resource]
 script = ExtResource("1")
 id = &"qasif"
-display_name = "Qasif"
+display_name = "Storm"
 epithet = ""
 art_notes = "wiry man conducting a rolling thunderclap with both hands, turquoise Qadiri robes and dignified traditional Sufi turban, Central Asian heritage, bronze skin"
 order_name = "Qadiri"

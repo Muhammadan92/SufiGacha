@@ -63,7 +63,7 @@ effects = [SubResource("e3"), SubResource("e4")]
 [resource]
 script = ExtResource("1")
 id = &"mehfil"
-display_name = "Mehfil"
+display_name = "Rally"
 epithet = ""
 art_notes = "warm host with arms open to an unseen gathering, lamplight, rose and ochre Chishti robes and dignified traditional Sufi turban, mixed Black and European heritage, medium brown skin"
 order_name = "Chishti"

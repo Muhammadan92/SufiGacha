@@ -72,7 +72,7 @@ effects = [SubResource("e4"), SubResource("e5")]
 [resource]
 script = ExtResource("1")
 id = &"watad"
-display_name = "Watad"
+display_name = "Anker"
 epithet = ""
 art_notes = "broad man planted like a tent-peg, feet sunk into stone, iron-red Rifai robes and dignified traditional Sufi turban, Uyghur heritage, East Asian features"
 order_name = "Rifai"

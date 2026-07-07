@@ -58,7 +58,7 @@ effects = [SubResource("e3")]
 [resource]
 script = ExtResource("1")
 id = &"daf"
-display_name = "Daf"
+display_name = "Cadence"
 epithet = ""
 art_notes = "graceful drummer whose frame-drum pulse visibly quickens her companions, white Mevlevi robes and graceful modest hijab, Persian heritage, light olive skin"
 order_name = "Mevlevi"

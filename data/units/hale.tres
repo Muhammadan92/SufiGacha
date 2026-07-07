@@ -60,7 +60,7 @@ effects = [SubResource("e3"), SubResource("e4")]
 [resource]
 script = ExtResource("1")
 id = &"hale"
-display_name = "Langar"
+display_name = "Hale"
 epithet = ""
 art_notes = "broad smiling man, rose and ochre Chishti robes, ladle and serving bowl at his belt, wearing a dignified traditional Sufi turban, North Indian heritage, warm brown skin, black beard"
 order_name = "Chishti"

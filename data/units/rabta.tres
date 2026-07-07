@@ -60,7 +60,7 @@ effects = [SubResource("e3"), SubResource("e4")]
 [resource]
 script = ExtResource("1")
 id = &"rabta"
-display_name = "Rabta"
+display_name = "Weft"
 epithet = ""
 art_notes = "focused man with a thin thread of light running from his heart upward, deep emerald Naqshbandi robes and dignified traditional Sufi turban, Turkish heritage, warm tan skin"
 order_name = "Naqshbandi"

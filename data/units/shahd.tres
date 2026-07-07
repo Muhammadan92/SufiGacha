@@ -52,7 +52,7 @@ effects = [SubResource("e3")]
 [resource]
 script = ExtResource("1")
 id = &"shahd"
-display_name = "Shahd"
+display_name = "Clover"
 epithet = ""
 art_notes = "gentle beekeeper woman with slow-drifting golden bees of light, rose and ochre Chishti robes and graceful modest hijab, Chinese Hui Muslim heritage, East Asian features"
 order_name = "Chishti"

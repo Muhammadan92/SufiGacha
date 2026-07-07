@@ -76,7 +76,7 @@ effects = [SubResource("e5"), SubResource("e6")]
 [resource]
 script = ExtResource("1")
 id = &"ember_r"
-display_name = "Wahaj"
+display_name = "Ember"
 epithet = ""
 art_notes = "fierce man, iron-black Rifai turban, deep red robes, live coals cupped bare-handed, Levantine Arab heritage, amber eyes"
 order_name = "Rifai"

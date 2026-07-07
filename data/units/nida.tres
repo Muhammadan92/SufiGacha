@@ -63,7 +63,7 @@ effects = [SubResource("e3"), SubResource("e4")]
 [resource]
 script = ExtResource("1")
 id = &"nida"
-display_name = "Nida"
+display_name = "Bell"
 epithet = ""
 art_notes = "noblewoman herald with a raised arm summoning courage, banner of storm-light behind her, turquoise Qadiri robes and graceful modest hijab, Southeast Asian Malay heritage, golden skin"
 order_name = "Qadiri"

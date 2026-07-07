@@ -68,7 +68,7 @@ effects = [SubResource("e5")]
 [resource]
 script = ExtResource("1")
 id = &"shafaq"
-display_name = "Shafaq"
+display_name = "Dusk"
 epithet = ""
 art_notes = "man wreathed in slow burning twilight colors, pale gold Suhrawardi robes and dignified traditional Sufi turban, Indian heritage, deep brown skin"
 order_name = "Suhrawardi"

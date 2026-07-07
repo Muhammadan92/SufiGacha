@@ -63,7 +63,7 @@ effects = [SubResource("e3"), SubResource("e4")]
 [resource]
 script = ExtResource("1")
 id = &"lark"
-display_name = "Nasim"
+display_name = "Lark"
 epithet = ""
 art_notes = "light-footed man mid-turn, white Mevlevi tennure and honey sikke, songbird poise, Turkish heritage, hazel eyes"
 order_name = "Mevlevi"

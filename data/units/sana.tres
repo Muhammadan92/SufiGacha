@@ -63,7 +63,7 @@ effects = [SubResource("e3"), SubResource("e4")]
 [resource]
 script = ExtResource("1")
 id = &"sana"
-display_name = "Sana"
+display_name = "Clara"
 epithet = ""
 art_notes = "bright-faced woman whose raised palm brightens her companions' weapons, pale gold Suhrawardi robes and graceful modest hijab, white European convert heritage, light hair"
 order_name = "Suhrawardi"

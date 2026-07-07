@@ -63,7 +63,7 @@ effects = [SubResource("e3"), SubResource("e4")]
 [resource]
 script = ExtResource("1")
 id = &"huzur"
-display_name = "Huzur"
+display_name = "Ward"
 epithet = ""
 art_notes = "watchful man radiating calm presence, hand on heart, deep emerald Naqshbandi robes and dignified traditional Sufi turban, Gulf Arab heritage, brown skin"
 order_name = "Naqshbandi"

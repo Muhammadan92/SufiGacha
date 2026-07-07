@@ -52,7 +52,7 @@ effects = [SubResource("e3")]
 [resource]
 script = ExtResource("1")
 id = &"sufra"
-display_name = "Sufra"
+display_name = "Boone"
 epithet = ""
 art_notes = "smiling man laying out a cloth that shimmers with abundance, rose and ochre Chishti robes and dignified traditional Sufi turban, Bosnian European heritage, fair skin"
 order_name = "Chishti"

@@ -63,7 +63,7 @@ effects = [SubResource("e4")]
 [resource]
 script = ExtResource("1")
 id = &"cole"
-display_name = "Hadid"
+display_name = "Cole"
 epithet = ""
 art_notes = "stocky young man, dark red Rifai wraps, soot-marked arms, iron ring in each fist, wearing a dignified traditional Sufi turban, East African Somali heritage, dark skin, tight-coiled hair"
 order_name = "Rifai"

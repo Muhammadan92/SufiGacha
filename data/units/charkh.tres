@@ -52,7 +52,7 @@ effects = [SubResource("e3")]
 [resource]
 script = ExtResource("1")
 id = &"charkh"
-display_name = "Charkh"
+display_name = "Whorl"
 epithet = ""
 art_notes = "turning man whose skirts blur into a white wheel, white Mevlevi robes and dignified traditional Sufi turban, Gulf Arab heritage, brown skin"
 order_name = "Mevlevi"

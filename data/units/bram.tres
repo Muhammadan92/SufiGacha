@@ -60,7 +60,7 @@ effects = [SubResource("eff_trance")]
 [resource]
 script = ExtResource("1")
 id = &"bram"
-display_name = "Rad"
+display_name = "Bram"
 epithet = "Voice of Thunder"
 art_notes = "broad-shouldered man in his 40s, turquoise Qadiri turban, weathered face with a full dark beard, layered storm-grey robes with turquoise trim, faint lightning glow around raised hand, West African heritage, dark brown skin"
 order_name = "Qadiri"

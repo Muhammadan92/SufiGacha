@@ -57,7 +57,7 @@ effects = [SubResource("eff_trance_heal"), SubResource("eff_trance_cleanse")]
 [resource]
 script = ExtResource("1")
 id = &"isla"
-display_name = "Bahr"
+display_name = "Ilias"
 epithet = "the Returning Tide"
 art_notes = "calm middle-aged man, deep royal-blue Shadhili robes and white turban, litany beads in hand, tide-water calligraphy swirling at his feet, white European heritage, auburn hair, fair skin, green eyes"
 order_name = "Shadhili"

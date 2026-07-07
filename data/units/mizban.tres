@@ -60,7 +60,7 @@ effects = [SubResource("e4")]
 [resource]
 script = ExtResource("1")
 id = &"mizban"
-display_name = "Mizban"
+display_name = "Glade"
 epithet = ""
 art_notes = "gracious host offering a bowl of glowing broth, rose and ochre Chishti robes and dignified traditional Sufi turban, West African heritage, dark brown skin"
 order_name = "Chishti"

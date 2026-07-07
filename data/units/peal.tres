@@ -58,7 +58,7 @@ effects = [SubResource("e4")]
 [resource]
 script = ExtResource("1")
 id = &"peal"
-display_name = "Sawt"
+display_name = "Peal"
 epithet = ""
 art_notes = "bright-eyed young man, turquoise turban with bell-shaped silver pins, sound rings at his fingertips, West African heritage, deep brown skin"
 order_name = "Qadiri"

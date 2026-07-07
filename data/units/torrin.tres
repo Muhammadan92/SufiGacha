@@ -52,7 +52,7 @@ effects = [SubResource("e3")]
 [resource]
 script = ExtResource("1")
 id = &"torrin"
-display_name = "Barq"
+display_name = "Torrin"
 epithet = ""
 art_notes = "broad young man, turquoise Qadiri turban, storm-grey robes, both fists crackling, Gulf Arab heritage, brown skin, strong jaw"
 order_name = "Qadiri"

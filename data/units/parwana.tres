@@ -61,7 +61,7 @@ effects = [SubResource("e4")]
 [resource]
 script = ExtResource("1")
 id = &"parwana"
-display_name = "Parwana"
+display_name = "Vesper"
 epithet = ""
 art_notes = "slight ecstatic man spiraling toward a flame of light, moth-wing motifs, white Mevlevi robes and dignified traditional Sufi turban, West African heritage, dark brown skin"
 order_name = "Mevlevi"

@@ -58,7 +58,7 @@ effects = [SubResource("e4")]
 [resource]
 script = ExtResource("1")
 id = &"hatif"
-display_name = "Hatif"
+display_name = "Kell"
 epithet = ""
 art_notes = "lean mysterious man, a calling voice made half-visible around him, turquoise Qadiri robes and dignified traditional Sufi turban, white European convert heritage, light hair"
 order_name = "Qadiri"

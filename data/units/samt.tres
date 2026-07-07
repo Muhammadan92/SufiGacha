@@ -59,7 +59,7 @@ effects = [SubResource("e4")]
 [resource]
 script = ExtResource("1")
 id = &"samt"
-display_name = "Samt"
+display_name = "Whist"
 epithet = ""
 art_notes = "quiet young man with a finger raised to his lips, sound dying around him, deep emerald Naqshbandi robes and dignified traditional Sufi turban, Chinese Hui Muslim heritage, East Asian features"
 order_name = "Naqshbandi"

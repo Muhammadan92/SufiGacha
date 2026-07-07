@@ -68,7 +68,7 @@ effects = [SubResource("e4"), SubResource("e5")]
 [resource]
 script = ExtResource("1")
 id = &"mishkat"
-display_name = "Mishkat"
+display_name = "Wick"
 epithet = ""
 art_notes = "scholar holding a lamp-niche whose light exposes every shadow, pale gold Suhrawardi robes and dignified traditional Sufi turban, Gulf Arab heritage, brown skin"
 order_name = "Suhrawardi"

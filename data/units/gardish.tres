@@ -61,7 +61,7 @@ effects = [SubResource("e4")]
 [resource]
 script = ExtResource("1")
 id = &"gardish"
-display_name = "Gardish"
+display_name = "Rove"
 epithet = ""
 art_notes = "orbiting man circled by small stones and light, like a living planet, white Mevlevi robes and dignified traditional Sufi turban, Indian heritage, deep brown skin"
 order_name = "Mevlevi"

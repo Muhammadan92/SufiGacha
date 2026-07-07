@@ -74,7 +74,7 @@ effects = [SubResource("e4"), SubResource("e5")]
 [resource]
 script = ExtResource("1")
 id = &"sabr"
-display_name = "Sabr"
+display_name = "Bide"
 epithet = ""
 art_notes = "scarred patient man, arms crossed, embers bouncing off him harmlessly, iron-red Rifai robes and dignified traditional Sufi turban, mixed Black and European heritage, medium brown skin"
 order_name = "Rifai"

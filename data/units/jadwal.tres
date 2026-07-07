@@ -52,7 +52,7 @@ effects = [SubResource("e3")]
 [resource]
 script = ExtResource("1")
 id = &"jadwal"
-display_name = "Jadwal"
+display_name = "Beck"
 epithet = ""
 art_notes = "quick youth flicking blades of streamwater, royal-blue Shadhili robes and dignified traditional Sufi turban, Moroccan Amazigh heritage, tan skin"
 order_name = "Shadhili"

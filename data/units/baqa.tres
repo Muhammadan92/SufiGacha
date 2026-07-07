@@ -58,7 +58,7 @@ effects = [SubResource("e3")]
 [resource]
 script = ExtResource("1")
 id = &"baqa"
-display_name = "Baqa"
+display_name = "Evert"
 epithet = ""
 art_notes = "serene elder whose outline seems permanent as mountains, deep emerald Naqshbandi robes and dignified traditional Sufi turban, Bosnian European heritage, fair skin"
 order_name = "Naqshbandi"

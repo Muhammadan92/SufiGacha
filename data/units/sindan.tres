@@ -62,7 +62,7 @@ effects = [SubResource("e4")]
 [resource]
 script = ExtResource("1")
 id = &"sindan"
-display_name = "Sindan"
+display_name = "Forge"
 epithet = ""
 art_notes = "smith with an anvil-flat stare, each strike harder than the last, iron-red Rifai robes and dignified traditional Sufi turban, Bosnian European heritage, fair skin"
 order_name = "Rifai"

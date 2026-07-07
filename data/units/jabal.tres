@@ -72,7 +72,7 @@ effects = [SubResource("e4"), SubResource("e5")]
 [resource]
 script = ExtResource("1")
 id = &"jabal"
-display_name = "Jabal"
+display_name = "Tor"
 epithet = ""
 art_notes = "mountainous man, immovable stance, stone-pattern skin markings, iron-red Rifai robes and dignified traditional Sufi turban, Moroccan Amazigh heritage, tan skin"
 order_name = "Rifai"

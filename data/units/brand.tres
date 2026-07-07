@@ -64,7 +64,7 @@ effects = [SubResource("eff_trance")]
 [resource]
 script = ExtResource("1")
 id = &"brand"
-display_name = "Thabit"
+display_name = "Brand"
 epithet = "the Unburnt"
 art_notes = "stocky older man, iron-black Rifai turban, deep red robes under scorched leather, grey-streaked beard, ember scars glowing on forearms, immovable stance, Levantine Arab heritage, olive skin, strong brow"
 order_name = "Rifai"

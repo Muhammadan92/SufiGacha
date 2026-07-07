@@ -52,7 +52,7 @@ effects = [SubResource("e3")]
 [resource]
 script = ExtResource("1")
 id = &"marsa"
-display_name = "Marsa"
+display_name = "Haven"
 epithet = ""
 art_notes = "harbormaster with mooring rope over his shoulder, lantern-calm, royal-blue Shadhili robes and dignified traditional Sufi turban, Southeast Asian Malay heritage, golden skin"
 order_name = "Shadhili"

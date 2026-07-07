@@ -52,7 +52,7 @@ effects = [SubResource("e3")]
 [resource]
 script = ExtResource("1")
 id = &"azm"
-display_name = "Azm"
+display_name = "Grit"
 epithet = ""
 art_notes = "determined stocky man, knuckles crackling with static, turquoise Qadiri robes and dignified traditional Sufi turban, East African heritage, dark skin"
 order_name = "Qadiri"

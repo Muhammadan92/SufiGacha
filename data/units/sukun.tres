@@ -63,7 +63,7 @@ effects = [SubResource("e4")]
 [resource]
 script = ExtResource("1")
 id = &"sukun"
-display_name = "Sukun"
+display_name = "Lull"
 epithet = ""
 art_notes = "utterly still man, dust motes frozen mid-air about him, deep emerald Naqshbandi robes and dignified traditional Sufi turban, West African heritage, dark brown skin"
 order_name = "Naqshbandi"

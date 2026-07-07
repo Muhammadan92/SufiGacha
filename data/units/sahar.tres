@@ -52,7 +52,7 @@ effects = [SubResource("e3")]
 [resource]
 script = ExtResource("1")
 id = &"sahar"
-display_name = "Sahar"
+display_name = "Aster"
 epithet = ""
 art_notes = "alert man in pre-dawn grey-gold, first light on his face, pale gold Suhrawardi robes and dignified traditional Sufi turban, Turkish heritage, warm tan skin"
 order_name = "Suhrawardi"

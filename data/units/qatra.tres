@@ -52,7 +52,7 @@ effects = [SubResource("e3")]
 [resource]
 script = ExtResource("1")
 id = &"qatra"
-display_name = "Qatra"
+display_name = "Dew"
 epithet = ""
 art_notes = "young woman cupping a single luminous drop of water, royal-blue Shadhili robes and graceful modest hijab, East African heritage, dark skin"
 order_name = "Shadhili"
