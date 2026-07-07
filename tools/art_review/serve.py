@@ -57,7 +57,11 @@ DEFAULT_STYLE = {
     "flags": "--niji 6 --s 180 --no photo, photorealism, realistic skin texture",
     "api_endpoint": "fal-ai/lora",
     "api_model": "cagliostrolab/animagine-xl-4.0",
-    "api_negative": "photo, photorealistic, realistic skin texture, 3d render, watermark, text, lowres, bad anatomy, extra fingers"
+    "api_negative": "lowres, bad anatomy, bad hands, extra fingers, extra digits, missing fingers, worst quality, low quality, jpeg artifacts, signature, watermark, username, text, photo, photorealistic, 3d render",
+    "api_quality_tags": "masterpiece, best quality, very aesthetic, absurdres",
+    "api_style_tags": "anime coloring, cel shading, fantasy, game cg",
+    "api_steps": "28",
+    "api_cfg": "6.0"
 }
 AR = {"portrait": "2:3", "chibi": "1:1", "icon": "1:1", "background": "16:9"}
 SIZES = {"portrait": (832, 1216), "chibi": (1024, 1024), "icon": (1024, 1024), "background": (1216, 832)}
@@ -120,8 +124,25 @@ def build_prompt(style, notes, kind):
     return ("%s --ar %s %s" % (prompt, AR[kind], style.get("flags", ""))).strip()
 
 
+API_KIND_TAGS = {
+    "portrait": "upper body, three-quarter view, detailed face, soft mystical light, plain dark background",
+    "chibi": "chibi, full body, standing, arms at sides, simple background, clean silhouette",
+    "icon": "face focus, close-up, centered, simple dark background",
+    "background": "no humans, scenery, fantasy landscape, detailed environment",
+}
+
+
 def api_prompt(style, notes, kind):
-    return build_prompt(style, notes, kind).split(" --ar ")[0]
+    """Anime SDXL checkpoints (Animagine/Illustrious family) want danbooru
+    TAG grammar + quality tags — NOT Midjourney prose. Different language
+    per provider, same art direction."""
+    subject = "" if kind == "background" else ("1girl, solo, " if "woman" in notes.lower() else "1boy, solo, ")
+    return ", ".join(x for x in [
+        style.get("api_quality_tags", "masterpiece, best quality, very aesthetic, absurdres"),
+        subject + notes,
+        API_KIND_TAGS[kind],
+        style.get("api_style_tags", "anime coloring, cel shading, fantasy, game cg"),
+    ] if x)
 
 
 def run_generation(job_id, style, notes, kind, name_hint, count):
@@ -141,6 +162,8 @@ def run_generation(job_id, style, notes, kind, name_hint, count):
             "image_size": {"width": w, "height": h},
             "num_images": count,
             "model_name": style.get("api_model", ""),
+            "num_inference_steps": int(style.get("api_steps", 28)),
+            "guidance_scale": float(style.get("api_cfg", 6.0)),
             "enable_safety_checker": True,
         }
         endpoint = style.get("api_endpoint", "fal-ai/lora")

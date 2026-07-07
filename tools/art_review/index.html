@@ -128,15 +128,22 @@ function render() {
 
   // REVIEW — inbox grid with assignment
   let r = "";
+  if (S.inbox.length) r += `<div class="row" style="margin-bottom:10px">
+    <span class="muted">${S.inbox.length} candidates</span><span class="grow"></span>
+    <button class="act no" onclick="rejectAll()">Reject ALL in inbox</button></div>`;
   if (!S.inbox.length) r = `<p class="muted">Inbox is empty. Download Midjourney keepers into <b>art_workbench/inbox/</b> and refresh.</p>`;
   const unitOpts = S.units.map(u => `<option value="${u.id}">${u.name} (${u.id})</option>`).join("");
   const valleyOpts = S.valleys.map(v => `<option value="${v.valley}">Valley ${v.valley}</option>`).join("");
   r += `<div class="grid">`;
   for (const f of S.inbox) {
-    const guess = S.units.find(u => f.toLowerCase().includes(u.id) || f.toLowerCase().includes(u.name.toLowerCase()));
+    const guess = S.units.find(u => f.toLowerCase().startsWith(u.id + "_") || f.toLowerCase().includes(u.name.toLowerCase()));
+    const kindGuess = ["portrait","chibi","icon"].find(k => f.toLowerCase().includes("_"+k)) ||
+      (f.toLowerCase().includes("background") ? "background" : null);
+    const chip = guess || kindGuess ?
+      `<div style="margin-top:6px"><span class="tag real">${guess ? guess.name.toUpperCase() : "?"} · ${(kindGuess||"?").toUpperCase()}</span></div>` : "";
     r += `<div class="card" id="card-${btoa(f).replace(/=/g,'')}">
       <img src="/inbox/${encodeURIComponent(f)}" loading="lazy">
-      <div class="muted" style="word-break:break-all;font-size:11px">${f}</div>
+      ${chip}<div class="muted" style="word-break:break-all;font-size:11px">${f}</div>
       <div class="row" style="margin-top:8px">
         <select id="tgt-${f}" onchange="renderTargets('${f}')">
           <option value="unit">Character</option><option value="valley">Valley BG</option>
@@ -149,7 +156,11 @@ function render() {
         <button class="act" onclick="reference('${f}')">Save as reference</button>
         <button class="act no" onclick="reject('${f}')">Reject</button>
       </div></div>`;
-    if (guess) setTimeout(() => { const el = $("id-"+f); if (el) el.value = guess.id; });
+    setTimeout(() => {
+      if (guess) { const el = $("id-"+f); if (el) el.value = guess.id; }
+      if (kindGuess === "background") { const t = $("tgt-"+f); if (t) { t.value = "valley"; renderTargets(f); } }
+      else if (kindGuess) { const k = $("kind-"+f); if (k) k.value = kindGuess; }
+    });
   }
   r += `</div>`;
   $("pane-review").innerHTML = r;
@@ -226,6 +237,11 @@ async function reference(f) {
     body:JSON.stringify({file:f, id:$("id-"+f).value})})).json();
   toast(res.ok ? res.detail : "ERROR: " + res.error);
   load();
+}
+async function rejectAll() {
+  if (!confirm(`Reject all ${S.inbox.length} inbox images?`)) return;
+  for (const f of S.inbox) await fetch("/api/reject", {method:"POST", body:JSON.stringify({file:f})});
+  toast("Inbox cleared (moved to rejected/)"); load();
 }
 async function reject(f) {
   await fetch("/api/reject", {method:"POST", body:JSON.stringify({file:f})});

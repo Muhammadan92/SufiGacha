@@ -7,5 +7,6 @@
  "flags": "--niji 6 --s 180 --no photo, photorealism, realistic skin texture",
  "api_endpoint": "fal-ai/lora",
  "api_model": "cagliostrolab/animagine-xl-4.0",
- "api_negative": "photo, photorealistic, realistic skin texture, 3d render, watermark, text, lowres, bad anatomy, extra fingers"
+ "api_negative": "photo, photorealistic, realistic skin texture, 3d render, watermark, text, lowres, bad anatomy, extra fingers, excessive glow, lens flare, energy effects, cluttered, busy background, chromatic aberration",
+ "api_style_tags": "anime coloring, cel shading, painterly, muted palette, soft lighting, clean composition"
 }
