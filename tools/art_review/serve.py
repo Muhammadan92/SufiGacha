@@ -17,6 +17,9 @@ import re
 import shutil
 import subprocess
 import urllib.parse
+import urllib.request
+import threading
+import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent.parent
@@ -26,7 +29,9 @@ IMPORTED = WB / "imported"
 REJECTED = WB / "rejected"
 STYLE_PATH = WB / "style.json"
 MANIFEST = WB / "real_art.json"
-CREFS_PATH = WB / "crefs.json"  # unit_id -> approved anchor's MJ image URL
+CREFS_PATH = WB / "crefs.json"
+SECRETS_PATH = WB / "secrets.json"  # {"fal_key": "..."} — gitignored, never committed
+JOBS = {}  # job_id -> {"label", "status", "detail"}  # unit_id -> approved anchor's MJ image URL
 
 ## Reference-pack poses: everything varies EXCEPT the character (--cref).
 REF_POSES = [
@@ -48,9 +53,13 @@ DEFAULT_STYLE = {
     "chibi_extra": "chibi proportions, full body, simple standing pose, clean silhouette, plain neutral background, game sprite sheet style",
     "icon_extra": "portrait emblem, head and shoulders close-up, centered, simple dark background, game avatar icon",
     "bg_extra": "wide establishing environment, atmospheric depth, no characters, painted game background art, stylized not photoreal",
-    "flags": "--niji 6 --s 180 --no photo, photorealism, realistic skin texture"
+    "flags": "--niji 6 --s 180 --no photo, photorealism, realistic skin texture",
+    "api_endpoint": "fal-ai/lora",
+    "api_model": "cagliostrolab/animagine-xl-4.0",
+    "api_negative": "photo, photorealistic, realistic skin texture, 3d render, watermark, text, lowres, bad anatomy, extra fingers"
 }
 AR = {"portrait": "2:3", "chibi": "1:1", "icon": "1:1", "background": "16:9"}
+SIZES = {"portrait": (832, 1216), "chibi": (1024, 1024), "icon": (1024, 1024), "background": (1216, 832)}
 
 VALLEYS = {
     1: "the Valley of the Quest: a dim cavern road beside an underground spring, first light of hope, emerald moss and silver water",
@@ -68,6 +77,11 @@ def load_json(path, default):
         return json.loads(path.read_text())
     except Exception:
         return default
+
+
+def get_style():
+    """Saved style merged over defaults — new keys appear without migration."""
+    return {**DEFAULT_STYLE, **load_json(STYLE_PATH, {})}
 
 
 def parse_units():
@@ -105,8 +119,55 @@ def build_prompt(style, notes, kind):
     return ("%s --ar %s %s" % (prompt, AR[kind], style.get("flags", ""))).strip()
 
 
+def api_prompt(style, notes, kind):
+    return build_prompt(style, notes, kind).split(" --ar ")[0]
+
+
+def run_generation(job_id, style, notes, kind, name_hint, count):
+    """Worker thread: fal.ai queue-less sync call, images land in the inbox."""
+    try:
+        secrets = load_json(SECRETS_PATH, {})
+        key = secrets.get("fal_key", "")
+        if not key:
+            JOBS[job_id] = {"label": name_hint, "status": "error",
+                            "detail": "no API key — add it in the Style tab"}
+            return
+        JOBS[job_id]["status"] = "running"
+        w, h = SIZES[kind]
+        body = {
+            "prompt": api_prompt(style, notes, kind),
+            "negative_prompt": style.get("api_negative", ""),
+            "image_size": {"width": w, "height": h},
+            "num_images": count,
+            "model_name": style.get("api_model", ""),
+            "enable_safety_checker": True,
+        }
+        endpoint = style.get("api_endpoint", "fal-ai/lora")
+        req = urllib.request.Request(
+            "https://fal.run/" + endpoint,
+            data=json.dumps(body).encode(),
+            headers={"Authorization": "Key " + key, "Content-Type": "application/json"})
+        with urllib.request.urlopen(req, timeout=300) as r:
+            out = json.loads(r.read())
+        n = 0
+        for i, img in enumerate(out.get("images", [])):
+            with urllib.request.urlopen(img["url"], timeout=120) as r:
+                data = r.read()
+            (INBOX / ("%s_%d_%d.png" % (name_hint, int(time.time()), i))).write_bytes(data)
+            n += 1
+        JOBS[job_id] = {"label": name_hint, "status": "done", "detail": "%d images -> inbox" % n}
+    except Exception as e:
+        detail = str(e)
+        if hasattr(e, "read"):
+            try:
+                detail = e.read().decode()[:300]
+            except Exception:
+                pass
+        JOBS[job_id] = {"label": name_hint, "status": "error", "detail": detail}
+
+
 def state():
-    style = load_json(STYLE_PATH, DEFAULT_STYLE)
+    style = get_style()
     real = load_json(MANIFEST, {})
     units = []
     for u in parse_units():
@@ -133,7 +194,8 @@ def state():
                 + " --ar 2:3 " + style.get("flags", "") for pose in REF_POSES]
     inbox = sorted(p.name for p in INBOX.glob("*")
                    if p.suffix.lower() in [".png", ".jpg", ".jpeg", ".webp"])
-    return {"style": style, "units": units, "valleys": valleys, "inbox": inbox}
+    return {"style": style, "units": units, "valleys": valleys, "inbox": inbox,
+            "jobs": JOBS, "has_key": bool(load_json(SECRETS_PATH, {}).get("fal_key"))}
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -191,6 +253,27 @@ class Handler(BaseHTTPRequestHandler):
             IMPORTED.mkdir(exist_ok=True)
             shutil.move(str(src), IMPORTED / src.name)
             self._json({"ok": True, "detail": r.stdout.strip()})
+        elif path == "/api/generate":
+            style = get_style()
+            if req["target"] == "valley":
+                notes = VALLEYS[int(req["id"])]
+                kind, hint = "background", "valley_%s_background" % req["id"]
+            else:
+                u = [x for x in parse_units() if x["id"] == req["id"]][0]
+                notes = u["notes"]
+                kind = req["kind"]
+                hint = "%s_%s" % (u["id"], kind)
+            job_id = "%s_%d" % (hint, int(time.time()))
+            JOBS[job_id] = {"label": hint, "status": "queued", "detail": ""}
+            threading.Thread(target=run_generation,
+                args=(job_id, style, notes, kind, hint, int(req.get("count", 4))),
+                daemon=True).start()
+            self._json({"ok": True, "job": job_id})
+        elif path == "/api/secret":
+            secrets = load_json(SECRETS_PATH, {})
+            secrets["fal_key"] = req["fal_key"].strip()
+            SECRETS_PATH.write_text(json.dumps(secrets))
+            self._json({"ok": True})
         elif path == "/api/cref":
             crefs = load_json(CREFS_PATH, {})
             crefs[req["id"]] = req["url"].strip()

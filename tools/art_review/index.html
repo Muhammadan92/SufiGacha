@@ -97,7 +97,8 @@ function render() {
       const tags = Object.entries(u.kinds).map(([k,v]) =>
         `<span class="tag ${v.real?'real':''}">${k}${v.real?' ✓':''}</span>`).join(" ");
       const buttons = missing.map(([k,v]) =>
-        `<button class="act" onclick='copy(${JSON.stringify(v.prompt)})'>Copy ${k}</button>`).join(" ");
+        `<button class="act" onclick='copy(${JSON.stringify(v.prompt)})'>Copy ${k}</button>` +
+        (S.has_key ? `<button class="act ok" onclick="gen('unit','${u.id}','${k}')">⚡ ${k} ×4</button>` : "")).join(" ");
       q += `<div class="card"><div class="row">
         <span class="name">${u.name}</span><span class="muted">${u.epithet||u.order||""} · ${"★".repeat(u.rarity)}</span>
         ${tags}<span class="grow"></span>${buttons || '<span class="tag real">complete ✓</span>'}
@@ -116,6 +117,7 @@ function render() {
       <span class="tag ${v.real?'real':''}">background${v.real?' ✓':''}</span>
       <span class="grow"></span>
       ${v.real?"":`<button class="act" onclick='copy(${JSON.stringify(v.prompt)})'>Copy prompt</button>`}
+      ${!v.real && S.has_key ? `<button class="act ok" onclick="gen('valley','${v.valley}','background')">⚡ ×4</button>` : ""}
     </div>${v.real?"":`<div class="prompt">${v.prompt}</div>`}</div>`;
   }
   $("pane-queue").innerHTML = q;
@@ -148,13 +150,30 @@ function render() {
   r += `</div>`;
   $("pane-review").innerHTML = r;
 
+  // active jobs strip
+  const jobs = Object.entries(S.jobs || {}).slice(-8).reverse();
+  if (jobs.length) {
+    const strip = jobs.map(([id, j]) => {
+      const c = j.status === "done" ? "real" : "";
+      const icon = {queued:"…", running:"⚙", done:"✓", error:"✗"}[j.status] || "?";
+      return `<span class="tag ${c}" title="${(j.detail||"").replace(/"/g,"'")}">${icon} ${j.label}${j.status==="error" ? " — " + (j.detail||"").slice(0,60) : ""}</span>`;
+    }).join(" ");
+    $("pane-queue").innerHTML = `<div class="card"><b class="name">Generation jobs</b><div class="row" style="margin-top:6px">${strip}</div></div>` + $("pane-queue").innerHTML;
+  }
+
   // STYLE — editable style.json
   $("pane-style").innerHTML = `
     <p class="muted">These fragments build every prompt. Edit + Save, then Queue prompts update instantly.
     Record your locked style-bible decisions here (this saves to art_workbench/style.json).</p>
     ${Object.entries(S.style).map(([k,v]) => `
       <div class="card"><b class="name">${k}</b><textarea id="st-${k}">${v}</textarea></div>`).join("")}
-    <button class="act ok" onclick="saveStyle()">Save style</button>`;
+    <button class="act ok" onclick="saveStyle()">Save style</button>
+    <div class="card" style="margin-top:14px"><b class="name">Cloud generation (fal.ai)</b>
+      <p class="muted">Official API — ~$0.003/image, no ToS issues. Get a key at fal.ai → paste here
+      (stored locally in art_workbench/secrets.json, never committed). ⚡ buttons appear in the Queue once set.
+      ${S.has_key ? '<span class="tag real">key configured ✓</span>' : '<span class="tag">no key yet</span>'}</p>
+      <div class="row"><input id="falkey" type="password" placeholder="fal API key" style="flex:1">
+      <button class="act ok" onclick="saveKey()">Save key</button></div></div>`;
 }
 
 function renderTargets(f) {
@@ -168,6 +187,17 @@ async function approve(f) {
   const body = { file:f, target:$("tgt-"+f).value, id:$("id-"+f).value, kind:$("kind-"+f).value };
   const res = await (await fetch("/api/approve", {method:"POST", body:JSON.stringify(body)})).json();
   toast(res.ok ? res.detail : "ERROR: " + res.error);
+  load();
+}
+async function gen(target, id, kind) {
+  const res = await (await fetch("/api/generate", {method:"POST",
+    body:JSON.stringify({target, id, kind, count:4})})).json();
+  toast(res.ok ? "Generating 4 — they'll appear in Review (~10-30s)" : "ERROR: " + res.error);
+  setTimeout(load, 4000);
+}
+async function saveKey() {
+  await fetch("/api/secret", {method:"POST", body:JSON.stringify({fal_key: $("falkey").value})});
+  toast("Key saved — ⚡ buttons are live in the Queue");
   load();
 }
 async function saveCref(id, url) {
