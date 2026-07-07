@@ -8,7 +8,7 @@
 | **Genre** | Turn-based team RPG with gacha collection |
 | **Platform** | iOS + Android (portrait or landscape — TBD, see §13) |
 | **Engine** | Godot 4.x (GDScript) |
-| **Art style** | Stylized 2D anime with Islamic ornamental framing (geometry, illumination, calligraphy motifs in UI) |
+| **Art style** | Stylized 2D anime with Islamic ornamental framing (geometry, illumination, calligraphy motifs in UI). **Chibi-first presentation (2026-07-06)**: the chibi with an idle breath IS the character everywhere in-game (battle, roster, Calling ceremony); portraits are secondary (reveal flourish, codex, marketing) |
 | **Monetization** | **Gambling-free**: fixed-price tiered token shop (no random paid acquisition — see §9). Marketed as a gambling-free hero collector |
 | **Audience** | Western gacha RPG players 16+. Primarily a **dawah project**: an accessible, welcoming introduction to Sufi spirituality for a general Western audience (see §1.1) |
 

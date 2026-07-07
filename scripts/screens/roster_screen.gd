@@ -31,6 +31,7 @@ func _build() -> void:
 	split.add_child(detail_pane)
 	detail_portrait = TextureRect.new()
 	detail_portrait.custom_minimum_size = Vector2(140, 140)
+	start_idle.call_deferred(detail_portrait, 1, 3.0)
 	detail_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	detail_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	detail_pane.add_child(detail_portrait)
@@ -59,7 +60,7 @@ func _build() -> void:
 
 func _show_detail(id: String) -> void:
 	shown_id = id
-	detail_portrait.texture = db.unit_art(id, "portrait")
+	detail_portrait.texture = chibi_texture(id)
 	var u: UnitData = db.units[id]
 	var level: int = game.level_of(id)
 	var mult: float = game.level_mult(level)

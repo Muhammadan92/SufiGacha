@@ -214,15 +214,20 @@ func _make_card(col: VBoxContainer, unit: BattleUnit) -> Dictionary:
 	var portrait_holder := PanelContainer.new()
 	portrait_holder.custom_minimum_size = Vector2(64, 64)
 	var pstyle := StyleBoxFlat.new()
-	var tex: Texture2D = db.unit_art(String(unit.data.id), "portrait")
+	var tex: Texture2D = chibi_texture(String(unit.data.id))
 	if tex != null:
 		pstyle.bg_color = Color.TRANSPARENT
 		portrait_holder.add_theme_stylebox_override("panel", pstyle)
+		var wrap := Control.new()  # plain Control: children move freely
+		wrap.custom_minimum_size = Vector2(64, 64)
+		portrait_holder.add_child(wrap)
 		var trect := TextureRect.new()
 		trect.texture = tex
 		trect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		trect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-		portrait_holder.add_child(trect)
+		trect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		trect.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		wrap.add_child(trect)
+		start_idle(trect, unit.get_instance_id() % 5, 2.5)
 	else:
 		pstyle.bg_color = affinity_color.darkened(0.35)
 		pstyle.set_corner_radius_all(4)

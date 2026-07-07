@@ -135,3 +135,25 @@ func unit_title(id: String) -> String:
 	var u: UnitData = db.units[id]
 	return "%s  [%s %s]  Lv %d" % [
 		u.label(), Enums.RARITY_NAMES[u.rarity], u.order_name, game.level_of(id)]
+
+
+# --- Chibi-first presentation (2026-07-06 pivot): the chibi IS the character
+# everywhere, with a gentle idle breath; portrait is the fallback while
+# chibi art lands. Idle is cosmetic motion only (GDD 4.4 untouched).
+
+func chibi_texture(id: String) -> Texture2D:
+	var tex: Texture2D = db.unit_art(id, "chibi")
+	if tex == null:
+		tex = db.unit_art(id, "portrait")
+	return tex
+
+
+## Attaches a looping breath (bob) to a freely-positionable CanvasItem.
+## phase staggers card motion so a row doesn't bob in lockstep.
+func start_idle(node: CanvasItem, phase := 0, strength := 4.0) -> void:
+	var dur := 1.15 + 0.11 * float(phase % 5)
+	var tw := node.create_tween().set_loops()
+	tw.tween_property(node, "position:y", node.position.y - strength, dur) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tw.tween_property(node, "position:y", node.position.y, dur) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)

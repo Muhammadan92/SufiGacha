@@ -170,6 +170,7 @@ func _build_reveal_overlay() -> void:
 
 	door_portrait = TextureRect.new()
 	door_portrait.custom_minimum_size = Vector2(220, 220)
+	start_idle.call_deferred(door_portrait, 2, 5.0)
 	door_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	door_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	door_portrait.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
@@ -206,7 +207,7 @@ func _play_ceremony(u: UnitData) -> void:
 	busy = true
 	var color: Color = Enums.RARITY_COLORS[u.rarity]
 	door_style.border_color = color
-	door_portrait.texture = db.unit_art(String(u.id), "portrait")
+	door_portrait.texture = chibi_texture(String(u.id))
 	door_name.text = u.label()
 	door_name.add_theme_color_override("font_color", color)
 	door_rarity.text = "%s — %s" % [Enums.RARITY_NAMES[u.rarity],
