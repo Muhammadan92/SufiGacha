@@ -6,7 +6,13 @@ read the linked section before each phase, they're short).
 
 ---
 
-## Phase 0 — The Art Review site (DECIDED: Midjourney; start here)
+## Phase 0 — The Art Review site (PIVOTED 2026-07-07: Recraft, western 2D)
+
+Style direction is now **western 2D illustration** (painterly storybook, not
+anime). Primary generator: **Recraft** (official API, custom-style anchors)
+— key goes in the site's Style tab. Midjourney/fal remain fallbacks.
+Once ~10 keepers exist, we register a Recraft CUSTOM STYLE from them and
+set recraft_style_id — every generation then matches the locked look.
 
 Midjourney has no public API (Enterprise-only, and third-party "MJ APIs"
 bot the platform against ToS — account-ban risk, so we don't use them).

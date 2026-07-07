@@ -1,4 +1,10 @@
-# AI Art Pipeline — SEVEN SPRINGS
+# AI Art Pipeline
+
+> **2026-07-07 PIVOT**: art direction is now **western 2D illustration**
+> (not anime); primary generator is **Recraft** via the Art Review site
+> (tools/art_review/). Anime/Niji/SDXL sections below are historical
+> reference; the LoRA plan is superseded by Recraft custom styles unless
+> we return to local generation. — SEVEN SPRINGS
 *Companion to GDD.md §11. How every visual asset gets made, with AI generation as the base layer and human curation/paint-over as the finish layer.*
 
 ---

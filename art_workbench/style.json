@@ -1,12 +1,15 @@
 {
- "base": "2D anime video game splash art, cel shaded, clean bold lineart, flat vivid colors, stylized illustration, official game art",
+ "base": "stylized western 2D game illustration, painterly with strong clean shapes, rich warm light against deep shadow, dignified fantasy, storybook quality",
  "character_extra": "single character, three-quarter view, centered, dignified traditional Sufi dress, dark cavern background lit by soft mystical light, hand-drawn game character design, not photorealistic",
  "chibi_extra": "chibi proportions, full body, simple standing pose, clean silhouette, plain neutral background, game sprite sheet style",
  "icon_extra": "portrait emblem, head and shoulders close-up, centered, simple dark background, game avatar icon",
  "bg_extra": "wide establishing environment, atmospheric depth, no characters, painted game background art, stylized not photoreal",
- "flags": "--niji 6 --s 180 --no photo, photorealism, realistic skin texture",
+ "flags": "--s 180 --no photo, photorealism, anime",
  "api_endpoint": "fal-ai/lora",
  "api_model": "cagliostrolab/animagine-xl-4.0",
  "api_negative": "photo, photorealistic, realistic skin texture, 3d render, watermark, text, lowres, bad anatomy, extra fingers, excessive glow, lens flare, energy effects, cluttered, busy background, chromatic aberration",
- "api_style_tags": "anime coloring, cel shading, painterly, muted palette, soft lighting, clean composition"
+ "api_style_tags": "anime coloring, cel shading, painterly, muted palette, soft lighting, clean composition",
+ "provider": "recraft",
+ "recraft_style": "digital_illustration/2d_art_poster",
+ "recraft_style_id": ""
 }

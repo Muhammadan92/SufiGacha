@@ -213,12 +213,16 @@ function render() {
     ${Object.entries(S.style).map(([k,v]) => `
       <div class="card"><b class="name">${k}</b><textarea id="st-${k}">${v}</textarea></div>`).join("")}
     <button class="act ok" onclick="saveStyle()">Save style</button>
-    <div class="card" style="margin-top:14px"><b class="name">Cloud generation (fal.ai)</b>
-      <p class="muted">Official API — ~$0.003/image, no ToS issues. Get a key at fal.ai → paste here
-      (stored locally in art_workbench/secrets.json, never committed). ⚡ buttons appear in the Queue once set.
+    <div class="card" style="margin-top:14px"><b class="name">Cloud generation (Recraft primary / fal fallback)</b>
+      <p class="muted">Official APIs, no ToS issues. PRIMARY: Recraft (western 2D, custom styles) —
+      key from recraft.ai account settings. Fallback: fal.ai. Keys stored locally in
+      art_workbench/secrets.json, never committed. ⚡ buttons appear once the active provider's key is set.
       ${S.has_key ? '<span class="tag real">key configured ✓</span>' : '<span class="tag">no key yet</span>'}</p>
-      <div class="row"><input id="falkey" type="password" placeholder="fal API key" style="flex:1">
-      <button class="act ok" onclick="saveKey()">Save key</button></div></div>`;
+      <div class="row"><input id="recraftkey" type="password" placeholder="Recraft API key (primary)" style="flex:1">
+      <input id="falkey" type="password" placeholder="fal API key (fallback)" style="flex:1">
+      <button class="act ok" onclick="saveKey()">Save keys</button></div>
+      <p class="muted">Active provider is the "provider" field above (recraft | fal). Recraft custom style:
+      set "recraft_style_id" once we register one from your approved keepers.</p></div>`;
 }
 
 function renderTargets(f) {
@@ -255,8 +259,9 @@ async function gen(target, id, kind) {
   setTimeout(load, 4000);
 }
 async function saveKey() {
-  await fetch("/api/secret", {method:"POST", body:JSON.stringify({fal_key: $("falkey").value})});
-  toast("Key saved — ⚡ buttons are live in the Queue");
+  await fetch("/api/secret", {method:"POST", body:JSON.stringify({
+    fal_key: $("falkey").value, recraft_key: $("recraftkey").value})});
+  toast("Keys saved — ⚡ buttons are live in the Queue");
   load();
 }
 async function saveNotes(id) {
