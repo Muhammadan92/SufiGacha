@@ -107,6 +107,10 @@ function render() {
         <span class="name">${u.name}</span><span class="muted">${u.epithet||u.order||""} · ${"★".repeat(u.rarity)}</span>
         ${tags}<span class="grow"></span>${buttons || '<span class="tag real">complete ✓</span>'}
       </div>${missing.length?`<div class="prompt">${missing[0][1].prompt}</div>`:""}
+      <details style="margin-top:6px"><summary class="muted" style="cursor:pointer">✎ edit character description (rebuilds all prompts)</summary>
+        <textarea id="notes-${u.id}" style="margin-top:6px">${u.notes}</textarea>
+        <button class="act ok" onclick="saveNotes('${u.id}')">Save description</button>
+      </details>
       <div class="row" style="margin-top:6px">
         <input placeholder="paste anchor image URL from MJ (--cref)" value="${u.cref||""}"
           style="flex:1;font-size:12px" onchange="saveCref('${u.id}', this.value)">
@@ -220,6 +224,11 @@ async function gen(target, id, kind) {
 async function saveKey() {
   await fetch("/api/secret", {method:"POST", body:JSON.stringify({fal_key: $("falkey").value})});
   toast("Key saved — ⚡ buttons are live in the Queue");
+  load();
+}
+async function saveNotes(id) {
+  await fetch("/api/notes", {method:"POST", body:JSON.stringify({id, notes: $("notes-"+id).value})});
+  toast("Description saved — every prompt for this character updated");
   load();
 }
 async function saveCref(id, url) {

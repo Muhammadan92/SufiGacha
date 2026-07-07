@@ -338,6 +338,17 @@ class Handler(BaseHTTPRequestHandler):
                 return self._json({"ok": True, "missing": len(items)})
             run_batch(items, int(req.get("count", 4)))
             self._json({"ok": True, "kicked": len(items)})
+        elif path == "/api/notes":
+            uid = req["id"]
+            p = ROOT / "data" / "units" / (uid + ".tres")
+            if not p.exists():
+                return self._json({"error": "unknown unit"}, 400)
+            clean = req["notes"].replace('"', "'").replace("\n", " ").strip()
+            text = p.read_text()
+            m = re.search(r'^art_notes = "(.*)"$', text, re.M)
+            text = text.replace('art_notes = "%s"' % m.group(1), 'art_notes = "%s"' % clean)
+            p.write_text(text)
+            self._json({"ok": True})
         elif path == "/api/secret":
             secrets = load_json(SECRETS_PATH, {})
             secrets["fal_key"] = req["fal_key"].strip()
