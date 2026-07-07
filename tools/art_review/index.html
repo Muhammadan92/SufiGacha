@@ -88,7 +88,8 @@ function render() {
   let q = (S.has_key ? `<div class="card"><div class="row">
     <b class="name">Batch generation</b>
     <span class="grow"></span>
-    <button class="act ok" onclick="genAll()">⚡ Generate ALL missing (×4 each)</button>
+    <button class="act ok" onclick="genAll()">⚡ Generate ALL missing (×4 each, review)</button>
+    <button class="act" onclick="autoFill()">⚡⚡ Auto-fill game (1 each, straight in)</button>
   </div></div>` : "") + `<p class="muted">Copy a prompt → generate in Midjourney → download keepers into
     <b>art_workbench/inbox/</b> → they appear in Review. Tip: for character consistency,
     after approving a portrait add <b>--cref &lt;MJ image URL&gt; --cw 100</b> to that
@@ -213,6 +214,13 @@ async function genAll() {
   if (!confirm(`Kick off ${dry.missing} assets × 4 images (~$${(dry.missing*4*0.01).toFixed(0)} worst case)?`)) return;
   const res = await (await fetch("/api/generate_all", {method:"POST", body:JSON.stringify({count:4})})).json();
   toast(`${res.kicked} jobs queued — 3 run at a time; watch the jobs strip / Review tab`);
+  setTimeout(load, 4000);
+}
+async function autoFill() {
+  const dry = await (await fetch("/api/generate_all", {method:"POST", body:JSON.stringify({dry:true})})).json();
+  if (!confirm(`Auto-fill ${dry.missing} assets — 1 image each, imported into the game WITHOUT review (replace any later via normal flow)?`)) return;
+  const res = await (await fetch("/api/generate_all", {method:"POST", body:JSON.stringify({count:1, auto_import:true})})).json();
+  toast(`${res.kicked} assets generating straight into the game — click 'Godot reimport' when the jobs finish`);
   setTimeout(load, 4000);
 }
 async function gen(target, id, kind) {

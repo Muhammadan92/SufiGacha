@@ -145,7 +145,7 @@ def api_prompt(style, notes, kind):
     ] if x)
 
 
-def run_generation(job_id, style, notes, kind, name_hint, count):
+def run_generation(job_id, style, notes, kind, name_hint, count, auto_target=None):
     """Worker thread: fal.ai queue-less sync call, images land in the inbox."""
     try:
         secrets = load_json(SECRETS_PATH, {})
@@ -179,6 +179,18 @@ def run_generation(job_id, style, notes, kind, name_hint, count):
                 data = r.read()
             (INBOX / ("%s_%d_%d.png" % (name_hint, int(time.time()), i))).write_bytes(data)
             n += 1
+        if auto_target and n:
+            # straight-into-game mode: import the first candidate, archive it
+            newest = sorted(INBOX.glob(name_hint + "_*"))[-1]
+            t, tid = auto_target
+            cmd = (["./tools/import_art.sh", "unit", tid, kind, str(newest)] if t == "unit"
+                   else ["./tools/import_art.sh", "valley", str(tid), str(newest)])
+            r2 = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
+            if r2.returncode == 0:
+                IMPORTED.mkdir(exist_ok=True)
+                shutil.move(str(newest), IMPORTED / newest.name)
+                JOBS[job_id] = {"label": name_hint, "status": "done", "detail": "auto-imported into the game"}
+                return
         JOBS[job_id] = {"label": name_hint, "status": "done", "detail": "%d images -> inbox" % n}
     except Exception as e:
         detail = str(e)
@@ -202,16 +214,16 @@ def enumerate_missing(count):
             hint = "%s_%s" % (u["id"], kind)
             if real.get("%s/%s" % (u["id"], kind)) or hint in inbox_names or hint in live:
                 continue
-            items.append((hint, u["notes"], kind))
+            items.append((hint, u["notes"], kind, ("unit", u["id"])))
     for v, theme in VALLEYS.items():
         hint = "valley_%d_background" % v
         if real.get("valley_%d/background" % v) or hint in inbox_names or hint in live:
             continue
-        items.append((hint, theme, "background"))
+        items.append((hint, theme, "background", ("valley", v)))
     return items
 
 
-def run_batch(items, count):
+def run_batch(items, count, auto=False):
     style = get_style()
     q = queue_mod.Queue()
     for it in items:
@@ -219,11 +231,12 @@ def run_batch(items, count):
     def worker():
         while True:
             try:
-                hint, notes, kind = q.get_nowait()
+                hint, notes, kind, target = q.get_nowait()
             except queue_mod.Empty:
                 return
-            run_generation("batch_" + hint, style, notes, kind, hint, count)
-    for hint, notes, kind in items:
+            run_generation("batch_" + hint, style, notes, kind, hint, count,
+                           auto_target=target if auto else None)
+    for hint, notes, kind, target in items:
         JOBS["batch_" + hint] = {"label": hint, "status": "queued", "detail": ""}
     for _ in range(3):
         threading.Thread(target=worker, daemon=True).start()
@@ -336,7 +349,7 @@ class Handler(BaseHTTPRequestHandler):
             items = enumerate_missing(int(req.get("count", 4)))
             if req.get("dry"):
                 return self._json({"ok": True, "missing": len(items)})
-            run_batch(items, int(req.get("count", 4)))
+            run_batch(items, int(req.get("count", 4)), auto=bool(req.get("auto_import")))
             self._json({"ok": True, "kicked": len(items)})
         elif path == "/api/notes":
             uid = req["id"]
