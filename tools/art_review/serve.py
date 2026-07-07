@@ -20,6 +20,7 @@ import urllib.parse
 import urllib.request
 import threading
 import time
+import queue as queue_mod
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent.parent
@@ -166,6 +167,45 @@ def run_generation(job_id, style, notes, kind, name_hint, count):
         JOBS[job_id] = {"label": name_hint, "status": "error", "detail": detail}
 
 
+def enumerate_missing(count):
+    """Every asset with no real art, no inbox candidates, and no live job."""
+    style = get_style()
+    real = load_json(MANIFEST, {})
+    inbox_names = " ".join(p.name for p in INBOX.glob("*"))
+    live = {j["label"] for j in JOBS.values() if j["status"] in ["queued", "running"]}
+    items = []
+    for u in parse_units():
+        for kind in ["portrait", "chibi", "icon"]:
+            hint = "%s_%s" % (u["id"], kind)
+            if real.get("%s/%s" % (u["id"], kind)) or hint in inbox_names or hint in live:
+                continue
+            items.append((hint, u["notes"], kind))
+    for v, theme in VALLEYS.items():
+        hint = "valley_%d_background" % v
+        if real.get("valley_%d/background" % v) or hint in inbox_names or hint in live:
+            continue
+        items.append((hint, theme, "background"))
+    return items
+
+
+def run_batch(items, count):
+    style = get_style()
+    q = queue_mod.Queue()
+    for it in items:
+        q.put(it)
+    def worker():
+        while True:
+            try:
+                hint, notes, kind = q.get_nowait()
+            except queue_mod.Empty:
+                return
+            run_generation("batch_" + hint, style, notes, kind, hint, count)
+    for hint, notes, kind in items:
+        JOBS["batch_" + hint] = {"label": hint, "status": "queued", "detail": ""}
+    for _ in range(3):
+        threading.Thread(target=worker, daemon=True).start()
+
+
 def state():
     style = get_style()
     real = load_json(MANIFEST, {})
@@ -269,6 +309,12 @@ class Handler(BaseHTTPRequestHandler):
                 args=(job_id, style, notes, kind, hint, int(req.get("count", 4))),
                 daemon=True).start()
             self._json({"ok": True, "job": job_id})
+        elif path == "/api/generate_all":
+            items = enumerate_missing(int(req.get("count", 4)))
+            if req.get("dry"):
+                return self._json({"ok": True, "missing": len(items)})
+            run_batch(items, int(req.get("count", 4)))
+            self._json({"ok": True, "kicked": len(items)})
         elif path == "/api/secret":
             secrets = load_json(SECRETS_PATH, {})
             secrets["fal_key"] = req["fal_key"].strip()
