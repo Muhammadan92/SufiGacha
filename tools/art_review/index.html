@@ -38,6 +38,7 @@
   <nav>
     <button id="t-queue" class="active" onclick="tab('queue')">Queue</button>
     <button id="t-review" onclick="tab('review')">Review <span id="inbox-n"></span></button>
+    <button id="t-gallery" onclick="tab('gallery')">Gallery</button>
     <button id="t-style" onclick="tab('style')">Style</button>
   </nav>
   <span class="grow"></span>
@@ -48,6 +49,7 @@
 <main>
   <div id="pane-queue"></div>
   <div id="pane-review" style="display:none"></div>
+  <div id="pane-gallery" style="display:none"></div>
   <div id="pane-style" style="display:none"></div>
 </main>
 <div id="toast"></div>
@@ -60,7 +62,7 @@ function toast(msg) {
   clearTimeout(t._h); t._h = setTimeout(() => t.style.display = "none", 2600);
 }
 function tab(name) {
-  for (const p of ["queue","review","style"]) {
+  for (const p of ["queue","review","gallery","style"]) {
     $("pane-"+p).style.display = p === name ? "" : "none";
     $("t-"+p).classList.toggle("active", p === name);
   }
@@ -180,6 +182,29 @@ function render() {
     }).join(" ");
     $("pane-queue").innerHTML = `<div class="card"><b class="name">Generation jobs</b><div class="row" style="margin-top:6px">${strip}</div></div>` + $("pane-queue").innerHTML;
   }
+
+  // GALLERY — everything currently IN the game, with replace buttons
+  let g = `<p class="muted">These are the live game assets (auto-filled or approved). ⚡ Replace
+    generates 4 fresh candidates into Review — approving one overwrites the current asset.</p><div class="grid">`;
+  for (const u of S.units) {
+    for (const [k, v] of Object.entries(u.kinds)) {
+      if (!v.real) continue;
+      g += `<div class="card"><img src="/asset/unit/${u.id}/${k}?v=${Date.now()}" loading="lazy">
+        <div class="row" style="margin-top:6px"><span class="tag real">${u.name.toUpperCase()} · ${k.toUpperCase()}</span>
+        <span class="grow"></span>
+        ${S.has_key?`<button class="act" onclick="gen('unit','${u.id}','${k}')">⚡ Replace ×4</button>`:""}</div></div>`;
+    }
+  }
+  for (const v of S.valleys) {
+    if (!v.real) continue;
+    g += `<div class="card"><img src="/asset/valley/${v.valley}?v=${Date.now()}" loading="lazy">
+      <div class="row" style="margin-top:6px"><span class="tag real">VALLEY ${v.valley}</span>
+      <span class="grow"></span>
+      ${S.has_key?`<button class="act" onclick="gen('valley','${v.valley}','background')">⚡ Replace ×4</button>`:""}</div></div>`;
+  }
+  g += `</div>`;
+  if (g.indexOf("card") < 0) g = `<p class="muted">Nothing in the game yet — auto-fill or approve something first.</p>`;
+  $("pane-gallery").innerHTML = g;
 
   // STYLE — editable style.json
   $("pane-style").innerHTML = `

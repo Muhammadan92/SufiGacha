@@ -297,6 +297,22 @@ class Handler(BaseHTTPRequestHandler):
             self.wfile.write(body)
         elif path == "/api/state":
             self._json(state())
+        elif path.startswith("/asset/"):
+            parts = path.split("/")  # /asset/unit/<id>/<kind> | /asset/valley/<n>
+            f = None
+            if len(parts) >= 5 and parts[2] == "unit":
+                f = ROOT / "assets" / "art" / "units" / parts[3] / (parts[4] + ".png")
+            elif len(parts) >= 4 and parts[2] == "valley":
+                f = ROOT / "assets" / "art" / "stages" / ("valley_" + parts[3]) / "background.png"
+            if f is not None and f.exists():
+                body = f.read_bytes()
+                self.send_response(200)
+                self.send_header("Content-Type", "image/png")
+                self.send_header("Content-Length", str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
+            else:
+                self._json({"error": "not found"}, 404)
         elif path.startswith("/inbox/"):
             f = INBOX / pathlib.Path(path[len("/inbox/"):]).name
             if f.exists():
