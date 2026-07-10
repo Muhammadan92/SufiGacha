@@ -130,7 +130,7 @@ def build_prompt(style, notes, kind):
 
 API_KIND_TAGS = {
     "portrait": "upper body, three-quarter view, detailed face, soft mystical light, plain dark background",
-    "chibi": "chibi, full body, standing, arms at sides, simple background, clean silhouette",
+    "chibi": "chibi, full body, standing, straight-on, symmetrical, arms slightly spread, simple background, clean silhouette",
     "icon": "face focus, close-up, centered, simple dark background",
     "background": "no humans, scenery, fantasy landscape, detailed environment",
 }
@@ -153,23 +153,33 @@ def recraft_images(style, notes, kind, count, key):
     """Recraft official API: natural-language prompt, western 2D styles.
     One request per image (robust across plan limits)."""
     prompt = build_prompt(style, notes, kind).split(" --")[0]
+    style_key = "recraft_style"
+    if kind == "chibi":
+        # poster substyles paint whole scenes; chibi battlers need isolation.
+        # 'sticker of...' + plain digital_illustration reliably isolates on
+        # white, which the cutout step then strips (rig-ready).
+        prompt = "sticker of a single character isolated on a plain white background: " + prompt
+        style_key = "recraft_style_chibi"
     body = {"prompt": prompt[:990], "size": RECRAFT_SIZES[kind], "n": 1}
-    if style.get("recraft_style_id"):
+    if style.get("recraft_style_id") and kind != "chibi":
         body["style_id"] = style["recraft_style_id"]
     else:
-        parts = style.get("recraft_style", "digital_illustration").split("/")
+        parts = style.get(style_key, "digital_illustration").split("/")
         body["style"] = parts[0]
         if len(parts) > 1:
             body["substyle"] = parts[1]
+    # Cloudflare blocks Python's TLS fingerprint (error 1010) — curl passes.
     urls = []
     for _ in range(count):
-        req = urllib.request.Request(
+        r = subprocess.run(["curl", "-s", "-X", "POST",
             "https://external.api.recraft.ai/v1/images/generations",
-            data=json.dumps(body).encode(),
-            headers={"Authorization": "Bearer " + key, "Content-Type": "application/json"})
-        with urllib.request.urlopen(req, timeout=300) as r:
-            out = json.loads(r.read())
-        urls += [d["url"] for d in out.get("data", [])]
+            "-H", "Authorization: Bearer " + key,
+            "-H", "Content-Type: application/json",
+            "-d", json.dumps(body)], capture_output=True, text=True, timeout=300)
+        out = json.loads(r.stdout)
+        if "data" not in out:
+            raise RuntimeError(str(out)[:300])
+        urls += [d["url"] for d in out["data"]]
     return urls
 
 
@@ -208,8 +218,12 @@ def run_generation(job_id, style, notes, kind, name_hint, count, auto_target=Non
             image_urls = [img["url"] for img in out.get("images", [])]
         n = 0
         for i, img_url in enumerate(image_urls):
-            with urllib.request.urlopen(img_url, timeout=120) as r:
-                data = r.read()
+            if "recraft.ai" in img_url:
+                data = subprocess.run(["curl", "-s", img_url],
+                    capture_output=True, timeout=120).stdout
+            else:
+                with urllib.request.urlopen(img_url, timeout=120) as r:
+                    data = r.read()
             (INBOX / ("%s_%d_%d.png" % (name_hint, int(time.time()), i))).write_bytes(data)
             n += 1
         if auto_target and n:
@@ -367,8 +381,16 @@ class Handler(BaseHTTPRequestHandler):
         path = self.path
         if path == "/api/approve":
             src = INBOX / pathlib.Path(req["file"]).name
+            orig = src
             if not src.exists():
                 return self._json({"error": "file gone"}, 400)
+            if req["target"] == "unit" and req["kind"] == "chibi":
+                # rig prep: strip the background before import
+                cut = src.with_name(src.stem + "_cut.png")
+                r_cut = subprocess.run(["python3", "tools/art_review/cutout.py", str(src), str(cut)],
+                    cwd=ROOT, capture_output=True, text=True)
+                if r_cut.returncode == 0 and cut.exists():
+                    src = cut
             if req["target"] == "unit":
                 cmd = ["./tools/import_art.sh", "unit", req["id"], req["kind"], str(src)]
             else:
@@ -378,6 +400,8 @@ class Handler(BaseHTTPRequestHandler):
                 return self._json({"error": r.stderr or r.stdout}, 400)
             IMPORTED.mkdir(exist_ok=True)
             shutil.move(str(src), IMPORTED / src.name)
+            if orig != src and orig.exists():
+                shutil.move(str(orig), IMPORTED / orig.name)
             self._json({"ok": True, "detail": r.stdout.strip()})
         elif path == "/api/generate":
             style = get_style()

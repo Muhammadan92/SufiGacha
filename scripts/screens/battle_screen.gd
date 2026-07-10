@@ -215,19 +215,18 @@ func _make_card(col: VBoxContainer, unit: BattleUnit) -> Dictionary:
 	portrait_holder.custom_minimum_size = Vector2(64, 64)
 	var pstyle := StyleBoxFlat.new()
 	var tex: Texture2D = chibi_texture(String(unit.data.id))
+	var rig: BattlerRig = null
 	if tex != null:
 		pstyle.bg_color = Color.TRANSPARENT
 		portrait_holder.add_theme_stylebox_override("panel", pstyle)
 		var wrap := Control.new()  # plain Control: children move freely
-		wrap.custom_minimum_size = Vector2(64, 64)
+		wrap.custom_minimum_size = Vector2(68, 68)
 		portrait_holder.add_child(wrap)
-		var trect := TextureRect.new()
-		trect.texture = tex
-		trect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		trect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		trect.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		wrap.add_child(trect)
-		start_idle(trect, unit.get_instance_id() % 5, 2.5)
+		rig = BattlerRig.new()
+		rig.setup(tex, 64.0, 1.0 if unit.is_player_side else -1.0)
+		rig.position = Vector2(34, 67)
+		wrap.add_child(rig)
+		rig.play_idle(unit.get_instance_id() % 5)
 	else:
 		pstyle.bg_color = affinity_color.darkened(0.35)
 		pstyle.set_corner_radius_all(4)
@@ -260,7 +259,7 @@ func _make_card(col: VBoxContainer, unit: BattleUnit) -> Dictionary:
 	return {
 		"card": card, "style": style, "affinity_color": affinity_color,
 		"hp_bar": hp_bar, "fv_bar": fv_bar,
-		"name_lbl": name_lbl, "status_lbl": status_lbl,
+		"name_lbl": name_lbl, "status_lbl": status_lbl, "rig": rig,
 	}
 
 
@@ -338,7 +337,15 @@ func _pulse(unit: BattleUnit, color: Color, scale_to: float = 1.0) -> void:
 		tw2.tween_property(card, "scale", Vector2.ONE, 0.15)
 
 
+func _rig_of(unit: BattleUnit) -> BattlerRig:
+	var card: Dictionary = cards.get(unit, {})
+	return card.get("rig")
+
+
 func _on_action_started(actor: BattleUnit, skill: SkillData, _primary: BattleUnit) -> void:
+	var arig := _rig_of(actor)
+	if arig != null:
+		arig.play_attack()
 	_pulse(actor, Color(1.3, 1.3, 1.3), 1.07)
 	if skill.slot == Enums.Slot.TRANCE:
 		sfx("trance")
@@ -356,6 +363,9 @@ func _on_action_started(actor: BattleUnit, skill: SkillData, _primary: BattleUni
 
 
 func _on_damage_dealt(target: BattleUnit, amount: int, crit: bool) -> void:
+	var trig := _rig_of(target)
+	if trig != null:
+		trig.play_hit()
 	sfx("hit_crit" if crit else "hit")
 	_pulse(target, Color(1.6, 0.5, 0.5), 0.94)
 	_float_text(target, ("-%d!" if crit else "-%d") % amount,
@@ -363,6 +373,9 @@ func _on_damage_dealt(target: BattleUnit, amount: int, crit: bool) -> void:
 
 
 func _on_unit_healed(target: BattleUnit, amount: int) -> void:
+	var hrig := _rig_of(target)
+	if hrig != null:
+		hrig.play_cast()
 	sfx("heal")
 	_pulse(target, Color(0.6, 1.5, 0.6))
 	_float_text(target, "+%d" % amount, Color(0.55, 0.95, 0.55))
@@ -374,6 +387,9 @@ func _on_unit_evaded(target: BattleUnit, label: String) -> void:
 
 
 func _on_unit_died(unit: BattleUnit) -> void:
+	var drig := _rig_of(unit)
+	if drig != null:
+		drig.play_death()
 	sfx("fall")
 	if unit.is_player_side:
 		player_deaths += 1
